@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { CgMenuRightAlt, FaMedal, FaSketch, FaWater } from './../assets/icons/vander';
+import { CgMenuRightAlt, FaMedal, FaSketch, FaWater } from '../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
 
-const Token = () => {
+const Token1 = () => {
     const [tabIndex, setTabIndex] = useState(0);
     return (
         <>
@@ -29,7 +29,7 @@ const Token = () => {
     )
 }
 
-export default Token
+export default Token1
 {/* <div>
                                 <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                                     <div className='bg-[#17171c]  px-2  flex items-center'>

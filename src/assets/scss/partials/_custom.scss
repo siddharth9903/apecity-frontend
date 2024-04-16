@@ -1,0 +1,44 @@
+.tradingview-widget-copyright {
+    display: none !important;
+}
+.react-responsive-modal-modal{
+    padding: 0px !important;
+    background: #1d1d22 !important;
+}
+
+::-webkit-scrollbar{
+    width: 0px;
+}
+
+.token-left::-webkit-scrollbar {
+    width: 0px;
+}
+
+.token-right::-webkit-scrollbar {
+    width:9px; 
+}
+.token-right::-webkit-scrollbar-track {
+    background-color: #28282d;
+}
+
+.token-right::-webkit-scrollbar-thumb {
+    background-color: #4d4d4d;
+    border-radius: 8px;
+}
+
+// .token-left::-webkit-scrollbar-thumb:hover {
+//     /* Adjust hover styles */
+//     background-color: blue;
+// }
+
+
+.tokens-table-wrapper::-webkit-scrollbar {
+    width:15px; 
+}
+.tokens-table-wrapper::-webkit-scrollbar-track {
+    background-color: #28282d;
+}
+
+.tokens-table-wrapper::-webkit-scrollbar-thumb {
+    background-color: #4d4d4d;
+}

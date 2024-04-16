@@ -1,27 +1,39 @@
 import { useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaMedal, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FaWater, FiChevronDown } from './../assets/icons/vander';
+import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
 import { shortenText } from '../utils/helper';
-import Orders from '../sections/token/Orders';
+import { Tooltip } from 'react-tooltip';
 import Holders from '../sections/token/Holders';
-import Providers from '../sections/token/Providers';
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import { FreeMode } from 'swiper/modules';
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
+import Tokens from '../sections/token/Tokens';
+import { FaCircleArrowLeft } from "react-icons/fa6";
 const Token = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const [tabIndex1, setTabIndex1] = useState(0);
     const [tabIndex2, setTabIndex2] = useState(0);
+    const [open, setOpen] = useState(false);
+
+    const onOpenModal = () => setOpen(true);
+    const onCloseModal = () => setOpen(false);
     return (
         <>
             <div className="container-fluid bg-black">
-                <div className='relative flex justify-between'>
-                    <div className="w-[calc(100%-400px)] bg-[#17171c]">
-                        <div className='w-full px-3 py-3 bg-[#17171c]'>
-                            <div className=''>
+                <div className='relative h-screen flex justify-between'>
+                    <div className="w-[calc(100%-400px)] h-screen overflow-y-auto absolute left-0 top-0 bg-[#17171c] token-left">
+                        <div className='w-full relative px-3 py-3 bg-[#17171c]'>
+                            <div className='absolute z-[11] h-full left-0 top-0'>
+                                <button className='h-full pl-2 bg-transparent'>
+                                    <FaCircleArrowLeft className='text-white text-xl'/>
+                                </button>        
+                            </div>
+                            <div className='pl-7'>
                                 <Swiper
                                     slidesPerView={6}
                                     spaceBetween={10}
@@ -53,11 +65,67 @@ const Token = () => {
 
 
                             </div>
+                            <div className='absolute z-[11] h-full right-0 top-0'>
+                                <div className='py-2 h-full'>
+                                    <button onClick={onOpenModal} className='flex rounded-s-lg h-full gap-x-1 px-2 bg-[#ff6600] items-center'>
+                                        <FaFireAlt className='text-white text-lg' />
+                                        <FaChevronRight className='text-white text-sm' />
+                                    </button>
+                                    <Modal styles={{
+                                        padding: 0
+                                    }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
+                                        <div className='w-[800px] flex gap-y-2 flex-col bg-[#1d1d22] h-[70vh]'>
+                                            <div className='bg-[#28282d]  w-full  py-2 px-3 flex items-center justify-between'>
+                                                <div>
+
+                                                    <div className='flex'>
+                                                        <button className={`px-3 py-2 rounded-s cursor-pointer bg-[#343439] border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>5M</p>
+                                                        </button>
+                                                        <button className={`px-3 py-2 cursor-pointer bg-transparent border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>1H</p>
+                                                        </button >
+                                                        <button className={`px-3 py-2  cursor-pointer  bg-transparent border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>6H</p>
+                                                        </button >
+                                                        <button className={`px-3 py-2 cursor-pointer rounded-e bg-transparent border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>24H</p>
+                                                        </button >
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button onClick={onCloseModal} className="bg-transparent rounded p-1 border border-[#ffffff29]">
+                                                        <RxCross2 className='text-white text-xl' />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className='flex-1 px-3 tokens-table-wrapper overflow-y-auto'>
+                                                <Tokens />
+                                            </div>
+                                            <div className='bg-[#28282d]  w-full  py-3 px-3'>
+                                                <div className='flex gap-x-4 w-full items-center justify-center'>
+                                                    <button  className="rounded-md flex gap-x-2 px-3 py-2 items-center border-none bg-[#475dc0]">
+                                                        <span><FaFire className='text-white text-sm'/></span>
+                                                        <span className='text-white pfont-600 text-sm'>All Trending Tokens on Ethereum</span>
+                                                        <span><FaChevronRight className='text-white text-[13px]' /></span>
+                                                    </button>
+                                                    <button className='flex items-center gap-x-1.5 bg-transparent'>
+                                                        <FaInfoCircle className='text-[#cccccc]'/>
+                                                        <span className='text-[#cccccc] pfont-500'>About</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Modal>
+                                </div>
+                            </div>
                         </div>
                         <div className="w-full">
+
                             <div className=''>
                                 <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
                             </div>
+
                         </div>
                         <div className='w-full  flex-1'>
                             <div>
@@ -76,24 +144,24 @@ const Token = () => {
                                                     <span className='pfont-500 text-sm ml-1.5'>Transactions</span>
                                                 </div>
                                             </Tab>
-                                            <Tab className='focus:border-none focus:outline-none'>
+                                            {/* <Tab className='focus:border-none focus:outline-none'>
                                                 <div className={`${tabIndex == 2 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
                                                     <span className='text-sm'><FaMedal /></span>
                                                     <span className='pfont-500 text-sm ml-1.5'>Top Traders</span>
                                                 </div>
-                                            </Tab>
+                                            </Tab> */}
                                             <Tab className='focus:border-none focus:outline-none'>
-                                                <div className={`${tabIndex == 3 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
+                                                <div className={`${tabIndex == 2 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
                                                     <span className='text-sm'><FaSketch /></span>
                                                     <span className='pfont-500 text-sm ml-1.5'>Holders(706)</span>
                                                 </div>
                                             </Tab>
-                                            <Tab className='focus:border-none focus:outline-none'>
+                                            {/* <Tab className='focus:border-none focus:outline-none'>
                                                 <div className={`${tabIndex == 4 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
                                                     <span className='text-sm'><FaWater /></span>
                                                     <span className='pfont-500 text-sm ml-1.5'> Liquidity Providers(2)</span>
                                                 </div>
-                                            </Tab>
+                                            </Tab> */}
 
                                         </TabList>
                                         <div>
@@ -106,41 +174,41 @@ const Token = () => {
                                     <TabPanel>
                                         <Transactions />
                                     </TabPanel>
-                                    <TabPanel>
+                                    {/* <TabPanel>
                                         <Orders />
-                                    </TabPanel>
+                                    </TabPanel> */}
                                     <TabPanel>
                                         <Holders />
                                     </TabPanel>
-                                    <TabPanel>
+                                    {/* <TabPanel>
                                         <Providers />
-                                    </TabPanel>
+                                    </TabPanel> */}
                                 </Tabs>
                             </div>
                         </div>
                     </div>
-                    <div className="border-l  border-[#5e5e6b] bg-[#17171c] w-[400px] right-0 top-0">
+                    <div className="border-l h-screen overflow-y-auto absolute  right-0 top-0 border-[#5e5e6b] bg-[#17171c] w-[400px] token-right">
                         <div className='pb-10'>
                             <div className='bg-[#222227] px-3 py-2'>
                                 <div className='flex items-center justify-between'>
                                     <div className='flex items-center gap-x-2'>
                                         <img className='w-7' src="/images/token/token1.webp" alt="" />
-                                        <p className='space-500 text-lg text-white'>Brick Block</p>
+                                        <p className='space-500 text-[17px] text-white'>Brick Block</p>
                                     </div>
                                     <div className='border cursor-pointer hover:bg-[#ffffff14] py-1.5 px-1.5 flex justify-center items-center border-[#ffffff29] rounded'>
                                         <BsThreeDotsVertical className='text-white' />
                                     </div>
                                 </div>
                             </div>
-                            <div className='bg-[#111116] py-3 flex justify-center'>
+                            <div className='bg-[#111116] py-1.5 flex justify-center'>
                                 <div>
                                     <div className='flex gap-x-2 justify-center items-center'>
                                         <div className='flex gap-x-1 justify-center items-center'>
-                                            <span className='text-white text-lg space-600'>Brick Block</span>
+                                            <span className='text-white text-[17px] space-600'>Brick Block</span>
                                             <span className='text-[#A7A7AC]'><FaRegCopy /></span>
                                         </div>
                                         <span className='text-white'>/</span>
-                                        <span className='uppercase text-white text-lg space-600'>weth</span>
+                                        <span className='uppercase text-white text-[17px] space-600'>weth</span>
                                         <div className='flex gap-x-1 justify-center items-center'>
                                             <span><img src="/images/icons/svg/rank.svg" alt="" /></span>
                                             <span className='text-[#ff9900] pfont-600'>#2</span>
@@ -201,27 +269,31 @@ const Token = () => {
                                         <p className='text-white text-[15px] text-center pfont-600'>0.0886777 WETH</p>
                                     </div>
                                 </div>
-                                <div className='bg-[#1b1d28] mt-4 px-2 py-2 rounded'>
+                                <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
                                     <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: 4%</p>
                                     <div className='mt-2'>
                                         <div className='rounded-full w-[90%] h-4 bg-[#374151]'>
-                                            <div style={{ width: '80%' }} className='rounded-full h-full bg-[#86efac]'>
-
-                                            </div>
+                                            <a className='w-full' data-tooltip-id='bonding_curve' >
+                                                <div style={{ width: '80%' }} className='rounded-full cursor-pointer h-full bg-[#48bb78]'>
+                                                </div>
+                                            </a>
+                                            <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
+                                                <div className='w-[330px]'>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are 769,105,722 tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
+                                                </div>
+                                            </Tooltip>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
-                                        <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are 769,105,722 tokens still available for sale in the bonding curve and there is 0.686 SOL in the bonding curve.</p>
-                                    </div>
+
                                 </div>
-                                <div className='mt-4'>
-                                    <div className="grid gap-4">
-                                        <div className="bg-[#2e303a] p-4 rounded-lg border border-none text-gray-400 grid gap-4">
+                                <div className='mt-3'>
+                                    <div className="grid gap-x-4 gap-y-2">
+                                        <div className="border border-[#343439] px-4 py-3 rounded-lg  text-gray-400 grid gap-4">
                                             <Tabs selectedIndex={tabIndex2} onSelect={(index) => setTabIndex2(index)}>
                                                 <TabList>
-                                                    <div className="grid grid-cols-2 gap-2 mb-4">
-                                                        <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex2 == 0 ? 'bg-green-400 text-black' : 'bg-gray-800 text-grey-600'}`}>
+                                                    <div className="grid grid-cols-2 gap-2 mb-3">
+                                                        <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex2 == 0 ? 'bg-[#48bb78] text-white' : 'bg-gray-800 text-grey-600'}`}>
                                                             Buy
                                                         </Tab>
                                                         <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex2 == 1 ? 'bg-red-400 text-white' : 'bg-gray-800 text-grey-600'}`}>
@@ -241,37 +313,45 @@ const Token = () => {
                                                                 slippage
                                                             </button>
                                                         </div>
-                                                        <div className="flex mt-4 flex-col">
-                                                            <div className="flex items-center rounded-md relative bg-[#2e303a]">
+                                                        <div className="flex mt-3 flex-col">
+                                                            <div className="flex items-center rounded-md relative">
                                                                 <input
                                                                     className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
-                                                                    id="amount" placeholder="0.0" type="number" />
-                                                                <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">SOL</span>
-                                                                    <img className="w-8 h-8 rounded-full"
-                                                                        src="/images/logo/sol.png"
-                                                                        alt="SOL" />
+                                                                    placeholder="0.0" type="number" />
+                                                                <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">ETH</span>
+                                                                    <img className="w-7 h-7 rounded-full"
+                                                                        src="/images/logo/eth.svg"
+                                                                        alt="ETH" />
                                                                 </div>
                                                             </div>
-                                                            <div className="flex mt-4 bg-[#2e303a] p-1 rounded-lg">
+                                                            <div className="flex flex-wrap gap-3 mt-2  p-1 rounded-lg">
                                                                 <button
-                                                                    className="text-xs py-1 -ml-1 px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
+                                                                    className="text-xs py-1  px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
                                                                 </button>
                                                                 <button
-                                                                    className="text-xs py-1 px-2 ml-1 rounded pfont-400 bg-gray-800 text-gray-300">1
-                                                                    SOL
+                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.25
+                                                                    ETH
                                                                 </button>
                                                                 <button
-                                                                    className="text-xs py-1 px-2 ml-1 rounded pfont-400 bg-gray-800 text-gray-300">5
-                                                                    SOL
+                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.5
+                                                                    ETH
                                                                 </button>
                                                                 <button
-                                                                    className="text-xs py-1 px-2 ml-1 rounded pfont-400 bg-gray-800 text-gray-300">10
-                                                                    SOL
+                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">1
+                                                                    ETH
+                                                                </button>
+                                                                <button
+                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">2.5
+                                                                    ETH
+                                                                </button>
+                                                                <button
+                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">5
+                                                                    ETH
                                                                 </button>
                                                             </div>
                                                         </div>
                                                         <button
-                                                            className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-green-400 pfont-500 text-black w-full py-3 rounded-md hover:bg-green-200">
+                                                            className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black">
                                                             Place
                                                             Trade
                                                         </button>
@@ -286,17 +366,17 @@ const Token = () => {
                                                             </button>
                                                         </div>
                                                         <div className="flex mt-4 flex-col">
-                                                            <div className="flex items-center rounded-md relative bg-[#2e303a]">
+                                                            <div className="flex items-center rounded-md relative ">
                                                                 <input
                                                                     className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
                                                                     id="amount" placeholder="0.0" type="number" />
                                                                 <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">WW420</span>
                                                                     <img className="w-8 h-8 rounded-full"
                                                                         src="/images/logo/ww4.jpeg"
-                                                                        alt="SOL" />
+                                                                        alt="ETH" />
                                                                 </div>
                                                             </div>
-                                                            <div className="flex mt-4 bg-[#2e303a] p-1 rounded-lg">
+                                                            <div className="flex mt-4  p-1 rounded-lg">
                                                                 <button
                                                                     className="text-xs py-1 -ml-1 px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
                                                                 </button>
@@ -319,7 +399,7 @@ const Token = () => {
                                                             </div>
                                                         </div>
                                                         <button
-                                                            className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-green-400 pfont-500 text-black w-full py-3 rounded-md hover:bg-green-200">
+                                                            className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black">
                                                             Place
                                                             Trade
                                                         </button>
@@ -702,7 +782,7 @@ const Token = () => {
                                         </div>
                                         <div className='flex border-b pt-3 pb-2 border-b-[#343439]  justify-between items-center'>
                                             <p className='text-sm text-white pfont-400'>
-                                                Pooled SOL
+                                                Pooled ETH
                                             </p>
                                             <p className='text-sm  flex items-center gap-x-3 text-white pfont-500'>
                                                 <span>15,990</span>
