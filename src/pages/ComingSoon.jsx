@@ -55,8 +55,11 @@ export default function Comingsoon() {
                                         <span className="relative inline-block" >O</span>
                                         <span className="relative inline-block" >N</span> */}
                                     </div>
-                                    <p className="text-white/70 max-w-xl mx-auto">We are a huge marketplace dedicated to connecting great artists of all Giglink with their fans and unique token collectors!</p>
-
+                                    <b>
+                                        <p className="text-white/70 mx-auto">Ape City is a fair-launch platform committed to ensuring secure and equitable on-chain trading.</p>
+                                    </b>
+                                    <p className="text-white/70 max-w-xl mx-auto">Each token launched on our platform is anti-rug, with no presales or team allocations, ensuring transparency and a level playing field for all users.</p>
+                                    {/* <p className="text-white/70 max-w-xl mx-auto">E */}
                                     <div id="countdown">
                                         <ul className="count-down list-none inline-block text-white text-center mt-8">
                                             <li id="days" className="count-number inline-block m-2">{time.days}
