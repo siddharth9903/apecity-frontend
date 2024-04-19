@@ -1,12 +1,13 @@
 .tradingview-widget-copyright {
     display: none !important;
 }
-.react-responsive-modal-modal{
+
+.react-responsive-modal-modal {
     padding: 0px !important;
     background: #1d1d22 !important;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
     width: 0px;
 }
 
@@ -15,8 +16,9 @@
 }
 
 .token-right::-webkit-scrollbar {
-    width:9px; 
+    width: 9px;
 }
+
 .token-right::-webkit-scrollbar-track {
     background-color: #28282d;
 }
@@ -33,8 +35,9 @@
 
 
 .tokens-table-wrapper::-webkit-scrollbar {
-    width:15px; 
+    width: 15px;
 }
+
 .tokens-table-wrapper::-webkit-scrollbar-track {
     background-color: #28282d;
 }
@@ -42,3 +45,77 @@
 .tokens-table-wrapper::-webkit-scrollbar-thumb {
     background-color: #4d4d4d;
 }
+
+body {
+    background-color: black;
+}
+
+.create-coin {
+    background-image: url('/public/images/bg/create-coin-bg.png');
+}
+
+
+//  react-select
+
+.filter-section {
+    .css-13cymwt-control {
+        background-color: transparent !important;
+        border: 2px solid #4b4b50 !important;
+        height: 42px !important;
+    }
+
+    .css-t3ipsp-control {
+        border: 2px solid #4b4b50 !important;
+        box-shadow: none !important;
+        height: 42px !important;
+        background-color: transparent !important;
+    }
+
+    .css-1u9des2-indicatorSeparator {
+        background-color: #6e767d !important;
+    }
+
+    .css-1xc3v61-indicatorContainer {
+        color: #6e767d !important;
+    }
+
+    .css-1dimb5e-singleValue {
+        color: white !important;
+    }
+
+    .css-15lsz6c-indicatorContainer:hover {
+        color: #6e767d !important;
+    }
+
+    .css-1nmdiq5-menu {
+        color: white !important;
+        background-color: #292525 !important;
+    }
+
+    .css-tr4s17-option {
+        background-color: #475dc0 !important;
+    }
+
+    .css-d7l1ni-option {
+        color: black !important;
+        background-color: rgb(243 244 246) !important;
+    }
+
+    .css-art2ul-ValueContainer2 {
+        padding: 2px 16px !important;
+    }
+}
+
+
+
+
+  
+
+ 
+ 
+  
+ 
+
+  
+ 
+  

@@ -4,9 +4,13 @@ import SimpleBarReact from "simplebar-react";
 import 'simplebar-react/dist/simplebar.min.css';
 
 import { Menu, Bell, ShoppingCart, DollarSign, Truck } from 'feather-icons-react'
-import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout } from "./../../../assets/icons/vander.jsx"
-
+import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2 } from "./../../../assets/icons/vander.jsx"
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
 export default function Topnav({ setToggle, toggle }) {
+    const [open, setOpen] = useState(false);
+    const onOpenModal = () => setOpen(true);
+    const onCloseModal = () => setOpen(false);
     const [notification, setNotification] = useState(false);
     const [userData, setUserData] = useState(false);
 
@@ -98,28 +102,77 @@ export default function Topnav({ setToggle, toggle }) {
     }
     return (
         <div className="top-header">
-            <div className="header-bar flex justify-between">
-                <div className="flex items-center space-x-1">
-                    <Link to="#" className="xl:hidden block me-2">
-                        <img src={'/images/logo/logo-icon-32.png'} className="md:hidden block" alt="" />
-                        <span className="md:block hidden">
+            <div className="header-bar">
+                <div>
+                    <div className="row items-center px-3 py-2.5">
+                        <div className="col-5">
+                            <div className="flex items-center space-x-1">
+                                <Link to="#" className="flex items-center">
+                                    {/* <img src={'/images/logo/logo.webp'} className="w-8" alt="" /> */}
+                                    <span className="text-white lilita-400 tracking-[2px] text-2xl">Ape city</span>
+                                    {/* <span className="md:block hidden">
                             <img src={'/images/logo/logo-dark.png'} className="inline-block dark:hidden" alt="" />
                             <img src={'/images/logo/logo-light.png'} className="hidden dark:inline-block" alt="" />
-                        </span>
-                    </Link>
-                    {/* <Link to="#" id="close-sidebar" className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white">
+                        </span> */}
+                                </Link>
+                                {/* <Link to="#" id="close-sidebar" className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white">
                         <Menu className="h-4 w-4" onClick={toggleHandler} />
                     </Link> */}
-                    {/* <div className="ps-1.5">
+                                {/* <div className="ps-1.5">
                         <div className="form-icon relative sm:block hidden">
                             <LuSearch className="absolute top-1/2 -translate-y-1/2 start-3" />
                             <input type="text" className="form-input w-56 ps-9 py-2 px-3 h-8 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-gray-100 dark:border-gray-800 focus:ring-0 bg-white" name="s" id="searchItem" placeholder="Search..." />
                         </div>
                     </div> */}
-                </div>
+                            </div>
+                        </div>
+                        <div className="col-2">
+                            <div className="">
+                                <div className="flex items-center justify-center gap-x-4">
+                                    <div>
+                                        <Link className="pfont-400 tracking-[1px] text-white" to={''}>Explore</Link>
+                                    </div>
+                                    <div>
+                                        <button onClick={onOpenModal} className="pfont-400 bg-transparent border-none tracking-[1px] text-white">BluePrint</button>
+                                        <Modal styles={{
+                                            padding: 0
+                                        }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
+                                            <div className='w-[600px] border py-6 px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
+                                                <div className='w-full   flex justify-center items-center'>
+                                                    <div className="text-center">
+                                                        <h3 className="text-center tracking-[0.5px] pfont-500 text-white text-xl">Blueprints</h3>
+                                                    </div>
+                                                    {/* <div className="">
+                                            <button onClick={onCloseModal} className="bg-transparent rounded p-1 border border-[#ffffff29]">
+                                                <RxCross2 className='text-white text-xl' />
+                                            </button>
+                                        </div> */}
+                                                </div>
+                                                <div>
+                                                    <p className="pfont-400 tracking-[0.5px] text-white text-center">
+                                                        Ape City is a fair-launch platform committed to ensuring secure and equitable on-chain trading. Each token launched on our platform is anti-rug, with no presales or team allocations, ensuring transparency and a level playing field for all users.
 
-                <ul className="list-none mb-0 space-x-1">
-                    <li className="dropdown inline-block relative">
+                                                    </p>
+                                                    <h4 className="text-center tracking-[0.5px] mt-5 pfont-500 text-white text-lg">Get Started: </h4>
+                                                    <div className="flex flex-col mt-4 gap-y-3">
+                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 1 :</span> Discover a coin that aligns with your interests and investment goals.</p>
+                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 2 :</span> Buy the coin on the bonding curve. </p>
+                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 3 :</span> Sell at any time to lock in your PnL.</p>
+                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 4 :</span> When enough people buy on the bonding curve, your coin reaches a market cap of $69k, and all liquidity from the bonding curve will be paired with 206,900,000* [TOKEN_TICKER] on Uniswap, and the LP tokens are subsequently burned.</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex mt-2 justify-center">
+                                                    <button onClick={onCloseModal} className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 px-6 py-2 rounded-md">I’m Ready to Ape</button>
+                                                </div>
+                                            </div>
+                                        </Modal>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-5">
+                            <div className="flex justify-end items-center  space-x-2">
+                                {/* <li className="dropdown inline-block relative">
                         <button data-dropdown-toggle="dropdown" className="dropdown-toggle btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white" type="button" onClick={notificationtoggle}>
                             <Bell className="h-4 w-4" />
                             <span className="absolute top-0 end-0 flex items-center justify-center bg-emerald-600 text-white text-[10px] font-bold rounded-full w-2 h-2 after:content-[''] after:absolute after:h-2 after:w-2 after:bg-emerald-600 after:top-0 after:end-0 after:rounded-full after:animate-ping"></span>
@@ -195,15 +248,25 @@ export default function Topnav({ setToggle, toggle }) {
                                 </ul>
                             </SimpleBarReact>
                         </div>
-                    </li>
-                    <li className="inline-block mb-0">
-                        <Link to="#" onClick={metamask} id="connectWallet" className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white"><BiWallet /></Link>
-                    </li>
-                    <li className="dropdown inline-block relative">
-                        <button data-dropdown-toggle="dropdown" className="dropdown-toggle items-center" type="button">
-                            <span className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white" onClick={userHandler}><img src={'/images/client/05.jpg'} className="rounded-full" alt="" /></span>
-                        </button>
-                        <div className={`dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 ${userData ? "block" : "hidden"}`} >
+                    </li> */}
+                                <div className="px-2">
+                                    <a className="text-white" href="">
+                                        <FaTwitter className="text-lg" />
+                                    </a>
+                                </div>
+                                <div className="pl-2 pr-3">
+                                    <a className="text-white" href="">
+                                        <FaTelegramPlane className="text-xl" />
+                                    </a>
+                                </div>
+                                <div className="">
+                                    <Link to="#" id="connectWallet" className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center gap-x-2 px-4 py-2 rounded-md text-sm"><span className="pfont-500">Connect Wallet</span><BiWallet /></Link>
+                                </div>
+                                <div className="dropdown inline-block cursor-pointer relative">
+                                    <button data-dropdown-toggle="dropdown" className="dropdown-toggle  cursor-pointer mt-1 items-center" type="button">
+                                        <span className="" onClick={userHandler}><img className='w-10 cursor-pointer' src={'/images/icons/png/user.png'} alt="" /></span>
+                                    </button>
+                                    {/* <div className={`dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 ${userData ? "block" : "hidden"}`} >
                             <div className="relative">
                                 <div className="py-8 bg-gradient-to-tr from-violet-600 to-red-600"></div>
                                 <div className="absolute px-4 -bottom-7 start-0">
@@ -239,9 +302,15 @@ export default function Topnav({ setToggle, toggle }) {
                                     <Link to="/login" className="flex items-center text-[14px] font-semibold py-1.5 px-4 hover:text-violet-600"><AiOutlineLogout className="text-[16px] align-middle me-1" /> Logout</Link>
                                 </li>
                             </ul>
+                        </div> */}
+                                </div>
+                            </div>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+
+
+
+                </div>
             </div>
         </div>
     )

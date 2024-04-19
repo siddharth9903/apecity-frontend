@@ -618,7 +618,6 @@
 
 .page-wrapper .page-content .top-header .header-bar {
     position: relative;
-    height: 70px;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -626,8 +625,8 @@
     -ms-flex-pack: justify;
     justify-content: space-between;
     --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-    padding: 1.5rem;
+    //background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    background-color: #17171c;
     --tw-shadow: 0 0 3px rgb(60 72 88 / 0.15);
     --tw-shadow-colored: 0 0 3px var(--tw-shadow-color);
     -webkit-box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -636,7 +635,8 @@
 
 :is(.dark .page-wrapper .page-content .top-header .header-bar) {
     --tw-bg-opacity: 1;
-    background-color: rgb(15 23 42 / var(--tw-bg-opacity));
+    background-color: #17171c;
+    //background-color: rgb(15 23 42 / var(--tw-bg-opacity));
     --tw-shadow-color: #374151;
     --tw-shadow: var(--tw-shadow-colored);
 }

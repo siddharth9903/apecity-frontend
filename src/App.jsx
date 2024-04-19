@@ -4,6 +4,7 @@ import './assets/css/tailwind.css';
 import './assets/scss/style.scss';
 import Switcher from './components/switcher';
 import Router from './routes/index.jsx';
+import { SnackbarProvider } from 'notistack';
 function App() {
   useEffect(() => {
     if (!document.documentElement.className.includes("dark")) {
@@ -13,6 +14,7 @@ function App() {
   return (
     <>
       <Router />
+      <SnackbarProvider />
       {/* <Switcher /> */}
     </>
   )

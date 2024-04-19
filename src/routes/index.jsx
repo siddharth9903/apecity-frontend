@@ -1,7 +1,8 @@
 import { useRoutes } from "react-router-dom";
 import Main from "../layouts/main";
 import Token from "../pages/Token";
-import Token1 from "../pages/Token1";
+import Explore from "../pages/Explore";
+import Create from "../pages/Create";
 const Router = () => {
   return useRoutes([
     {
@@ -10,11 +11,15 @@ const Router = () => {
         children:[
             {
               index:true,
+              element:<Explore />
+            },
+            {
+              path:'token',
               element:<Token />
             },
             {
-              path:'/token1',
-              element:<Token1 />
+              path:'create',
+              element:<Create />
             }
         ]
     }

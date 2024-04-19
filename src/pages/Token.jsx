@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
@@ -14,24 +14,48 @@ import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import Tokens from '../sections/token/Tokens';
 import { FaCircleArrowLeft } from "react-icons/fa6";
+import { useForm, useWatch } from 'react-hook-form';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { enqueueSnackbar } from 'notistack';
+import copy from 'copy-to-clipboard';
+import { useNavigate } from 'react-router-dom';
 const Token = () => {
+    const navigate=useNavigate()
     const [tabIndex, setTabIndex] = useState(0);
     const [tabIndex1, setTabIndex1] = useState(0);
     const [tabIndex2, setTabIndex2] = useState(0);
     const [open, setOpen] = useState(false);
-
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
+    const TradeSchema = Yup.object().shape({
+
+    })
+    
+    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(TradeSchema)
+    })
+    const onSubmit = (values) => {
+
+    }
+    const value = useWatch({
+        name: 'value',
+        control
+    });
+
+    const price = useMemo(() => {
+        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
+    }, [value])
     return (
         <>
-            <div className="container-fluid bg-black">
+            <div className="container-fluid pt-[70px] bg-black">
                 <div className='relative h-screen flex justify-between'>
                     <div className="w-[calc(100%-400px)] h-screen overflow-y-auto absolute left-0 top-0 bg-[#17171c] token-left">
                         <div className='w-full relative px-3 py-3 bg-[#17171c]'>
                             <div className='absolute z-[11] h-full left-0 top-0'>
-                                <button className='h-full pl-2 bg-transparent'>
-                                    <FaCircleArrowLeft className='text-white text-xl'/>
-                                </button>        
+                                <button onClick={()=>navigate('/')} className='h-full pl-2 bg-transparent'>
+                                    <FaCircleArrowLeft className='text-white text-xl' />
+                                </button>
                             </div>
                             <div className='pl-7'>
                                 <Swiper
@@ -104,13 +128,13 @@ const Token = () => {
                                             </div>
                                             <div className='bg-[#28282d]  w-full  py-3 px-3'>
                                                 <div className='flex gap-x-4 w-full items-center justify-center'>
-                                                    <button  className="rounded-md flex gap-x-2 px-3 py-2 items-center border-none bg-[#475dc0]">
-                                                        <span><FaFire className='text-white text-sm'/></span>
+                                                    <button className="rounded-md flex gap-x-2 px-3 py-2 items-center border-none bg-[#475dc0]">
+                                                        <span><FaFire className='text-white text-sm' /></span>
                                                         <span className='text-white pfont-600 text-sm'>All Trending Tokens on Ethereum</span>
                                                         <span><FaChevronRight className='text-white text-[13px]' /></span>
                                                     </button>
                                                     <button className='flex items-center gap-x-1.5 bg-transparent'>
-                                                        <FaInfoCircle className='text-[#cccccc]'/>
+                                                        <FaInfoCircle className='text-[#cccccc]' />
                                                         <span className='text-[#cccccc] pfont-500'>About</span>
                                                     </button>
                                                 </div>
@@ -259,7 +283,7 @@ const Token = () => {
                                         </span>
                                     </button>
                                 </div>
-                                <div className='flex mt-4 gap-x-2'>
+                                <div className='flex mt-3 gap-x-2'>
                                     <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                         <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
                                         <p className='text-white text-[15px] text-center pfont-600'>$0.0886777</p>
@@ -302,20 +326,21 @@ const Token = () => {
                                                     </div>
                                                 </TabList>
                                                 <TabPanel>
-                                                    <div>
+                                                    <form onSubmit={handleSubmit(onSubmit)}>
                                                         <div className="flex justify-between w-full gap-2">
                                                             <button
+                                                                type='button'
                                                                 className="text-xs py-1 px-2 pfont-400 rounded  bg-gray-800 text-gray-300">Switch
                                                                 to WW420
                                                             </button>
                                                             <button className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
-                                                            >Set max
-                                                                slippage
+                                                            >   Set max slippage
                                                             </button>
                                                         </div>
                                                         <div className="flex mt-3 flex-col">
                                                             <div className="flex items-center rounded-md relative">
                                                                 <input
+                                                                    {...register('value')}
                                                                     className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
                                                                     placeholder="0.0" type="number" />
                                                                 <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">ETH</span>
@@ -324,41 +349,57 @@ const Token = () => {
                                                                         alt="ETH" />
                                                                 </div>
                                                             </div>
-                                                            <div className="flex flex-wrap gap-3 mt-2  p-1 rounded-lg">
+                                                            <div className="flex flex-wrap gap-3  mt-2  py-1 rounded-lg">
                                                                 <button
+                                                                    type='button'
+                                                                    onClick={() => setValue('value', null)}
                                                                     className="text-xs py-1  px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
                                                                 </button>
                                                                 <button
+                                                                    type='button'
+                                                                    onClick={() => setValue('value', 0.25)}
                                                                     className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.25
                                                                     ETH
                                                                 </button>
                                                                 <button
+                                                                    type='button'
+                                                                    onClick={() => setValue('value', 0.5)}
                                                                     className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.5
                                                                     ETH
                                                                 </button>
                                                                 <button
+                                                                    type='button'
+                                                                    onClick={() => setValue('value', 1)}
                                                                     className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">1
                                                                     ETH
                                                                 </button>
                                                                 <button
+                                                                    type='button'
+                                                                    onClick={() => setValue('value', 2.5)}
                                                                     className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">2.5
                                                                     ETH
                                                                 </button>
                                                                 <button
+                                                                    type='button'
+                                                                    onClick={() => setValue('value', 5)}
                                                                     className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">5
                                                                     ETH
                                                                 </button>
                                                             </div>
+                                                            <div className='mt-1'>
+                                                                {price}
+                                                            </div>
                                                         </div>
                                                         <button
-                                                            className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black">
+                                                            type='submit'
+                                                            className="inline-flex mt-2 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black">
                                                             Place
                                                             Trade
                                                         </button>
-                                                    </div>
+                                                    </form>
                                                 </TabPanel>
                                                 <TabPanel>
-                                                    <div>
+                                                    <form>
                                                         <div className="flex justify-end w-full gap-2">
 
                                                             <button className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
@@ -378,32 +419,38 @@ const Token = () => {
                                                             </div>
                                                             <div className="flex mt-4  p-1 rounded-lg">
                                                                 <button
+                                                                    type='button'
                                                                     className="text-xs py-1 -ml-1 px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
                                                                 </button>
                                                                 <button
+                                                                    type='button'
                                                                     className="text-xs py-1 px-2 ml-1 rounded  pfont-400 bg-gray-800 text-gray-300">25%
 
                                                                 </button>
                                                                 <button
+                                                                    type='button'
                                                                     className="text-xs py-1 px-2 ml-1 rounded pfont-400 bg-gray-800 text-gray-300">50%
 
                                                                 </button>
                                                                 <button
+                                                                    type='button'
                                                                     className="text-xs py-1 px-2 ml-1 rounded pfont-400 bg-gray-800 text-gray-300">75%
 
                                                                 </button>
                                                                 <button
+                                                                    type='button'
                                                                     className="text-xs py-1 px-2 ml-1 rounded pfont-400 bg-gray-800 text-gray-300">100%
 
                                                                 </button>
                                                             </div>
                                                         </div>
                                                         <button
+                                                            type='submit'
                                                             className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black">
                                                             Place
                                                             Trade
                                                         </button>
-                                                    </div>
+                                                    </form>
                                                 </TabPanel>
                                             </Tabs>
                                         </div>
@@ -794,7 +841,10 @@ const Token = () => {
                                                 Pair
                                             </p>
                                             <div className='flex items-center gap-x-3'>
-                                                <div className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
+                                                <div onClick={() => {
+                                                    enqueueSnackbar('copied',{ autoHideDuration: 1000 })
+                                                    copy('FHjxJM4nU7YHCbwqsmRs5M89m6BG1FygopXsj4vFSRVy')
+                                                }} className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
                                                     <span>
                                                         <FaRegCopy className='text-sm' />
                                                     </span>
@@ -817,7 +867,10 @@ const Token = () => {
                                                 Brick Block
                                             </p>
                                             <div className='flex items-center gap-x-3'>
-                                                <div className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
+                                                <div onClick={() => {
+                                                    enqueueSnackbar('copied',{ autoHideDuration: 1000 })
+                                                    copy('FHjxJM4nU7YHCbwqsmRs5M89m6BG1FygopXsj4vFSRVy')
+                                                }} className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
                                                     <span>
                                                         <FaRegCopy className='text-sm' />
                                                     </span>
@@ -840,7 +893,10 @@ const Token = () => {
                                                 WETH
                                             </p>
                                             <div className='flex items-center gap-x-3'>
-                                                <div className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
+                                                <div onClick={() => {
+                                                    enqueueSnackbar('copied',{ autoHideDuration: 1000 })
+                                                    copy('FHjxJM4nU7YHCbwqsmRs5M89m6BG1FygopXsj4vFSRVy')
+                                                }} className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
                                                     <span>
                                                         <FaRegCopy className='text-sm' />
                                                     </span>

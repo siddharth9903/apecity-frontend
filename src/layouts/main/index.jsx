@@ -11,7 +11,7 @@ const Main = () => {
             <div className={`page-wrapper  ${toggle ? "toggled" : ""}`}>
                 {/* <Navbar /> */}
                 <main className="page-content bg-gray-50 dark:bg-slate-800">
-                    {/* <Topnav toggle={toggle} setToggle={setToggle} /> */}
+                    <Topnav toggle={toggle} setToggle={setToggle} />
                     <Outlet />
                     {/* <Footer /> */}
                 </main>
