@@ -11,7 +11,7 @@ export default function Comingsoon() {
         document.documentElement.classList.add('light')
 
         const interval = setInterval(() => {
-            let startDate = new Date('April 21, 2024 0:0:0');
+            let startDate = new Date('April 28, 2024 0:0:0');
             let currentDate = new Date();
             const diff = startDate.getTime() - currentDate.getTime();
 
