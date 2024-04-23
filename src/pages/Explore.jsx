@@ -25,7 +25,7 @@ const Explore = () => {
     return (
         <>
             <div className="container-fluid pt-[70px] bg-black">
-                <div className="bs-container">
+                <div className="bs-container-md max-md:px-3">
                     <div className="row">
                         <div className="col-12 pt-10">
                             <div className="flex justify-center">
@@ -36,40 +36,41 @@ const Explore = () => {
                         </div>
                         <div className="col-12 rounded-md mt-10 py-4 px-2 bg-[#28282d]">
                             <div className="row filter-section">
-                                <div className="col-4 px-2">
-                                    <h3 className="text-white roboto-500 ">Search :</h3>
+                                <div className="col-lg-4 col-xs-6 px-2">
+                                    <h3 className="text-white roboto-400 ">Search :</h3>
                                     <div className="mt-1.5 items-center border-[2px] rounded gap-x-2 border-[#4b4b50] px-4 flex">
-                                        <IoSearch  className="text-xl text-[#6e767d]"/>
+                                        <IoSearch className="text-xl text-[#6e767d]" />
                                         <input type="text" placeholder="Search" className="w-full text-white focus:outline-none  border-none bg-transparent placeholder:text-[#6e767d] roboto-400 rounded h-[42px]" />
                                     </div>
                                 </div>
-                                <div className="col-3 px-2">
-                                    <h3 className="text-white roboto-500 ">Sort By :</h3>
+                                <div className="col-lg-3 col-xs-6 max-xs:mt-4 px-2">
+                                    <h3 className="text-white roboto-400 ">Sort By :</h3>
                                     <div className="mt-1.5">
-                                        <Select  placeholder='Sort By' className="roboto-400" options={options} />
+                                        <Select placeholder='Sort By' className="roboto-400" options={options} />
                                     </div>
                                 </div>
-                                <div className="col-2 px-2">
-                                    <h3 className="text-white roboto-500 ">Order By :</h3>
+                                <div className="col-lg-2 max-lg:mt-4 col-6 px-2">
+                                    <h3 className="text-white roboto-400 ">Order By :</h3>
                                     <div className="mt-1.5">
                                         <Select placeholder='Order By' className="roboto-400" options={options1} />
                                     </div>
                                 </div>
-                                <div className="col-3 px-2">
+                                <div className="col-lg-3 max-lg:mt-4 col-6 px-2">
                                     <div>
-                                        <h3 className="text-white roboto-500 ">Reorder :</h3>
+                                        <h3 className="text-white roboto-400 ">Reorder :</h3>
                                         <div className="mt-1.5">
-                                            <Select  placeholder='Select' className="roboto-400" options={options2} />
+                                            <Select placeholder='Select' className="roboto-400" options={options2} />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div className="col-12 mb-3 mt-3">
+
+                        <div className="col-12  mb-3 mt-3">
+
                             <ExploreToken />
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

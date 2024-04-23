@@ -109,13 +109,47 @@ body {
 
 
 
-  
 
- 
- 
-  
- 
+.wallet-menu {
+    background-color: #212225 !important;
+    border-radius: 8px !important;
+    border: 1px solid #38393b !important;
+}
 
-  
- 
-  
+.szh-menu__divider {
+    background-color: #38393b !important;
+}
+
+.szh-menu__item {
+    padding: 0.4rem 1.1rem !important;
+}
+
+.menu-item1{
+    color:#9b9c9d !important;
+    letter-spacing: 0.5px !important;
+    font-family: $primaryfont !important;
+    font-weight: 400 !important;
+    background-color: #212225 !important;
+}
+.menu-item1-hover{
+    color:#9b9c9d !important;
+    letter-spacing: 0.5px !important;
+    font-family: $primaryfont !important;
+    font-weight: 400 !important;
+    background-color: #212225 !important;
+}
+.menu-item2 {
+    color: #ff886d !important;
+    letter-spacing: 0.5px !important;
+    font-family: $primaryfont !important;
+    font-weight: 400 !important;
+    background-color: #212225 !important;
+}
+
+.menu-item2-hover {
+    color: #ff886d !important;
+    letter-spacing: 0.5px !important;
+    font-family: $primaryfont !important;
+    font-weight: 400 !important;
+    background-color: #212225 !important;
+}

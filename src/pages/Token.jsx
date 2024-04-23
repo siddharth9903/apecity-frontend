@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
@@ -19,19 +19,21 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
+import { FaChartSimple } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 const Token = () => {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const [tabIndex, setTabIndex] = useState(0);
     const [tabIndex1, setTabIndex1] = useState(0);
     const [tabIndex2, setTabIndex2] = useState(0);
+    const [tabIndex3, setTabIndex3] = useState(0)
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
     const TradeSchema = Yup.object().shape({
 
     })
-    
+    const targetDivRef = useRef(null);
     const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(TradeSchema)
     })
@@ -42,28 +44,65 @@ const Token = () => {
         name: 'value',
         control
     });
-
+    const handleClick = () => {
+        if (targetDivRef.current) {
+            targetDivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            console.error("Target div with ref 'targetDivRef' not found.");
+        }
+    };
     const price = useMemo(() => {
         return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
     }, [value])
     return (
         <>
-            <div className="container-fluid pt-[70px] bg-black">
-                <div className='relative h-screen flex justify-between'>
-                    <div className="w-[calc(100%-400px)] h-screen overflow-y-auto absolute left-0 top-0 bg-[#17171c] token-left">
-                        <div className='w-full relative px-3 py-3 bg-[#17171c]'>
+            <div className="container-fluid pt-[56px] bg-black">
+                <div className='lg:relative lg:h-screen lg:flex lg:justify-between'>
+                    <div className={`lg:w-[calc(100%-400px)] ${tabIndex3 == 0 && 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-0 lg:top-0 bg-[#17171c] token-left`}>
+                        <div className='w-full max-lg:bottom-[50px] max-lg:left-0 fixed lg:relative px-3 py-3 bg-[#17171c]'>
                             <div className='absolute z-[11] h-full left-0 top-0'>
-                                <button onClick={()=>navigate('/')} className='h-full pl-2 bg-transparent'>
+                                <button onClick={() => navigate('/')} className='h-full pl-2 bg-transparent'>
                                     <FaCircleArrowLeft className='text-white text-xl' />
                                 </button>
                             </div>
                             <div className='pl-7'>
                                 <Swiper
-                                    slidesPerView={6}
-                                    spaceBetween={10}
                                     freeMode={true}
                                     modules={[FreeMode]}
-                                    className="mySwiper"
+                                    breakpoints={{
+                                        1600: {
+                                            slidesPerView: 6,
+                                            spaceBetween: 10
+                                        },
+                                        1400: {
+                                            slidesPerView: 5,
+                                            spaceBetween: 10
+                                        },
+                                        1200: {
+                                            slidesPerView: 4,
+                                            spaceBetween: 10
+                                        },
+                                        992: {
+                                            slidesPerView: 3,
+                                            spaceBetween: 10
+                                        },
+                                        768: {
+                                            slidesPerView: 4,
+                                            spaceBetween: 10
+                                        },
+                                        576: {
+                                            slidesPerView: 3,
+                                            spaceBetween: 10
+                                        },
+                                        400: {
+                                            slidesPerView: 2,
+                                            spaceBetween: 10
+                                        },
+                                        0: {
+                                            slidesPerView: 1,
+                                            spaceBetween: 10
+                                        }
+                                    }}
                                 >
                                     <SwiperSlide>
                                         <button className='flex items-center gap-x-2 py-1 bg-[#2e2e33] px-2 rounded-md'>
@@ -188,9 +227,6 @@ const Token = () => {
                                             </Tab> */}
 
                                         </TabList>
-                                        <div>
-
-                                        </div>
                                     </div>
                                     <TabPanel>
                                         <Transactions />
@@ -211,7 +247,7 @@ const Token = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="border-l h-screen overflow-y-auto absolute  right-0 top-0 border-[#5e5e6b] bg-[#17171c] w-[400px] token-right">
+                    <div className={`lg:border-l  ${tabIndex3 == 1 && 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute  lg:right-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[400px] token-right`}>
                         <div className='pb-10'>
                             <div className='bg-[#222227] px-3 py-2'>
                                 <div className='flex items-center justify-between'>
@@ -256,7 +292,7 @@ const Token = () => {
                             <div className='relative overflow-hidden '>
                                 <img className='hover:scale-105  transition-all duration-300' src="/images/token/token-bg-1.webp" alt="" />
                             </div>
-                            <div className='pl-4 pr-2'>
+                            <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex gap-x-[1px]'>
                                     <button className='bg-[#4b4b50] flex-1 rounded-s  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
                                         <img className='w-4' src="/images/icons/svg/web.svg" alt="" />
@@ -276,7 +312,7 @@ const Token = () => {
                                             Telegram
                                         </span>
                                     </button>
-                                    <button className='bg-[#4b4b50] rounded-e  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
+                                    <button onClick={handleClick} className='bg-[#4b4b50] rounded-e  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
 
                                         <span className=''>
                                             <FiChevronDown />
@@ -296,7 +332,7 @@ const Token = () => {
                                 <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
                                     <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: 4%</p>
                                     <div className='mt-2'>
-                                        <div className='rounded-full w-[90%] h-4 bg-[#374151]'>
+                                        <div className='rounded-full w-full sm:w-[90%] h-4 bg-[#374151]'>
                                             <a className='w-full' data-tooltip-id='bonding_curve' >
                                                 <div style={{ width: '80%' }} className='rounded-full cursor-pointer h-full bg-[#48bb78]'>
                                                 </div>
@@ -355,12 +391,7 @@ const Token = () => {
                                                                     onClick={() => setValue('value', null)}
                                                                     className="text-xs py-1  px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
                                                                 </button>
-                                                                <button
-                                                                    type='button'
-                                                                    onClick={() => setValue('value', 0.25)}
-                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.25
-                                                                    ETH
-                                                                </button>
+
                                                                 <button
                                                                     type='button'
                                                                     onClick={() => setValue('value', 0.5)}
@@ -406,7 +437,7 @@ const Token = () => {
                                                             >Set max slippage
                                                             </button>
                                                         </div>
-                                                        <div className="flex mt-4 flex-col">
+                                                        <div className="flex mt-3 flex-col">
                                                             <div className="flex items-center rounded-md relative ">
                                                                 <input
                                                                     className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
@@ -417,7 +448,7 @@ const Token = () => {
                                                                         alt="ETH" />
                                                                 </div>
                                                             </div>
-                                                            <div className="flex mt-4  p-1 rounded-lg">
+                                                            <div className="flex mt-2  p-1 rounded-lg">
                                                                 <button
                                                                     type='button'
                                                                     className="text-xs py-1 -ml-1 px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
@@ -842,7 +873,7 @@ const Token = () => {
                                             </p>
                                             <div className='flex items-center gap-x-3'>
                                                 <div onClick={() => {
-                                                    enqueueSnackbar('copied',{ autoHideDuration: 1000 })
+                                                    enqueueSnackbar('copied', { autoHideDuration: 1000 })
                                                     copy('FHjxJM4nU7YHCbwqsmRs5M89m6BG1FygopXsj4vFSRVy')
                                                 }} className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
                                                     <span>
@@ -868,7 +899,7 @@ const Token = () => {
                                             </p>
                                             <div className='flex items-center gap-x-3'>
                                                 <div onClick={() => {
-                                                    enqueueSnackbar('copied',{ autoHideDuration: 1000 })
+                                                    enqueueSnackbar('copied', { autoHideDuration: 1000 })
                                                     copy('FHjxJM4nU7YHCbwqsmRs5M89m6BG1FygopXsj4vFSRVy')
                                                 }} className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
                                                     <span>
@@ -894,7 +925,7 @@ const Token = () => {
                                             </p>
                                             <div className='flex items-center gap-x-3'>
                                                 <div onClick={() => {
-                                                    enqueueSnackbar('copied',{ autoHideDuration: 1000 })
+                                                    enqueueSnackbar('copied', { autoHideDuration: 1000 })
                                                     copy('FHjxJM4nU7YHCbwqsmRs5M89m6BG1FygopXsj4vFSRVy')
                                                 }} className='flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center'>
                                                     <span>
@@ -952,8 +983,8 @@ const Token = () => {
                                         <p className='pfont-400 text-white text-center'>198</p>
                                     </div>
                                 </div>
-                                <div className='pt-[2rem] mt-5'>
-                                    <div className='gradient-1 px-5 shadow-1 rounded-2xl'>
+                                <div ref={targetDivRef} className='pt-[2rem] mt-5'>
+                                    <div className='gradient-1 sm:px-5 shadow-1 rounded-2xl'>
                                         <div className='translate-y-[-2rem]'>
                                             <div className='flex justify-center'>
                                                 <img className='w-[30%]' src="/images/token/token1.webp" alt="" />
@@ -999,6 +1030,16 @@ const Token = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className={`lg:hidden flex justify-between w-full fixed left-0 bg-[#060606] bottom-0 h-[50px]`}>
+                    <button onClick={() => setTabIndex3(0)} className={`flex-1 outline-none gap-x-2 flex h-[50px] text-white justify-center items-center border-none  ${tabIndex3 == 0 ? 'bg-[#475dc0]' : 'bg-[#060606]'} `}>
+                        <span><FaInfoCircle /> </span>
+                        <span className='pfont-400'>Info</span>
+                    </button>
+                    <button onClick={() => setTabIndex3(1)} className={`flex-1 outline-none border-none h-[50px] gap-x-2 text-white flex justify-center items-center    ${tabIndex3 == 1 ? 'bg-[#475dc0]' : 'bg-[#060606]'}`}>
+                        <span><FaChartSimple /></span>
+                        <span className='pfont-400'>Chart+Txns</span>
+                    </button>
                 </div>
             </div>
 

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom";
 import SimpleBarReact from "simplebar-react";
 import 'simplebar-react/dist/simplebar.min.css';
-
+import { ControlledMenu, MenuDivider, MenuItem, useClick } from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
+import '@szhsin/react-menu/dist/transitions/slide.css';
 import { Menu, Bell, ShoppingCart, DollarSign, Truck } from 'feather-icons-react'
-import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2 } from "./../../../assets/icons/vander.jsx"
+import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2, FaUserCircle, FaWallet, SiBlueprint, AiOutlineDisconnect } from "./../../../assets/icons/vander.jsx"
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 export default function Topnav({ setToggle, toggle }) {
@@ -13,7 +15,9 @@ export default function Topnav({ setToggle, toggle }) {
     const onCloseModal = () => setOpen(false);
     const [notification, setNotification] = useState(false);
     const [userData, setUserData] = useState(false);
-
+    const ref = useRef(null);
+    const [open2, setOpen2] = useState(false);
+    const anchorProps = useClick(open2, setOpen2);
     useEffect(() => {
         let handlar = () => {
             setNotification(false)
@@ -104,8 +108,8 @@ export default function Topnav({ setToggle, toggle }) {
         <div className="top-header">
             <div className="header-bar">
                 <div>
-                    <div className="row items-center px-3 py-2.5">
-                        <div className="col-5">
+                    <div className="row px-3 sm:px-5 items-center lg:px-3 py-2.5">
+                        <div className="col-lg-4 col-md-2 col-sm-3 col-4">
                             <div className="flex items-center space-x-1">
                                 <Link to="#" className="flex items-center">
                                     {/* <img src={'/images/logo/logo.webp'} className="w-8" alt="" /> */}
@@ -126,21 +130,21 @@ export default function Topnav({ setToggle, toggle }) {
                     </div> */}
                             </div>
                         </div>
-                        <div className="col-2">
+                        <div className="col-lg-4 col-md-4 col-6 max-sm:hidden">
                             <div className="">
-                                <div className="flex items-center justify-center gap-x-4">
+                                <div className="flex items-center justify-center md:justify-start lg:justify-center gap-x-4">
                                     <div>
                                         <Link className="pfont-400 tracking-[1px] text-white" to={''}>Explore</Link>
                                     </div>
                                     <div>
-                                        <button onClick={onOpenModal} className="pfont-400 bg-transparent border-none tracking-[1px] text-white">BluePrint</button>
+                                        <button onClick={onOpenModal} className="pfont-400 bg-transparent border-none tracking-[1px] text-white">How it works</button>
                                         <Modal styles={{
                                             padding: 0
                                         }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
-                                            <div className='w-[600px] border py-6 px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
+                                            <div className='md:w-[600px] border px-4 py-4 sm:py-6 sm:px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
                                                 <div className='w-full   flex justify-center items-center'>
                                                     <div className="text-center">
-                                                        <h3 className="text-center tracking-[0.5px] pfont-500 text-white text-xl">Blueprints</h3>
+                                                        <h3 className="text-center tracking-[0.5px] pfont-500 text-white text-xl">How it works</h3>
                                                     </div>
                                                     {/* <div className="">
                                             <button onClick={onCloseModal} className="bg-transparent rounded p-1 border border-[#ffffff29]">
@@ -149,16 +153,16 @@ export default function Topnav({ setToggle, toggle }) {
                                         </div> */}
                                                 </div>
                                                 <div>
-                                                    <p className="pfont-400 tracking-[0.5px] text-white text-center">
+                                                    <p className="pfont-400 max-sm:text-sm tracking-[0.5px] text-white text-center">
                                                         Ape City is a fair-launch platform committed to ensuring secure and equitable on-chain trading. Each token launched on our platform is anti-rug, with no presales or team allocations, ensuring transparency and a level playing field for all users.
 
                                                     </p>
                                                     <h4 className="text-center tracking-[0.5px] mt-5 pfont-500 text-white text-lg">Get Started: </h4>
                                                     <div className="flex flex-col mt-4 gap-y-3">
-                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 1 :</span> Discover a coin that aligns with your interests and investment goals.</p>
-                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 2 :</span> Buy the coin on the bonding curve. </p>
-                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 3 :</span> Sell at any time to lock in your PnL.</p>
-                                                        <p className="text-gray-300 pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 4 :</span> When enough people buy on the bonding curve, your coin reaches a market cap of $69k, and all liquidity from the bonding curve will be paired with 206,900,000* [TOKEN_TICKER] on Uniswap, and the LP tokens are subsequently burned.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 1 :</span> Discover a coin that aligns with your interests and investment goals.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 2 :</span> Buy the coin on the bonding curve. </p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 3 :</span> Sell at any time to lock in your PnL.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 4 :</span> When enough people buy on the bonding curve, your coin reaches a market cap of $69k, and all liquidity from the bonding curve will be paired with 206,900,000* [TOKEN_TICKER] on Uniswap, and the LP tokens are subsequently burned.</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex mt-2 justify-center">
@@ -170,8 +174,8 @@ export default function Topnav({ setToggle, toggle }) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-5">
-                            <div className="flex justify-end items-center  space-x-2">
+                        <div className="col-lg-4 col-md-6 col-sm-3 col-8">
+                            <div className="flex justify-end items-center gap-x-5 md:gap-x-4">
                                 {/* <li className="dropdown inline-block relative">
                         <button data-dropdown-toggle="dropdown" className="dropdown-toggle btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white" type="button" onClick={notificationtoggle}>
                             <Bell className="h-4 w-4" />
@@ -249,23 +253,51 @@ export default function Topnav({ setToggle, toggle }) {
                             </SimpleBarReact>
                         </div>
                     </li> */}
-                                <div className="px-2">
+                                <div className="sm:hidden">
+                                    <button onClick={onOpenModal} className="bg-transparent flex items-center border-none outline-none">
+                                        <SiBlueprint className="text-white text-lg" />
+                                    </button>
+                                </div>
+                                <div className="">
                                     <a className="text-white" href="">
                                         <FaTwitter className="text-lg" />
                                     </a>
                                 </div>
-                                <div className="pl-2 pr-3">
+                                <div className="">
                                     <a className="text-white" href="">
                                         <FaTelegramPlane className="text-xl" />
                                     </a>
                                 </div>
                                 <div className="">
-                                    <Link to="#" id="connectWallet" className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center gap-x-2 px-4 py-2 rounded-md text-sm"><span className="pfont-500">Connect Wallet</span><BiWallet /></Link>
+                                    <Link to="#" ref={ref} {...anchorProps} className="md:bg-[#475dc0] transition-all duration-300 md:hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center md:gap-x-2 md:px-4 md:py-2 rounded-md text-sm"><span className="pfont-500 max-md:hidden">Connect Wallet</span><FaWallet className="text-lg md:hidden" /><BiWallet className="text-lg max-md:hidden" /></Link>
                                 </div>
                                 <div className="dropdown inline-block cursor-pointer relative">
                                     <button data-dropdown-toggle="dropdown" className="dropdown-toggle  cursor-pointer mt-1 items-center" type="button">
-                                        <span className="" onClick={userHandler}><img className='w-10 cursor-pointer' src={'/images/icons/png/user.png'} alt="" /></span>
+                                        <span className="" onClick={userHandler}><FaUserCircle className="text-[#999999] text-[25px]" /> </span>
                                     </button>
+                                    <ControlledMenu
+                                        state={open2 ? 'open' : 'closed'}
+                                        anchorRef={ref}
+                                        onClose={() => setOpen2(false)}
+                                        arrow={false}
+                                        align="end"
+                                        gap={12}
+                                        menuClassName="wallet-menu"
+                                    >
+                                        <MenuItem className={({ hover }) => hover ? 'menu-item1-hover' : 'menu-item1'}>
+                                            <div className="gap-x-3 flex items-center">
+                                                <span><FaWallet /></span>
+                                                <span>Change Wallet</span>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuDivider />
+                                        <MenuItem className={({ hover }) => hover ? 'menu-item2-hover' : 'menu-item2'}>
+                                            <div className="flex gap-x-3 items-center">
+                                                <span><AiOutlineDisconnect className="text-xl" /></span>
+                                                <span>Disconnect Wallet</span>
+                                            </div>
+                                        </MenuItem>
+                                    </ControlledMenu>
                                     {/* <div className={`dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 ${userData ? "block" : "hidden"}`} >
                             <div className="relative">
                                 <div className="py-8 bg-gradient-to-tr from-violet-600 to-red-600"></div>

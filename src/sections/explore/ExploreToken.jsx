@@ -10,21 +10,23 @@ const ExploreToken = () => {
     const [items, setItems] = useState(initialItems);
     useEffect(() => {
         const interval = setInterval(() => {
-          const shuffledItems = [...items].sort(() => Math.random() - 0.5);
-          setItems(shuffledItems);
-        }, 3000); 
-    
+            const shuffledItems = [...items].sort(() => Math.random() - 0.5);
+            setItems(shuffledItems);
+        }, 3000);
+
         return () => clearInterval(interval);
-      }, [items]); 
+    }, [items]);
     return (
         <>
-            <table className="w-full border-separate border-spacing-y-3">
-                <Reorder.Group as="tbody" axis="y" onReorder={setItems} values={items}>
-                    {items.map((item) => (
-                        <Item key={item} item={item} />
-                    ))}
-                </Reorder.Group>
-            </table>
+            <div className="overflow-x-auto">
+                <table className="md:w-full max-md:w-[720px] max-md:overflow-x-auto border-separate border-spacing-y-3">
+                    <Reorder.Group as="tbody" axis="y" onReorder={setItems} values={items}>
+                        {items.map((item) => (
+                            <Item key={item} item={item} />
+                        ))}
+                    </Reorder.Group>
+                </table>
+            </div>
             <div className="my-4">
                 <div className="flex gap-x-5 items-center justify-center">
                     <div className="h-9 w-9  rounded-full bg-[#475dc0] hover:bg-blue-500 cursor-pointer shadow-gray-700 flex justify-center items-center">
@@ -51,7 +53,7 @@ export const Item = ({ item }) => {
     const boxShadow = useRaisedShadow(y);
     const navigate = useNavigate()
     return (
-        <Reorder.Item as="tr" onClick={()=>navigate('/token')} value={item} id={item} className="bg-[#28282d] hover:bg-[#39393e] cursor-pointer rounded-md" style={{ boxShadow, y }}>
+        <Reorder.Item as="tr" onClick={() => navigate('/token')} value={item} id={item} className="bg-[#28282d] hover:bg-[#39393e] cursor-pointer rounded-md" style={{ boxShadow, y }}>
             <td className="w-[40%] px-4 py-4">
                 <div className="flex items-center gap-x-2">
                     <span className="text-sm text-[#848489] pfont-400">#</span>
