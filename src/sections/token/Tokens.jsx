@@ -1,7 +1,7 @@
 const Tokens = () => {
     return (
         <>
-            <table className="w-full border-separate border-spacing-y-3">
+            <table className="min-[845px]:w-full w-[800px] border-separate border-spacing-y-3">
                 <tbody>
                     {Array.from({ length: 40 }).map((item, index) => (
                         <tr key={index} className="bg-[#28282d] hover:bg-[#39393e] rounded-md">

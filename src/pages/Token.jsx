@@ -30,9 +30,17 @@ const Token = () => {
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
     const onCloseModal = () => setOpen(false);
+    const [open1, setOpen1] = useState(false);
+    const onOpenModal1 = () => setOpen1(true);
+    const onCloseModal1 = () => setOpen1(false);
+    const [open2, setOpen2] = useState(false);
+    const onOpenModal2 = () => setOpen2(true);
+    const [eth, setETH] = useState(true)
+    const onCloseModal2 = () => setOpen2(false);
     const TradeSchema = Yup.object().shape({
 
     })
+
     const targetDivRef = useRef(null);
     const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(TradeSchema)
@@ -59,7 +67,7 @@ const Token = () => {
             <div className="container-fluid pt-[56px] bg-black">
                 <div className='lg:relative lg:h-screen lg:flex lg:justify-between'>
                     <div className={`lg:w-[calc(100%-400px)] ${tabIndex3 == 0 && 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-0 lg:top-0 bg-[#17171c] token-left`}>
-                        <div className='w-full max-lg:bottom-[50px] max-lg:left-0 fixed lg:relative px-3 py-3 bg-[#17171c]'>
+                        <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
                             <div className='absolute z-[11] h-full left-0 top-0'>
                                 <button onClick={() => navigate('/')} className='h-full pl-2 bg-transparent'>
                                     <FaCircleArrowLeft className='text-white text-xl' />
@@ -68,44 +76,46 @@ const Token = () => {
                             <div className='pl-7'>
                                 <Swiper
                                     freeMode={true}
+                                    slidesPerView={'auto'}
+                                    spaceBetween={12}
                                     modules={[FreeMode]}
-                                    breakpoints={{
-                                        1600: {
-                                            slidesPerView: 6,
-                                            spaceBetween: 10
-                                        },
-                                        1400: {
-                                            slidesPerView: 5,
-                                            spaceBetween: 10
-                                        },
-                                        1200: {
-                                            slidesPerView: 4,
-                                            spaceBetween: 10
-                                        },
-                                        992: {
-                                            slidesPerView: 3,
-                                            spaceBetween: 10
-                                        },
-                                        768: {
-                                            slidesPerView: 4,
-                                            spaceBetween: 10
-                                        },
-                                        576: {
-                                            slidesPerView: 3,
-                                            spaceBetween: 10
-                                        },
-                                        400: {
-                                            slidesPerView: 2,
-                                            spaceBetween: 10
-                                        },
-                                        0: {
-                                            slidesPerView: 1,
-                                            spaceBetween: 10
-                                        }
-                                    }}
+                                // breakpoints={{
+                                //     1600: {
+                                //         slidesPerView: 6,
+                                //         spaceBetween: 10
+                                //     },
+                                //     1400: {
+                                //         slidesPerView: 5,
+                                //         spaceBetween: 10
+                                //     },
+                                //     1200: {
+                                //         slidesPerView: 4,
+                                //         spaceBetween: 10
+                                //     },
+                                //     992: {
+                                //         slidesPerView: 3,
+                                //         spaceBetween: 10
+                                //     },
+                                //     768: {
+                                //         slidesPerView: 4,
+                                //         spaceBetween: 10
+                                //     },
+                                //     576: {
+                                //         slidesPerView: 3,
+                                //         spaceBetween: 10
+                                //     },
+                                //     400: {
+                                //         slidesPerView: 2,
+                                //         spaceBetween: 10
+                                //     },
+                                //     0: {
+                                //         slidesPerView: 1,
+                                //         spaceBetween: 10
+                                //     }
+                                // }}
                                 >
-                                    <SwiperSlide>
-                                        <button className='flex items-center gap-x-2 py-1 bg-[#2e2e33] px-2 rounded-md'>
+                                    <SwiperSlide style={{ width: '174px' }}>
+                                        <button className='flex items-center w-full gap-x-2 py-1 bg-[#2e2e33] px-2 rounded-md'>
                                             <span className='text-sm text-[#A7A7AC]'>#1</span>
                                             <img className='w-5' src="/images/icons/svg/blerf.webp" alt="" />
                                             <span className='text-white pfont-600 uppercase'>blerf</span>
@@ -114,8 +124,8 @@ const Token = () => {
                                     </SwiperSlide>
                                     {
                                         Array.from({ length: 7 }).map((_, index) => (
-                                            <SwiperSlide key={index}>
-                                                <button className='flex items-center gap-x-2 py-1  px-2 rounded-md'>
+                                            <SwiperSlide style={{ width: '174px' }} key={index}>
+                                                <button className='flex w-[174px] h-[32px] items-center gap-x-2 py-1  px-2 rounded-md'>
                                                     <span className='text-sm text-[#A7A7AC]'>#{index + 2}</span>
                                                     <img className='w-5' src="/images/icons/svg/blerf.webp" alt="" />
                                                     <span className='text-white pfont-600 uppercase'>blerf</span>
@@ -137,7 +147,7 @@ const Token = () => {
                                     <Modal styles={{
                                         padding: 0
                                     }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
-                                        <div className='w-[800px] flex gap-y-2 flex-col bg-[#1d1d22] h-[70vh]'>
+                                        <div className='lg:w-[800px] flex gap-y-2 flex-col bg-[#1d1d22] h-[70vh]'>
                                             <div className='bg-[#28282d]  w-full  py-2 px-3 flex items-center justify-between'>
                                                 <div>
 
@@ -162,7 +172,7 @@ const Token = () => {
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div className='flex-1 px-3 tokens-table-wrapper overflow-y-auto'>
+                                            <div className='flex-1 px-3 tokens-table-wrapper overflow-x-auto overflow-y-auto'>
                                                 <Tokens />
                                             </div>
                                             <div className='bg-[#28282d]  w-full  py-3 px-3'>
@@ -290,7 +300,7 @@ const Token = () => {
                                 </div>
                             </div>
                             <div className='relative overflow-hidden '>
-                                <img className='hover:scale-105  transition-all duration-300' src="/images/token/token-bg-1.webp" alt="" />
+                                <img className='hover:scale-105 w-full  transition-all duration-300' src="/images/token/token-bg-1.webp" alt="" />
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex gap-x-[1px]'>
@@ -330,7 +340,10 @@ const Token = () => {
                                     </div>
                                 </div>
                                 <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
-                                    <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: 4%</p>
+                                    <div className='flex items-center gap-x-2'>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: 4%</p>
+                                        <FaInfoCircle data-tooltip-id='bonding_curve' className='text-[#8e94a0] cursor-pointer' />
+                                    </div>
                                     <div className='mt-2'>
                                         <div className='rounded-full w-full sm:w-[90%] h-4 bg-[#374151]'>
                                             <a className='w-full' data-tooltip-id='bonding_curve' >
@@ -364,62 +377,91 @@ const Token = () => {
                                                 <TabPanel>
                                                     <form onSubmit={handleSubmit(onSubmit)}>
                                                         <div className="flex justify-between w-full gap-2">
-                                                            <button
-                                                                type='button'
-                                                                className="text-xs py-1 px-2 pfont-400 rounded  bg-gray-800 text-gray-300">Switch
-                                                                to WW420
-                                                            </button>
-                                                            <button className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
+                                                            {
+                                                                eth ?
+                                                                    <button
+                                                                        type='button'
+                                                                        onClick={() => setETH(false)}
+                                                                        className="text-xs py-1 px-2 pfont-400 rounded  bg-gray-800 text-gray-300">Switch
+                                                                        to LEGIT
+                                                                    </button> :
+                                                                    <button
+                                                                        type='button'
+                                                                        onClick={() => setETH(true)}
+                                                                        className="text-xs py-1 px-2 pfont-400 rounded  bg-gray-800 text-gray-300">Switch
+                                                                        to ETH
+                                                                    </button>
+                                                            }
+                                                            <button onClick={onOpenModal1} className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
                                                             >   Set max slippage
                                                             </button>
                                                         </div>
                                                         <div className="flex mt-3 flex-col">
-                                                            <div className="flex items-center rounded-md relative">
-                                                                <input
-                                                                    {...register('value')}
-                                                                    className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
-                                                                    placeholder="0.0" type="number" />
-                                                                <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">ETH</span>
-                                                                    <img className="w-7 h-7 rounded-full"
-                                                                        src="/images/logo/eth.svg"
-                                                                        alt="ETH" />
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex flex-wrap gap-3  mt-2  py-1 rounded-lg">
-                                                                <button
-                                                                    type='button'
-                                                                    onClick={() => setValue('value', null)}
-                                                                    className="text-xs py-1  px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
-                                                                </button>
+                                                            {
+                                                                eth ?
+                                                                    <div className="flex items-center rounded-md relative">
+                                                                        <input
+                                                                            {...register('value')}
+                                                                            className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
+                                                                            placeholder="0.0" type="number" />
+                                                                        <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">ETH</span>
+                                                                            <img className="w-7 h-7 rounded-full"
+                                                                                src="/images/logo/eth.svg"
+                                                                                alt="ETH" />
+                                                                        </div>
+                                                                    </div> :
+                                                                    <div className="flex items-center rounded-md relative">
+                                                                        <input
+                                                                            // {...register('value')}
+                                                                            className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
+                                                                            placeholder="0.0" type="number" />
+                                                                        <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">LEGIT</span>
+                                                                            <img className="w-7 h-7 rounded-full"
+                                                                                src="/images/token/legit.jpeg"
+                                                                                alt="ETH" />
+                                                                        </div>
+                                                                    </div>
+                                                            }
+                                                            {
+                                                                eth ?
+                                                                    <>
+                                                                        <div className="flex flex-wrap gap-3  mt-2  py-1 rounded-lg">
+                                                                            <button
+                                                                                type='button'
+                                                                                onClick={() => setValue('value', null)}
+                                                                                className="text-xs py-1  px-2 rounded pfont-400  bg-gray-800 text-gray-300">Reset
+                                                                            </button>
 
-                                                                <button
-                                                                    type='button'
-                                                                    onClick={() => setValue('value', 0.5)}
-                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.5
-                                                                    ETH
-                                                                </button>
-                                                                <button
-                                                                    type='button'
-                                                                    onClick={() => setValue('value', 1)}
-                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">1
-                                                                    ETH
-                                                                </button>
-                                                                <button
-                                                                    type='button'
-                                                                    onClick={() => setValue('value', 2.5)}
-                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">2.5
-                                                                    ETH
-                                                                </button>
-                                                                <button
-                                                                    type='button'
-                                                                    onClick={() => setValue('value', 5)}
-                                                                    className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">5
-                                                                    ETH
-                                                                </button>
-                                                            </div>
-                                                            <div className='mt-1'>
-                                                                {price}
-                                                            </div>
+                                                                            <button
+                                                                                type='button'
+                                                                                onClick={() => setValue('value', 0.5)}
+                                                                                className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">0.5
+                                                                                ETH
+                                                                            </button>
+                                                                            <button
+                                                                                type='button'
+                                                                                onClick={() => setValue('value', 1)}
+                                                                                className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">1
+                                                                                ETH
+                                                                            </button>
+                                                                            <button
+                                                                                type='button'
+                                                                                onClick={() => setValue('value', 2.5)}
+                                                                                className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">2.5
+                                                                                ETH
+                                                                            </button>
+                                                                            <button
+                                                                                type='button'
+                                                                                onClick={() => setValue('value', 5)}
+                                                                                className="text-xs py-1 px-2  rounded pfont-400 bg-gray-800 text-gray-300">5
+                                                                                ETH
+                                                                            </button>
+                                                                        </div>
+                                                                        <div className='mt-1'>
+                                                                            {price}
+                                                                        </div>
+                                                                    </> : null
+                                                            }
                                                         </div>
                                                         <button
                                                             type='submit'
@@ -433,7 +475,7 @@ const Token = () => {
                                                     <form>
                                                         <div className="flex justify-end w-full gap-2">
 
-                                                            <button className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
+                                                            <button onClick={onOpenModal2} className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
                                                             >Set max slippage
                                                             </button>
                                                         </div>
@@ -510,7 +552,7 @@ const Token = () => {
                                             </div>
                                         </TabList>
                                         <TabPanel >
-                                            <div className='border rounded-b flex py-4 px-4 border-[#343439]'>
+                                            <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
                                                         <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
@@ -526,7 +568,7 @@ const Token = () => {
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
-                                                    <div className='flex flex-col gap-y-5'>
+                                                    <div className='flex flex-col gap-y-3'>
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
@@ -592,7 +634,7 @@ const Token = () => {
                                             </div>
                                         </TabPanel>
                                         <TabPanel >
-                                            <div className='border rounded-b flex py-4 px-4 border-[#343439]'>
+                                            <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
                                                         <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
@@ -608,7 +650,7 @@ const Token = () => {
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
-                                                    <div className='flex flex-col gap-y-5'>
+                                                    <div className='flex flex-col gap-y-3'>
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
@@ -674,7 +716,7 @@ const Token = () => {
                                             </div>
                                         </TabPanel>
                                         <TabPanel >
-                                            <div className='border rounded-b flex py-4 px-4 border-[#343439]'>
+                                            <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
                                                         <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
@@ -690,7 +732,7 @@ const Token = () => {
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
-                                                    <div className='flex flex-col gap-y-5'>
+                                                    <div className='flex flex-col gap-y-3'>
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
@@ -756,7 +798,7 @@ const Token = () => {
                                             </div>
                                         </TabPanel>
                                         <TabPanel >
-                                            <div className='border rounded-b flex py-4 px-4 border-[#343439]'>
+                                            <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
                                                         <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
@@ -772,7 +814,7 @@ const Token = () => {
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
-                                                    <div className='flex flex-col gap-y-5'>
+                                                    <div className='flex flex-col gap-y-3'>
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
@@ -999,12 +1041,12 @@ const Token = () => {
                                                         Website
                                                     </span>
                                                 </button>
-                                                <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
+                                                {/* <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
                                                     <img className='w-4' src="/images/icons/svg/web.svg" alt="" />
                                                     <span className='pfont-600 ml-2 text-sm'>
                                                         Docs
                                                     </span>
-                                                </button>
+                                                </button> */}
                                                 <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
                                                     <BsTwitterX className='text-sm' />
                                                     <span className='pfont-600 ml-2 text-sm'>
@@ -1042,7 +1084,60 @@ const Token = () => {
                     </button>
                 </div>
             </div>
+            <Modal styles={{
+                padding: 0
+            }} open={open1} showCloseIcon={false} blockScroll={false} onClose={onCloseModal1} center>
+                <div className='sm:w-[470px] border px-5 py-5 sm:py-6 sm:px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
+                    <div className='w-full   flex justify-center items-center'>
+                        <div className="text-center">
+                            <h3 className="text-center tracking-[0.5px] roboto-400 text-white text-lg">Set max. slippage (%)</h3>
 
+                        </div>
+                    </div>
+                    <div>
+                        <div className="flex items-center rounded-md relative">
+                            <input
+
+                                className="flex h-11 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
+                                placeholder="0.0" type="number" />
+
+                        </div>
+                    </div>
+                    <div>
+                        <p className='text-center tracking-[0.5px] mt-2.5 mb-2 pfont-400 text-white text-sm'>This is the maximum amount of slippage you are willing to accept when placing trades</p>
+                    </div>
+                    <div className="flex  justify-center">
+                        <button onClick={onCloseModal1} className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 w-full text-center justify-center py-2.5 rounded-md">Close</button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal styles={{
+                padding: 0
+            }} open={open2} showCloseIcon={false} blockScroll={false} onClose={onCloseModal2} center>
+                <div className='sm:w-[470px] border px-5 py-5 sm:py-6 sm:px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
+                    <div className='w-full   flex justify-center items-center'>
+                        <div className="text-center">
+                            <h3 className="text-center tracking-[0.5px] roboto-400 text-white text-lg">Set max. slippage (%)</h3>
+
+                        </div>
+                    </div>
+                    <div>
+                        <div className="flex items-center rounded-md relative">
+                            <input
+
+                                className="flex h-11 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
+                                placeholder="0.0" type="number" />
+
+                        </div>
+                    </div>
+                    <div>
+                        <p className='text-center tracking-[0.5px] mt-2.5 mb-2 pfont-400 text-white text-sm'>This is the maximum amount of slippage you are willing to accept when placing trades</p>
+                    </div>
+                    <div className="flex  justify-center">
+                        <button onClick={onCloseModal2} className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 w-full text-center justify-center py-2.5 rounded-md">Close</button>
+                    </div>
+                </div>
+            </Modal>
         </>
     )
 }

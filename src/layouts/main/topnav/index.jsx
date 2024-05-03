@@ -112,8 +112,8 @@ export default function Topnav({ setToggle, toggle }) {
                         <div className="col-lg-4 col-md-2 col-sm-3 col-4">
                             <div className="flex items-center space-x-1">
                                 <Link to="#" className="flex items-center">
-                                    {/* <img src={'/images/logo/logo.webp'} className="w-8" alt="" /> */}
-                                    <span className="text-white lilita-400 tracking-[2px] text-2xl">Ape city</span>
+                                    <img src={'/images/logo/logo1.png'} className="w-12" alt="" />
+                                    {/* <span className="text-white lilita-400 tracking-[2px] text-2xl">Ape city</span> */}
                                     {/* <span className="md:block hidden">
                             <img src={'/images/logo/logo-dark.png'} className="inline-block dark:hidden" alt="" />
                             <img src={'/images/logo/logo-light.png'} className="hidden dark:inline-block" alt="" />
@@ -137,14 +137,14 @@ export default function Topnav({ setToggle, toggle }) {
                                         <Link className="pfont-400 tracking-[1px] text-white" to={''}>Explore</Link>
                                     </div>
                                     <div>
-                                        <button onClick={onOpenModal} className="pfont-400 bg-transparent border-none tracking-[1px] text-white">How it works</button>
+                                        <button onClick={onOpenModal} className="pfont-400 bg-transparent border-none tracking-[1px] text-white">Blueprint</button>
                                         <Modal styles={{
                                             padding: 0
                                         }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
                                             <div className='md:w-[600px] border px-4 py-4 sm:py-6 sm:px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
                                                 <div className='w-full   flex justify-center items-center'>
                                                     <div className="text-center">
-                                                        <h3 className="text-center tracking-[0.5px] pfont-500 text-white text-xl">How it works</h3>
+                                                        <h3 className="text-center tracking-[0.5px] pfont-500 text-white text-xl">Blueprint</h3>
                                                     </div>
                                                     {/* <div className="">
                                             <button onClick={onCloseModal} className="bg-transparent rounded p-1 border border-[#ffffff29]">
@@ -154,15 +154,17 @@ export default function Topnav({ setToggle, toggle }) {
                                                 </div>
                                                 <div>
                                                     <p className="pfont-400 max-sm:text-sm tracking-[0.5px] text-white text-center">
-                                                        Ape City is a fair-launch platform committed to ensuring secure and equitable on-chain trading. Each token launched on our platform is anti-rug, with no presales or team allocations, ensuring transparency and a level playing field for all users.
+                                                    Ape City is a fair-launch platform ensuring secure and equitable on-chain trading. Each token launched through our platform is anti-rug, with no presales or team allocations. This enhances transparency and a level playing field for all users.
+
 
                                                     </p>
                                                     <h4 className="text-center tracking-[0.5px] mt-5 pfont-500 text-white text-lg">Get Started: </h4>
                                                     <div className="flex flex-col mt-4 gap-y-3">
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 1 :</span> Discover a coin that aligns with your interests and investment goals.</p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 2 :</span> Buy the coin on the bonding curve. </p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 3 :</span> Sell at any time to lock in your PnL.</p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 4 :</span> When enough people buy on the bonding curve, your coin reaches a market cap of $69k, and all liquidity from the bonding curve will be paired with 206,900,000* [TOKEN_TICKER] on Uniswap, and the LP tokens are subsequently burned.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 1 :</span> Discover a token that aligns with your interests and investment goals.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 2 :</span> Buy the token on its bonding curve, a mechanism that adjusts the price dynamically as more tokens are purchased. </p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 3 :</span> Sell your token at any time to realize your PnL.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 4 :</span> Once your token reaches a market cap of $69,000*, a liquidity pool is automatically created on Uniswap.</p>
+                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 5 :</span> The LP tokens generated from this liquidity pool are burned, enhancing the token’s liquidity and potentially increasing its value.</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex mt-2 justify-center">

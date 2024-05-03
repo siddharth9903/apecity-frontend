@@ -29,29 +29,30 @@ const Create = () => {
                         <FaCircleArrowLeft className='text-white text-2xl' />
                         <span className='text-white sm:hidden pfont-500'>Go back</span>
                     </button>
+                    
                 </div>
                 <div className="row py-10 justify-center">
-                    <div className="col-xxl-4 col-lg-5 col-md-7 col-sm-9 col-11 bg-[#28282d] shadow-1 rounded-md p-7">
+                    <div  className="col-xxl-4 col-lg-5 col-md-7 col-sm-9 col-11 bg-black border-[2px] border-[#27272a]  rounded-md p-7">
                         <div>
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className='flex flex-col gap-y-4'>
                                     <div>
                                         <label className='roboto-400 tracking-[0.5px] text-white'>Name :</label>
-                                        <input className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
+                                        <input className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
                                     </div>
                                     <div>
                                         <label className='roboto-400 tracking-[0.5px] text-white'>Ticker :</label>
-                                        <input className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
+                                        <input className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
                                     </div>
                                     <div>
                                         <label className='roboto-400 tracking-[0.5px] text-white'>Logo :</label>
-                                        <div className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-3 px-3 outline-none focus:outline-none'>
+                                        <div className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-3 px-3 outline-none focus:outline-none'>
                                             <input type="file" />
                                         </div>
                                     </div>
                                     <div>
                                         <label className='roboto-400 tracking-[0.5px] text-white'>Description :</label>
-                                        <textarea rows={4} className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
+                                        <textarea rows={4} className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
                                     </div>
                                     <div>
                                         <div onClick={() => setOpen1(!open1)} className='flex gap-x-1.5 items-center  cursor-pointer'>
@@ -62,25 +63,25 @@ const Create = () => {
                                             <div className='flex gap-y-3 flex-col pt-3 pb-2'>
                                                 <div>
                                                     <label className='roboto-400 tracking-[0.5px] text-white'>Twitter :</label>
-                                                    <input className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
+                                                    <input className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
                                                 </div>
                                                 <div>
                                                     <label className='roboto-400 tracking-[0.5px] text-white'>Telegram :</label>
-                                                    <input className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
+                                                    <input className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50] bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
                                                 </div>
                                                 <div>
                                                     <label className='roboto-400 tracking-[0.5px] text-white'>Website :</label>
-                                                    <input className='w-full border-[2px] border-[#4b4b50]  bg-[#28282d] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
+                                                    <input className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none' type="text" />
                                                 </div>
                                             </div>
                                         </Collapse>
                                     </div>
 
                                     <div>
-                                        <button type='submit' className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 text-center border-none w-full text-white flex justify-center items-center tracking-[1px] roboto-500 gap-x-2 px-4 py-2.5 rounded-md">
+                                        <button type='submit' className=" bg-gradient-to-br from-zinc-900 to-zinc-900   dark:bg-zinc-800  transition-all duration-300  hover:scale-105 text-center border-none w-full text-white flex justify-center items-center tracking-[1px] roboto-500 gap-x-2 px-4 py-2.5 rounded-md">
                                             Create Coin
                                         </button>
-                                        <p className='text-white mt-2 roboto-400'>Cost to deploy: ~0.02 ETH</p>
+                                        <p className='text-white mt-3.5 roboto-400'>Cost to deploy: ~0.02 ETH</p>
                                     </div>
                                 </div>
                             </form>
@@ -97,7 +98,7 @@ const Create = () => {
                                     </div>
                                     <div className="flex mb-2 justify-end w-full gap-2">
 
-                                        <button className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
+                                        <button className="text-xs py-1 pfont-400 px-2  rounded bg-gray-800 text-gray-300" type="button"
                                         >Switch to sdvcdf
                                         </button>
                                     </div>
