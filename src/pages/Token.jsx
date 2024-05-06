@@ -64,7 +64,7 @@ const Token = () => {
     }, [value])
     return (
         <>
-            <div className="container-fluid pt-[56px] bg-black">
+            <div className="container-fluid pt-[69px] bg-black">
                 <div className='lg:relative lg:h-screen lg:flex lg:justify-between'>
                     <div className={`lg:w-[calc(100%-400px)] ${tabIndex3 == 0 && 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-0 lg:top-0 bg-[#17171c] token-left`}>
                         <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
@@ -473,23 +473,52 @@ const Token = () => {
                                                 </TabPanel>
                                                 <TabPanel>
                                                     <form>
-                                                        <div className="flex justify-end w-full gap-2">
-
+                                                        <div className="flex justify-between w-full gap-2">
+                                                            {
+                                                                eth ?
+                                                                    <button
+                                                                        type='button'
+                                                                        onClick={() => setETH(false)}
+                                                                        className="text-xs py-1 px-2 pfont-400 rounded  bg-gray-800 text-gray-300">Switch
+                                                                        to LEGIT
+                                                                    </button> :
+                                                                    <button
+                                                                        type='button'
+                                                                        onClick={() => setETH(true)}
+                                                                        className="text-xs py-1 px-2 pfont-400 rounded  bg-gray-800 text-gray-300">Switch
+                                                                        to ETH
+                                                                    </button>
+                                                            }
                                                             <button onClick={onOpenModal2} className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300" type="button"
                                                             >Set max slippage
                                                             </button>
                                                         </div>
                                                         <div className="flex mt-3 flex-col">
-                                                            <div className="flex items-center rounded-md relative ">
-                                                                <input
-                                                                    className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
-                                                                    id="amount" placeholder="0.0" type="number" />
-                                                                <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">WW420</span>
-                                                                    <img className="w-8 h-8 rounded-full"
-                                                                        src="/images/logo/ww4.jpeg"
-                                                                        alt="ETH" />
-                                                                </div>
-                                                            </div>
+                                                            {
+                                                                eth ?
+                                                                    <div className="flex items-center rounded-md relative">
+                                                                        <input
+                                                                            {...register('value')}
+                                                                            className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
+                                                                            placeholder="0.0" type="number" />
+                                                                        <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">ETH</span>
+                                                                            <img className="w-7 h-7 rounded-full"
+                                                                                src="/images/logo/eth.svg"
+                                                                                alt="ETH" />
+                                                                        </div>
+                                                                    </div> :
+                                                                    <div className="flex items-center rounded-md relative">
+                                                                        <input
+                                                                            // {...register('value')}
+                                                                            className="flex h-10 rounded-md border pfont-400 border-slate-200 px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none   disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300 bg-transparent text-white outline-none w-full pl-3"
+                                                                            placeholder="0.0" type="number" />
+                                                                        <div className="flex items-center ml-2 absolute right-2"><span className="text-white pfont-400 mr-2">LEGIT</span>
+                                                                            <img className="w-7 h-7 rounded-full"
+                                                                                src="/images/token/legit.jpeg"
+                                                                                alt="ETH" />
+                                                                        </div>
+                                                                    </div>
+                                                            }
                                                             <div className="flex mt-2  p-1 rounded-lg">
                                                                 <button
                                                                     type='button'
@@ -534,20 +563,20 @@ const Token = () => {
                                         <TabList>
                                             <div className='flex'>
                                                 <Tab className={`flex-1 py-2 rounded-s cursor-pointer ${tabIndex1 == 0 ? 'bg-[#343439]' : 'bg-transparent'} border border-[#343439]`}>
-                                                    <p className={`${tabIndex1 == 0 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-sm `}>5M</p>
-                                                    <p className='text-[#b0dc73] pfont-600 text-center'>0.16%</p>
+                                                    <p className={`${tabIndex1 == 0 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-xs `}>5M</p>
+                                                    <p className='text-[#b0dc73] pfont-600 text-center text-sm'>0.16%</p>
                                                 </Tab>
                                                 <Tab className={`flex-1 py-2 cursor-pointer ${tabIndex1 == 1 ? 'bg-[#343439]' : 'bg-transparent'} border border-[#343439]`}>
-                                                    <p className={`${tabIndex1 == 1 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-sm `}>1H</p>
-                                                    <p className='text-[#d0332a] pfont-600 text-center'>-0.16%</p>
+                                                    <p className={`${tabIndex1 == 1 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-xs `}>1H</p>
+                                                    <p className='text-[#d0332a] pfont-600 text-center text-sm'>-0.16%</p>
                                                 </Tab>
                                                 <Tab className={`flex-1 py-2 rounded-s cursor-pointer ${tabIndex1 == 2 ? 'bg-[#343439]' : 'bg-transparent'} border border-[#343439]`}>
-                                                    <p className={`${tabIndex1 == 2 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-sm `}>1H</p>
-                                                    <p className='text-[#b0dc73] pfont-600 text-center'>0.16%</p>
+                                                    <p className={`${tabIndex1 == 2 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-xs `}>1H</p>
+                                                    <p className='text-[#b0dc73] pfont-600 text-center text-sm'>0.16%</p>
                                                 </Tab>
                                                 <Tab className={`flex-1 py-2 cursor-pointer rounded-e ${tabIndex1 == 3 ? 'bg-[#343439]' : 'bg-transparent'} border border-[#343439]`}>
-                                                    <p className={`${tabIndex1 == 3 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-sm `}>1H</p>
-                                                    <p className='text-[#d0332a] pfont-600 text-center'>-0.16%</p>
+                                                    <p className={`${tabIndex1 == 3 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'} text-center text-xs `}>1H</p>
+                                                    <p className='text-[#d0332a] pfont-600 text-center text-sm'>-0.16%</p>
                                                 </Tab>
                                             </div>
                                         </TabList>
@@ -555,16 +584,16 @@ const Token = () => {
                                             <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>1205</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>TXNS</p>
+                                                        <p className='pfont-500 text-white text-sm'>1205</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>volume</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>$2.4M</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>volume</p>
+                                                        <p className='pfont-500 text-white text-sm'>$2.4M</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>makers</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>555</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>makers</p>
+                                                        <p className='pfont-500 text-white text-sm'>555</p>
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
@@ -572,12 +601,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byus</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byus</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sells</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sells</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -592,12 +621,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byu vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byu vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sell vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sell vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -612,12 +641,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byuers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byuers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sellers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sellers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -637,16 +666,16 @@ const Token = () => {
                                             <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>1205</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>TXNS</p>
+                                                        <p className='pfont-500 text-white text-sm'>1205</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>volume</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>$2.4M</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>volume</p>
+                                                        <p className='pfont-500 text-white text-sm'>$2.4M</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>makers</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>555</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>makers</p>
+                                                        <p className='pfont-500 text-white text-sm'>555</p>
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
@@ -654,12 +683,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byus</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byus</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sells</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sells</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -674,12 +703,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byu vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byu vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sell vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sell vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -694,12 +723,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byuers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byuers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sellers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sellers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -719,16 +748,16 @@ const Token = () => {
                                             <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>1205</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>TXNS</p>
+                                                        <p className='pfont-500 text-white text-sm'>1205</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>volume</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>$2.4M</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>volume</p>
+                                                        <p className='pfont-500 text-white text-sm'>$2.4M</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>makers</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>555</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>makers</p>
+                                                        <p className='pfont-500 text-white text-sm'>555</p>
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
@@ -736,12 +765,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byus</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byus</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sells</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sells</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -756,12 +785,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byu vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byu vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sell vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sell vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -776,12 +805,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byuers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byuers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sellers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sellers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -801,16 +830,16 @@ const Token = () => {
                                             <div className='border rounded-b flex py-3 px-3 border-[#343439]'>
                                                 <div className='pr-7 border-r flex flex-col justify-between border-[#343439]'>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>TXNS</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>1205</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>TXNS</p>
+                                                        <p className='pfont-500 text-white text-sm'>1205</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>volume</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>$2.4M</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>volume</p>
+                                                        <p className='pfont-500 text-white text-sm'>$2.4M</p>
                                                     </div>
                                                     <div className=''>
-                                                        <p className={`pfont-500 text-[#797979] uppercase text-sm`}>makers</p>
-                                                        <p className='pfont-500 text-white text-[17px]'>555</p>
+                                                        <p className={`pfont-500 text-[#797979] uppercase text-xs`}>makers</p>
+                                                        <p className='pfont-500 text-white text-sm'>555</p>
                                                     </div>
                                                 </div>
                                                 <div className='flex-1 pl-4'>
@@ -818,12 +847,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byus</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byus</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sells</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sells</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -838,12 +867,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byu vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byu vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sell vol</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>$442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sell vol</p>
+                                                                    <p className='pfont-400 text-white text-sm'>$442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
@@ -858,12 +887,12 @@ const Token = () => {
                                                         <div>
                                                             <div className='flex justify-between'>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>byuers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>1062</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>byuers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>1062</p>
                                                                 </div>
                                                                 <div>
-                                                                    <p className={`pfont-500 text-[#797979] uppercase text-sm`}>sellers</p>
-                                                                    <p className='pfont-400 text-white text-[17px]'>442</p>
+                                                                    <p className={`pfont-500 text-[#797979] uppercase text-xs`}>sellers</p>
+                                                                    <p className='pfont-400 text-white text-sm'>442</p>
                                                                 </div>
                                                             </div>
                                                             <div className='flex mt-1 gap-x-1'>
