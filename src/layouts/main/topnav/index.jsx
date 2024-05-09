@@ -9,6 +9,7 @@ import { Menu, Bell, ShoppingCart, DollarSign, Truck } from 'feather-icons-react
 import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2, FaUserCircle, FaWallet, SiBlueprint, AiOutlineDisconnect } from "./../../../assets/icons/vander.jsx"
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
+import ConnectButton from "../../../components/ConnectButton.jsx";
 export default function Topnav({ setToggle, toggle }) {
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
@@ -38,72 +39,72 @@ export default function Topnav({ setToggle, toggle }) {
     const toggleHandler = () => {
         setToggle(!toggle)
     }
-    const metamask = async () => {
-        try {
-            //Basic Actions Section
-            const onboardButton = document.getElementById('connectWallet')
+    // const metamask = async () => {
+    //     try {
+    //         //Basic Actions Section
+    //         const onboardButton = document.getElementById('connectWallet')
 
-            //   metamask modal
-            const modal = document.getElementById('modal-metamask')
-            const closeModalBtn = document.getElementById('close-modal')
+    //         //   metamask modal
+    //         const modal = document.getElementById('modal-metamask')
+    //         const closeModalBtn = document.getElementById('close-modal')
 
-            //   wallet address
-            const myPublicAddress = document.getElementById('myPublicAddress')
+    //         //   wallet address
+    //         const myPublicAddress = document.getElementById('myPublicAddress')
 
-            //Created check function to see if the MetaMask extension is installed
-            const isMetaMaskInstalled = () => {
-                //Have to check the ethereum binding on the window object to see if it's installed
-                const { ethereum } = window
-                return Boolean(ethereum && ethereum.isMetaMask)
-            }
+    //         //Created check function to see if the MetaMask extension is installed
+    //         const isMetaMaskInstalled = () => {
+    //             //Have to check the ethereum binding on the window object to see if it's installed
+    //             const { ethereum } = window
+    //             return Boolean(ethereum && ethereum.isMetaMask)
+    //         }
 
-            const onClickConnect = async () => {
-                if (!isMetaMaskInstalled()) {
-                    //meta mask not installed
-                    modal.classList.add('show')
-                    modal.style.display = 'block'
-                    return
-                }
-                try {
-                    // eslint-disable-next-line no-undef
-                    await ethereum.request({ method: 'eth_requestAccounts' })
-                    // eslint-disable-next-line no-undef
-                    const accounts = await ethereum.request({ method: 'eth_accounts' })
-                    myPublicAddress.innerHTML =
-                        accounts[0].split('').slice(0, 6).join('') +
-                        '...' +
-                        accounts[0]
-                            .split('')
-                            .slice(accounts[0].length - 7, accounts[0].length)
-                            .join('')
-                } catch (error) {
-                    console.error(error)
-                }
-            }
+    //         const onClickConnect = async () => {
+    //             if (!isMetaMaskInstalled()) {
+    //                 //meta mask not installed
+    //                 modal.classList.add('show')
+    //                 modal.style.display = 'block'
+    //                 return
+    //             }
+    //             try {
+    //                 // eslint-disable-next-line no-undef
+    //                 await ethereum.request({ method: 'eth_requestAccounts' })
+    //                 // eslint-disable-next-line no-undef
+    //                 const accounts = await ethereum.request({ method: 'eth_accounts' })
+    //                 myPublicAddress.innerHTML =
+    //                     accounts[0].split('').slice(0, 6).join('') +
+    //                     '...' +
+    //                     accounts[0]
+    //                         .split('')
+    //                         .slice(accounts[0].length - 7, accounts[0].length)
+    //                         .join('')
+    //             } catch (error) {
+    //                 console.error(error)
+    //             }
+    //         }
 
-            const closeModal = () => {
-                modal.classList.remove('show')
-                modal.style.display = 'none'
-            }
+    //         const closeModal = () => {
+    //             modal.classList.remove('show')
+    //             modal.style.display = 'none'
+    //         }
 
-            if (isMetaMaskInstalled()) {
-                // eslint-disable-next-line no-undef
-                const accounts = await ethereum.request({ method: 'eth_accounts' })
-                if (!!accounts[0]) {
-                    myPublicAddress.innerHTML =
-                        accounts[0].split('').slice(0, 6).join('') +
-                        '...' +
-                        accounts[0]
-                            .split('')
-                            .slice(accounts[0].length - 7, accounts[0].length)
-                            .join('')
-                }
-            }
+    //         if (isMetaMaskInstalled()) {
+    //             // eslint-disable-next-line no-undef
+    //             const accounts = await ethereum.request({ method: 'eth_accounts' })
+    //             if (!!accounts[0]) {
+    //                 myPublicAddress.innerHTML =
+    //                     accounts[0].split('').slice(0, 6).join('') +
+    //                     '...' +
+    //                     accounts[0]
+    //                         .split('')
+    //                         .slice(accounts[0].length - 7, accounts[0].length)
+    //                         .join('')
+    //             }
+    //         }
 
-            onboardButton.addEventListener('click', onClickConnect)
-            closeModalBtn.addEventListener('click', closeModal)
-        } catch (error) { }
-    }
+    //         onboardButton.addEventListener('click', onClickConnect)
+    //         closeModalBtn.addEventListener('click', closeModal)
+    //     } catch (error) { }
+    // }
     return (
         <div className="top-header">
             <div className="header-bar">
@@ -271,7 +272,8 @@ export default function Topnav({ setToggle, toggle }) {
                                     </a>
                                 </div>
                                 <div className="">
-                                    <Link to="#" ref={ref} {...anchorProps} className="md:bg-[#475dc0] transition-all duration-300 md:hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center md:gap-x-2 md:px-4 md:py-2 rounded-md text-sm"><span className="pfont-500 max-md:hidden">Connect Wallet</span><FaWallet className="text-lg md:hidden" /><BiWallet className="text-lg max-md:hidden" /></Link>
+                                    <ConnectButton />
+                                    {/* <Link to="#" ref={ref} {...anchorProps} className="md:bg-[#475dc0] transition-all duration-300 md:hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center md:gap-x-2 md:px-4 md:py-2 rounded-md text-sm"><span className="pfont-500 max-md:hidden">Connect Wallet</span><FaWallet className="text-lg md:hidden" /><BiWallet className="text-lg max-md:hidden" /></Link> */}
                                 </div>
                                 <div className="dropdown inline-block cursor-pointer relative">
                                     <button data-dropdown-toggle="dropdown" className="dropdown-toggle  cursor-pointer mt-1 items-center" type="button">

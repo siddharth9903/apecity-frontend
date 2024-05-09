@@ -1,3 +1,142 @@
+// import { useMemo, useState } from 'react';
+// import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+// import { BsChatSquare, BsThreeDotsVertical, BsTwitter, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
+// import Transactions from '../sections/token/Transactions';
+// import { shortenText } from '../utils/helper';
+// import { Tooltip } from 'react-tooltip';
+// import Holders from '../sections/token/Holders';
+// import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import 'swiper/css';
+// import 'swiper/css/free-mode';
+// import { FreeMode } from 'swiper/modules';
+// import 'react-responsive-modal/styles.css';
+// import { Modal } from 'react-responsive-modal';
+// import Tokens from '../sections/token/Tokens';
+// import { FaCircleArrowLeft } from "react-icons/fa6";
+// import { useForm, useWatch } from 'react-hook-form';
+// import * as Yup from 'yup';
+// import { yupResolver } from '@hookform/resolvers/yup';
+// import { enqueueSnackbar } from 'notistack';
+// import copy from 'copy-to-clipboard';
+// import { FaChartSimple } from "react-icons/fa6";
+// import { useNavigate, useParams } from 'react-router-dom';
+// import { useQuery } from '@apollo/client';
+// import { TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
+
+// const Token = () => {
+//     const navigate = useNavigate();
+//     const { tokenAddress } = useParams();
+
+//     const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
+//         variables: { id: tokenAddress },
+//     });
+
+//     const [tradesPage, setTradesPage] = useState(1);
+//     const tradesPageSize = 10;
+
+//     const { data: tradesData, loading: tradesLoading, error: tradesError } = useQuery(TOKEN_TRADES_QUERY, {
+//         variables: {
+//             bondingCurveId: tokenData?.token?.bondingCurve?.id,
+//             first: tradesPageSize,
+//             skip: (tradesPage - 1) * tradesPageSize,
+//         },
+//         skip: !tokenData?.token?.bondingCurve?.id,
+//     });
+
+//     const [tabIndex, setTabIndex] = useState(0);
+//     const [tabIndex1, setTabIndex1] = useState(0);
+//     const [tabIndex2, setTabIndex2] = useState(0);
+//     const [tabIndex3, setTabIndex3] = useState(0);
+//     const [open, setOpen] = useState(false);
+//     const onOpenModal = () => setOpen(true);
+//     const onCloseModal = () => setOpen(false);
+//     const [open1, setOpen1] = useState(false);
+//     const onOpenModal1 = () => setOpen1(true);
+//     const onCloseModal1 = () => setOpen1(false);
+//     const [open2, setOpen2] = useState(false);
+//     const onOpenModal2 = () => setOpen2(true);
+//     const [eth, setETH] = useState(true);
+//     const onCloseModal2 = () => setOpen2(false);
+
+//     const TradeSchema = Yup.object().shape({});
+
+//     const { register, control, setValue, handleSubmit } = useForm({
+//         resolver: yupResolver(TradeSchema),
+//     });
+
+//     const onSubmit = (values) => { };
+
+//     const value = useWatch({
+//         name: 'value',
+//         control,
+//     });
+
+//     const handleClick = () => {
+//         const targetDivRef = document.getElementById('targetDiv');
+//         if (targetDivRef) {
+//             targetDivRef.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//         } else {
+//             console.error("Target div with id 'targetDiv' not found.");
+//         }
+//     };
+
+//     const price = useMemo(() => {
+//         return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
+//     }, [value]);
+
+//     if (tokenLoading || tradesLoading) {
+//         return <div>Loading...</div>;
+//     }
+
+//     if (tokenError || tradesError) {
+//         return <div>Error: {tokenError?.message || tradesError?.message}</div>;
+//     }
+
+//     const token = tokenData?.token;
+//     const bondingCurve = token?.bondingCurve;
+//     const trades = tradesData?.trades;
+
+//     return (
+//         <>
+//             <div className="container-fluid pt-[69px] bg-black">
+//                 <div className="lg:relative lg:h-screen lg:flex lg:justify-between">
+//                     <div className={`lg:w-[calc(100%-400px)] ${tabIndex3 == 0 && 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-0 lg:top-0 bg-[#17171c] token-left`}>
+//                         {/* ... */}
+//                         <div className="w-full flex-1">
+//                             <div>
+//                                 <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+//                                     {/* ... */}
+//                                     <TabPanel>
+//                                         <Transactions trades={trades} />
+//                                     </TabPanel>
+//                                     {/* ... */}
+//                                 </Tabs>
+//                             </div>
+//                         </div>
+//                     </div>
+//                     <div className={`lg:border-l  ${tabIndex3 == 1 && 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute  lg:right-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[400px] token-right`}>
+//                         {/* ... */}
+//                         <div className="pb-10">
+//                             {/* ... */}
+//                             <div className="mt-4 px-3">
+//                                 {/* ... */}
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//                 <div className={`lg:hidden flex justify-between w-full fixed left-0 bg-[#060606] bottom-0 h-[50px]`}>
+//                     {/* ... */}
+//                 </div>
+//             </div>
+//             {/* ... */}
+//         </>
+//     );
+// };
+
+// export default Token;
+
+
 import { useMemo, useRef, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
@@ -20,9 +159,18 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
 import { FaChartSimple } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
+import TokenDetails from '../sections/token/TokenDetails';
+import TradeComponent from '../sections/token/TradeComponent';
+import { formatNumber } from '../utils/formats';
+
+
 const Token = () => {
     const navigate = useNavigate()
+    let { tokenAddress } = useParams();
+
     const [tabIndex, setTabIndex] = useState(0);
     const [tabIndex1, setTabIndex1] = useState(0);
     const [tabIndex2, setTabIndex2] = useState(0);
@@ -40,6 +188,41 @@ const Token = () => {
     const TradeSchema = Yup.object().shape({
 
     })
+
+    const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
+        variables: { id: tokenAddress },
+    });
+
+    const [tradesPage, setTradesPage] = useState(1);
+    const tradesPageSize = 10;
+
+    const { data: tradesData, loading: tradesLoading, error: tradesError } = useQuery(TOKEN_TRADES_QUERY, {
+        variables: {
+            bondingCurveId: tokenData?.token?.bondingCurve?.id,
+            first: tradesPageSize,
+            skip: (tradesPage - 1) * tradesPageSize,
+        },
+        skip: !tokenData?.token?.bondingCurve?.id,
+    });
+
+    console.log('tokenData', tokenData)
+    console.log('tradesData', tradesData)
+
+
+    // if (tokenLoading || tradesLoading) {
+    //     return <div>Loading...</div>;
+    // }
+
+    // if (tokenError || tradesError) {
+    //     return <div>Error: {tokenError?.message || tradesError?.message}</div>;
+    // }
+
+
+    const token = tokenData?.token;
+    const bondingCurve = token?.bondingCurve;
+    const trades = tradesData?.trades;
+    const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
+    const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
 
     const targetDivRef = useRef(null);
     const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
@@ -62,6 +245,10 @@ const Token = () => {
     const price = useMemo(() => {
         return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
     }, [value])
+
+    console.log("tokenAddress",tokenAddress)
+
+
     return (
         <>
             <div className="container-fluid pt-[69px] bg-black">
@@ -123,7 +310,7 @@ const Token = () => {
                                         </button>
                                     </SwiperSlide>
                                     {
-                                        Array.from({ length: 7 }).map((_, index) => (
+                                        Array.from({ length: 7 })?.map((_, index) => (
                                             <SwiperSlide style={{ width: '174px' }} key={index}>
                                                 <button className='flex w-[174px] h-[32px] items-center gap-x-2 py-1  px-2 rounded-md'>
                                                     <span className='text-sm text-[#A7A7AC]'>#{index + 2}</span>
@@ -239,20 +426,8 @@ const Token = () => {
                                         </TabList>
                                     </div>
                                     <TabPanel>
-                                        <Transactions />
+                                        <Transactions trades={trades} />
                                     </TabPanel>
-                                    <TabPanel>
-                                        <Transactions />
-                                    </TabPanel>
-                                    {/* <TabPanel>
-                                        <Orders />
-                                    </TabPanel> */}
-                                    <TabPanel>
-                                        <Holders />
-                                    </TabPanel>
-                                    {/* <TabPanel>
-                                        <Providers />
-                                    </TabPanel> */}
                                 </Tabs>
                             </div>
                         </div>
@@ -263,7 +438,7 @@ const Token = () => {
                                 <div className='flex items-center justify-between'>
                                     <div className='flex items-center gap-x-2'>
                                         <img className='w-7' src="/images/token/token1.webp" alt="" />
-                                        <p className='space-500 text-[17px] text-white'>Brick Block</p>
+                                        <p className='space-500 text-[17px] text-white'>{token?.name}</p>
                                     </div>
                                     <div className='border cursor-pointer hover:bg-[#ffffff14] py-1.5 px-1.5 flex justify-center items-center border-[#ffffff29] rounded'>
                                         <BsThreeDotsVertical className='text-white' />
@@ -274,7 +449,7 @@ const Token = () => {
                                 <div>
                                     <div className='flex gap-x-2 justify-center items-center'>
                                         <div className='flex gap-x-1 justify-center items-center'>
-                                            <span className='text-white text-[17px] space-600'>Brick Block</span>
+                                            <span className='text-white text-[17px] space-600'>{token?.name}</span>
                                             <span className='text-[#A7A7AC]'><FaRegCopy /></span>
                                         </div>
                                         <span className='text-white'>/</span>
@@ -336,31 +511,55 @@ const Token = () => {
                                     </div>
                                     <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                         <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
-                                        <p className='text-white text-[15px] text-center pfont-600'>0.0886777 WETH</p>
+                                        <p className='text-white text-[15px] text-center pfont-600'>{bondingCurve?.currentPrice} WETH</p>
                                     </div>
                                 </div>
-                                <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
+                                {/* <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
                                     <div className='flex items-center gap-x-2'>
-                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: 4%</p>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
                                         <FaInfoCircle data-tooltip-id='bonding_curve' className='text-[#8e94a0] cursor-pointer' />
                                     </div>
                                     <div className='mt-2'>
-                                        <div className='rounded-full w-full sm:w-[90%] h-4 bg-[#374151]'>
+                                        <div className={`rounded-full w-full sm:w-[100%] h-4 bg-[#374151]`}>
                                             <a className='w-full' data-tooltip-id='bonding_curve' >
-                                                <div style={{ width: '80%' }} className='rounded-full cursor-pointer h-full bg-[#48bb78]'>
+                                                <div style={{ width: '80%' }} className='srounded-full cursor-pointer h-full bg-[#48bb78]'>
                                                 </div>
                                             </a>
                                             <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
                                                 <div className='w-[330px]'>
                                                     <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are 769,105,722 tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
                                                 </div>
                                             </Tooltip>
                                         </div>
                                     </div>
 
+                                </div> */}
+                                <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
+                                    <div className='flex items-center gap-x-2'>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
+                                        <FaInfoCircle data-tooltip-id='bonding_curve' className='text-[#8e94a0] cursor-pointer' />
+                                    </div>
+                                    <div className='mt-2'>
+                                        <div className={`rounded-full w-full sm:w-[100%] h-4 bg-[#374151] relative`}>
+                                            <a className='w-full' data-tooltip-id='bonding_curve'>
+                                                <div style={{ width: `${bondingCurveProgess}%` }} className='srounded-full cursor-pointer h-full bg-[#48bb78] absolute top-0 left-0'>
+                                                </div>
+                                            </a>
+                                            <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
+                                                <div className='w-[330px]'>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
+                                                </div>
+                                            </Tooltip>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className='mt-3'>
+
+                                {
+                                    token  && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve}/>
+                                }
+                                {/* <div className='mt-3'>
                                     <div className="grid gap-x-4 gap-y-2">
                                         <div className="border border-[#343439] px-4 py-3 rounded-lg  text-gray-400 grid gap-4">
                                             <Tabs selectedIndex={tabIndex2} onSelect={(index) => setTabIndex2(index)}>
@@ -557,8 +756,13 @@ const Token = () => {
                                             </Tabs>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='mt-4'>
+                                </div> */}
+                                
+                                {
+                                    token && trades && <TokenDetails token={token} trades={trades} />
+                                }
+                                
+                                {/* <div className='mt-4'>
                                     <Tabs selectedIndex={tabIndex1} onSelect={(index) => setTabIndex1(index)}>
                                         <TabList>
                                             <div className='flex'>
@@ -1017,7 +1221,7 @@ const Token = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div className='flex mt-5 gap-x-2'>
                                     <div className='flex-1 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
                                         <BsTwitterX className='text-white  text-sm' />
@@ -1028,7 +1232,7 @@ const Token = () => {
                                         <p className='text-white text-sm text-center pfont-500'>Other Pairs</p>
                                     </div>
                                 </div>
-                                <div className='flex mt-5 gap-x-2'>
+                                {/* <div className='flex mt-5 gap-x-2'>
                                     <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
                                         <div className='flex justify-center'>
                                             <img src="/images/icons/svg/rocket.svg" alt="" />
@@ -1053,7 +1257,7 @@ const Token = () => {
                                         </div>
                                         <p className='pfont-400 text-white text-center'>198</p>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div ref={targetDivRef} className='pt-[2rem] mt-5'>
                                     <div className='gradient-1 sm:px-5 shadow-1 rounded-2xl'>
                                         <div className='translate-y-[-2rem]'>

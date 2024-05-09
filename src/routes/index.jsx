@@ -14,7 +14,7 @@ const Router = () => {
               element:<Explore />
             },
             {
-              path:'token',
+              path:'token/:tokenAddress',
               element:<Token />
             },
             {
