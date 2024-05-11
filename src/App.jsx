@@ -20,8 +20,9 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Web3ModalProvider>
-        <Router />
-        <SnackbarProvider />
+        <SnackbarProvider>        
+          <Router />
+        </SnackbarProvider>
         {/* <Switcher /> */}
       </Web3ModalProvider>
     </ApolloProvider>

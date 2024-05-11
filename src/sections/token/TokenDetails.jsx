@@ -35,7 +35,6 @@ const TokenDetails = ({ token, trades }) => {
             };
 
             trades.forEach((trade) => {
-                stats.volumeEth += parseFloat(trade.inAmount);
                 stats.makers.add(trade.user.id);
 
                 if (trade.type === 'BUY') {
@@ -51,7 +50,7 @@ const TokenDetails = ({ token, trades }) => {
 
             setTradeStats({
                 txns: stats.txns,
-                volumeEth: stats.volumeEth,
+                volumeEth: stats.buyVolEth + stats.sellVolEth,
                 makers: stats.makers.size,
                 buys: stats.buys,
                 sells: stats.sells,

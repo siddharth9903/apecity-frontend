@@ -2,7 +2,7 @@
 import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 import { WagmiProvider } from 'wagmi';
-import { defineChain } from 'viem';
+import { defineChain, http } from 'viem';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { vLocalChain, vTenderlyBaseChain } from '../../tenderly.config';
 // import { hardhat } from 'wagmi/chains';
@@ -15,29 +15,6 @@ const metadata = {
     icons: ['https://yourapp.com/favicon.ico'],
 };
 
-// // Create a custom chain configuration for your Tenderly chain
-// const tenderlyChain = defineChain({
-//     id: 8453, // Replace with your Tenderly chain ID
-//     name: 'BaseTenderly Chain',
-//     network: 'base-tenderly',
-//     nativeCurrency: {
-//         decimals: 18,
-//         name: 'ETH',
-//         symbol: 'ETH',
-//     },
-//     rpcUrls: {
-//         default: {
-//             http: ['https://virtual.base.rpc.tenderly.co/431b304f-522f-416d-99ec-cd50deb63c8a'], // Replace with your Tenderly RPC URL
-//         },
-//     },
-//     blockExplorers: {
-//         default: {
-//             name: 'Base Tenderly Explorer',
-//             url: 'https://dashboard.tenderly.co/explorer/vnet/431b304f-522f-416d-99ec-cd50deb63c8a', // Replace with your Tenderly explorer URL
-//         },
-//     },
-//     // testnet: true,
-// });
 
 // const config = defaultWagmiConfig({
 //     autoConnect: true,
@@ -55,13 +32,41 @@ const config = defaultWagmiConfig({
     chains: [vTenderlyBaseChain],
     projectId,
     metadata,
+    transports: {
+        [vTenderlyBaseChain.id]: http('https://virtual.base.rpc.tenderly.co/7817edf3-f43a-4498-9cf9-c44c0164e1ed'),
+    },
 });
+
+// const config2 = createConfig({
+//     chains: [vTenderlyBaseChain],
+//     transports: {
+//         [vTenderlyBaseChain.id]: http('https://virtual.base.rpc.tenderly.co/7817edf3-f43a-4498-9cf9-c44c0164e1ed'),
+//     },
+//     publicClient: () => createPublicClient({ chain: vTenderlyBaseChain }),
+//     webSocketPublicClient: () => createPublicClient({ chain: vTenderlyBaseChain, transport: WebSocketTransport() }),
+//     connectors: [new InjectedConnector({ chains })],
+//     chains: [vTenderlyBaseChain],
+//     projectId,
+//     metadata,
+
+//     // connectors: [
+//     //     walletConnect({ projectId, metadata, showQrModal: false }),
+//     //     injected({ shimDisconnect: true }),
+//     //     coinbaseWallet({
+//     //         appName: metadata.name,
+//     //         appLogoUrl: metadata.icons[0]
+//     //     })
+//     // ]
+// })
+
 
 createWeb3Modal({
     wagmiConfig: config,
     projectId,
     enableAnalytics: true,
     enableOnramp: true,
+    allowUnsupportedChain: true,
+    defaultChain: vTenderlyBaseChain
 });
 
 export function Web3ModalProvider({ children }) {

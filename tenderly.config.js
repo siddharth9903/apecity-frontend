@@ -21,7 +21,7 @@ export const vTenderlyBaseChain = defineChain({
             url: 'https://dashboard.tenderly.co/explorer/vnet/7817edf3-f43a-4498-9cf9-c44c0164e1ed', // Replace with your Tenderly explorer URL
         },
     },
-    // testnet: true,
+    testnet: true,
 });
 
 // Create a custom chain configuration for your Tenderly chain
