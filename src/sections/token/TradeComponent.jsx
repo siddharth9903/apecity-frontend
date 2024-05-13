@@ -57,10 +57,10 @@ const TradeComponent = ({ token, bondingCurve }) => {
     const { register, control, setValue, handleSubmit, watch, formState: { errors: formErrors } } = useForm({
         resolver: yupResolver(TradeSchema),
         defaultValues: {
-            buyAmountEth: '',
-            buyAmountToken: '',
-            sellAmountEth: '',
-            sellAmountToken: ''
+            buyAmountEth: '0',
+            buyAmountToken: '0',
+            sellAmountEth: '0',
+            sellAmountToken: '0'
         },
     });
 
@@ -121,6 +121,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
 
     const onSubmit = async (values) => {
         try {
+            console.log('im in')
             let value = 0
             if (tabIndex === TradeType.BUY) {
                 if (ethTrade) {
@@ -170,6 +171,8 @@ const TradeComponent = ({ token, bondingCurve }) => {
         }
     };
 
+    console.log('formErrors',formErrors)
+
 
     return (
         <div className='mt-3'>
@@ -206,13 +209,13 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             Switch to ETH
                                         </button>
                                     )}
-                                    <button
+                                    {/* <button
                                         onClick={onOpenModal1}
                                         className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300"
                                         type="button"
                                     >
                                         Set max slippage
-                                    </button>
+                                    </button> */}
                                 </div>
                                 <div className="flex mt-3 flex-col">
                                     {ethTrade ? (
@@ -299,13 +302,13 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             Switch to ETH
                                         </button>
                                     )}
-                                    <button
+                                    {/* <button
                                         onClick={onOpenModal2}
                                         className="text-xs py-1 pfont-400 px-2 rounded bg-gray-800 text-gray-300"
                                         type="button"
                                     >
                                         Set max slippage
-                                    </button>
+                                    </button> */}
                                 </div>
                                 <div className="flex mt-3 flex-col">
                                     {ethTrade ? (

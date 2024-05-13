@@ -67,7 +67,7 @@ const TokenDetails = ({ token, trades }) => {
     return (
         <div className="mt-4">
             <Tabs selectedIndex={tabIndex1} onSelect={(index) => setTabIndex1(index)}>
-                {/* <TabList>
+                <TabList>
                     <div className="flex">
                         <Tab
                             className={`flex-1 py-2 rounded-s cursor-pointer ${tabIndex1 === 0 ? 'bg-[#343439]' : 'bg-transparent'
@@ -77,12 +77,12 @@ const TokenDetails = ({ token, trades }) => {
                                 className={`${tabIndex1 === 0 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'
                                     } text-center text-xs`}
                             >
-                                5M
+                                Bondingcurve lifetime
                             </p>
-                            <p className="text-[#b0dc73] pfont-600 text-center text-sm">0.16%</p>
+                            {/* <p className="text-[#b0dc73] pfont-600 text-center text-sm">0.16%</p> */}
                         </Tab>
                     </div>
-                </TabList> */}
+                </TabList>
                 <TabPanel>
                     <div className="border rounded-b flex py-3 px-3 border-[#343439]">
                         <div className="pr-7 border-r flex flex-col justify-between border-[#343439]">

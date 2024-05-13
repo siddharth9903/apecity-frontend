@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
-import { shortenText } from '../utils/helper';
+import { shortenText, timestampToDate } from '../utils/helper';
 import { Tooltip } from 'react-tooltip';
 import Holders from '../sections/token/Holders';
 import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
@@ -26,11 +26,14 @@ import { TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries
 import TokenDetails from '../sections/token/TokenDetails';
 import TradeComponent from '../sections/token/TradeComponent';
 import { formatNumber } from '../utils/formats';
+import Datafeed from '../datafeed';
+import { createChart } from 'lightweight-charts';
 
 
 const Token = () => {
     const navigate = useNavigate()
     let { tokenAddress } = useParams();
+    const chartContainerRef = useRef(null);
 
     const [tabIndex, setTabIndex] = useState(0);
     const [tabIndex1, setTabIndex1] = useState(0);
@@ -46,9 +49,9 @@ const Token = () => {
     const onOpenModal2 = () => setOpen2(true);
     const [eth, setETH] = useState(true)
     const onCloseModal2 = () => setOpen2(false);
-    const TradeSchema = Yup.object().shape({
 
-    })
+    const [aggregationInterval, setAggregationInterval] = useState(300)
+
 
     const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
         variables: { id: tokenAddress },
@@ -64,19 +67,8 @@ const Token = () => {
             skip: (tradesPage - 1) * tradesPageSize,
         },
         skip: !tokenData?.token?.bondingCurve?.id,
+        pollInterval: 2000
     });
-
-    console.log('tokenData', tokenData)
-    console.log('tradesData', tradesData)
-
-
-    // if (tokenLoading || tradesLoading) {
-    //     return <div>Loading...</div>;
-    // }
-
-    // if (tokenError || tradesError) {
-    //     return <div>Error: {tokenError?.message || tradesError?.message}</div>;
-    // }
 
 
     const token = tokenData?.token;
@@ -85,9 +77,133 @@ const Token = () => {
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
 
+
+    useEffect(() => {
+        if (chartContainerRef.current) {
+            const chart = createChart(chartContainerRef.current, {
+                layout: {
+                    textColor: 'black',
+                    background: { type: 'solid', color: 'white' },
+                },
+                // crosshair: {
+                //     mode: CrosshairMode.Normal,
+                // },
+                timeScale: {
+                    timeVisible: true,
+                    secondsVisible: false,
+                },
+            });
+
+            const candlestickSeries = chart.addCandlestickSeries({
+                upColor: '#26a69a',
+                downColor: '#ef5350',
+                borderVisible: false,
+                wickUpColor: '#26a69a',
+                wickDownColor: '#ef5350',
+            });
+
+            const trades = tradesData?.trades;
+
+            if (trades) {
+                const aggregatedData = trades.reduce((acc, trade) => {
+                    const timestamp = trade.timestamp * 1000;
+                    const intervalKey = Math.floor(timestamp / (aggregationInterval * 1000)) * (aggregationInterval * 1000);
+                    if (!acc[intervalKey]) {
+                        acc[intervalKey] = {
+                            time: timestamp,
+                            open: Number(trade.avgPrice),
+                            high: Number(trade.avgPrice),
+                            low: Number(trade.avgPrice),
+                            close: Number(trade.avgPrice),
+                        };
+                    } else {
+                        acc[intervalKey].high = Math.max(acc[intervalKey].high, Number(trade.avgPrice));
+                        acc[intervalKey].low = Math.min(acc[intervalKey].low, Number(trade.avgPrice));
+                        acc[intervalKey].close = Number(trade.avgPrice);
+                    }
+                    return acc;
+                }, {});
+
+                const candlestickData = Object.values(aggregatedData).sort(
+                    (a, b) => a.time - b.time
+                );
+
+                candlestickSeries.setData(candlestickData);
+            }
+
+            chart.timeScale().fitContent();
+
+            return () => {
+                chart.remove();
+            };
+        }
+    }, [tradesData, aggregationInterval]);
+
+
+    // useEffect(() => {
+    //     if (chartContainerRef.current) {
+    //         const chart = createChart(chartContainerRef.current, {
+    //             layout: {
+    //                 textColor: 'black',
+    //                 background: { type: 'solid', color: 'white' },
+    //             },
+    //             // crosshair: {
+    //             //     mode: CrosshairMode.Normal,
+    //             // },
+    //             timeScale: {
+    //                 timeVisible: true,
+    //                 secondsVisible: false,
+    //             },
+    //         });
+
+    //         const candlestickSeries = chart.addCandlestickSeries({
+    //             upColor: '#26a69a',
+    //             downColor: '#ef5350',
+    //             borderVisible: false,
+    //             wickUpColor: '#26a69a',
+    //             wickDownColor: '#ef5350',
+    //         });
+
+    //         const trades = tradesData?.trades;
+
+    //         if (trades) {
+    //             const aggregatedData = trades.reduce((acc, trade) => {
+    //                 const timestamp = trade.timestamp * 1000;
+    //                 const hourKey = Math.floor(timestamp / 3600000) * 3600000;
+    //                 if (!acc[hourKey]) {
+    //                     acc[hourKey] = {
+    //                         time: timestamp,
+    //                         open: Number(trade.avgPrice),
+    //                         high: Number(trade.avgPrice),
+    //                         low: Number(trade.avgPrice),
+    //                         close: Number(trade.avgPrice),
+    //                     };
+    //                 } else {
+    //                     acc[hourKey].high = Math.max(acc[hourKey].high, Number(trade.avgPrice));
+    //                     acc[hourKey].low = Math.min(acc[hourKey].low, Number(trade.avgPrice));
+    //                     acc[hourKey].close = Number(trade.avgPrice);
+    //                 }
+    //                 return acc;
+    //             }, {});
+
+    //             const candlestickData = Object.values(aggregatedData).sort(
+    //                 (a, b) => a.time - b.time
+    //             );
+
+    //             candlestickSeries.setData(candlestickData);
+    //         }
+
+    //         chart.timeScale().fitContent();
+
+    //         return () => {
+    //             chart.remove();
+    //         };
+    //     }
+    // }, [tradesData]);
+
     const targetDivRef = useRef(null);
     const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(TradeSchema)
+        // resolver: yupResolver(TradeSchema)
     })
     const onSubmit = (values) => {
 
@@ -108,6 +224,16 @@ const Token = () => {
     }, [value])
 
     console.log("tokenAddress",tokenAddress)
+
+
+    const widgetOptions = {
+        symbol: token?.id,
+        interval: '60',
+        fullscreen: false,
+        container: 'tv_chart_container',
+        library_path: '/charting_library/',
+        datafeed: Datafeed,
+    };
 
 
     return (
@@ -244,7 +370,10 @@ const Token = () => {
                         <div className="w-full">
 
                             <div className=''>
-                                <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
+                                {/* <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart> */}
+
+                                <div ref={chartContainerRef} style={{ height: '450px', width: '100%' }}></div>
+                                {/* <div id="tv_chart_container" style={{ height: '450px' }}></div> */}
                             </div>
 
                         </div>
