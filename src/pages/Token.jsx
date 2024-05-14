@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
@@ -22,6 +22,33 @@ import copy from 'copy-to-clipboard';
 import { FaChartSimple } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 const Token = () => {
+    const [realTimeData, setRealTimeData] = useState([]);
+    const chartRef = useRef();
+
+    // Function to generate fake data
+    const generateFakeData = () => {
+        // Generate fake data for demonstration
+        const newData = Array.from({ length: 10 }, () => ({
+            timestamp: new Date(),
+            value: Math.random() * 10000// Generate random values for demonstration
+        }));
+        
+        if (chartRef.current) {
+            chartRef.current.updateData(newData);
+          }
+    };
+
+    // useEffect to generate fake data on component mount and updates
+    useEffect(() => {
+        // Call generateFakeData function initially
+        generateFakeData();
+
+        // Set interval to continuously generate fake data at a certain interval
+        const interval = setInterval(generateFakeData, 500); // Example: Generate data every 5 seconds
+
+        // Clean up interval on component unmount
+        return () => clearInterval(interval);
+    }, []);
     const navigate = useNavigate()
     const [tabIndex, setTabIndex] = useState(0);
     const [tabIndex1, setTabIndex1] = useState(0);
@@ -196,7 +223,7 @@ const Token = () => {
                         <div className="w-full">
 
                             <div className=''>
-                                <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
+                                <AdvancedRealTimeChart  ref={chartRef} data={realTimeData} height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
                             </div>
 
                         </div>
