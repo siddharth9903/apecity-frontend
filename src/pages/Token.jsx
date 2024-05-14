@@ -31,6 +31,33 @@ import { createChart } from 'lightweight-charts';
 
 
 const Token = () => {
+    const [realTimeData, setRealTimeData] = useState([]);
+    const chartRef = useRef();
+
+    // Function to generate fake data
+    const generateFakeData = () => {
+        // Generate fake data for demonstration
+        const newData = Array.from({ length: 10 }, () => ({
+            timestamp: new Date(),
+            value: Math.random() * 10000// Generate random values for demonstration
+        }));
+        
+        if (chartRef.current) {
+            chartRef.current.updateData(newData);
+          }
+    };
+
+    // useEffect to generate fake data on component mount and updates
+    useEffect(() => {
+        // Call generateFakeData function initially
+        generateFakeData();
+
+        // Set interval to continuously generate fake data at a certain interval
+        const interval = setInterval(generateFakeData, 500); // Example: Generate data every 5 seconds
+
+        // Clean up interval on component unmount
+        return () => clearInterval(interval);
+    }, []);
     const navigate = useNavigate()
     let { tokenAddress } = useParams();
     const chartContainerRef = useRef(null);
@@ -370,10 +397,7 @@ const Token = () => {
                         <div className="w-full">
 
                             <div className=''>
-                                {/* <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart> */}
-
-                                <div ref={chartContainerRef} style={{ height: '450px', width: '100%' }}></div>
-                                {/* <div id="tv_chart_container" style={{ height: '450px' }}></div> */}
+                                <AdvancedRealTimeChart  ref={chartRef} data={realTimeData} height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
                             </div>
 
                         </div>
