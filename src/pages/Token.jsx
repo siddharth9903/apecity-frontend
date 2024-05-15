@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
+import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgLayoutGrid, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
 import { shortenText, timestampToDate } from '../utils/helper';
 import { Tooltip } from 'react-tooltip';
@@ -31,33 +31,7 @@ import { createChart } from 'lightweight-charts';
 
 
 const Token = () => {
-    const [realTimeData, setRealTimeData] = useState([]);
-    const chartRef = useRef();
 
-    // Function to generate fake data
-    const generateFakeData = () => {
-        // Generate fake data for demonstration
-        const newData = Array.from({ length: 10 }, () => ({
-            timestamp: new Date(),
-            value: Math.random() * 10000// Generate random values for demonstration
-        }));
-        
-        if (chartRef.current) {
-            chartRef.current.updateData(newData);
-          }
-    };
-
-    // useEffect to generate fake data on component mount and updates
-    useEffect(() => {
-        // Call generateFakeData function initially
-        generateFakeData();
-
-        // Set interval to continuously generate fake data at a certain interval
-        const interval = setInterval(generateFakeData, 500); // Example: Generate data every 5 seconds
-
-        // Clean up interval on component unmount
-        return () => clearInterval(interval);
-    }, []);
     const navigate = useNavigate()
     let { tokenAddress } = useParams();
     const chartContainerRef = useRef(null);
@@ -78,6 +52,34 @@ const Token = () => {
     const onCloseModal2 = () => setOpen2(false);
 
     const [aggregationInterval, setAggregationInterval] = useState(300)
+
+    const [realTimeData, setRealTimeData] = useState([]);
+    // const chartRef = useRef();
+
+    // // Function to generate fake data
+    // const generateFakeData = () => {
+    //     // Generate fake data for demonstration
+    //     const newData = Array.from({ length: 10 }, () => ({
+    //         timestamp: new Date(),
+    //         value: Math.random() * 10000// Generate random values for demonstration
+    //     }));
+
+    //     if (chartRef.current) {
+    //         chartRef.current.updateData(newData);
+    //     }
+    // };
+
+    // // useEffect to generate fake data on component mount and updates
+    // useEffect(() => {
+    //     // Call generateFakeData function initially
+    //     generateFakeData();
+
+    //     // Set interval to continuously generate fake data at a certain interval
+    //     const interval = setInterval(generateFakeData, 100); // Example: Generate data every 5 seconds
+
+    //     // Clean up interval on component unmount
+    //     return () => clearInterval(interval);
+    // }, []);
 
 
     const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
@@ -103,68 +105,6 @@ const Token = () => {
     const trades = tradesData?.trades;
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
-
-
-    useEffect(() => {
-        if (chartContainerRef.current) {
-            const chart = createChart(chartContainerRef.current, {
-                layout: {
-                    textColor: 'black',
-                    background: { type: 'solid', color: 'white' },
-                },
-                // crosshair: {
-                //     mode: CrosshairMode.Normal,
-                // },
-                timeScale: {
-                    timeVisible: true,
-                    secondsVisible: false,
-                },
-            });
-
-            const candlestickSeries = chart.addCandlestickSeries({
-                upColor: '#26a69a',
-                downColor: '#ef5350',
-                borderVisible: false,
-                wickUpColor: '#26a69a',
-                wickDownColor: '#ef5350',
-            });
-
-            const trades = tradesData?.trades;
-
-            if (trades) {
-                const aggregatedData = trades.reduce((acc, trade) => {
-                    const timestamp = trade.timestamp * 1000;
-                    const intervalKey = Math.floor(timestamp / (aggregationInterval * 1000)) * (aggregationInterval * 1000);
-                    if (!acc[intervalKey]) {
-                        acc[intervalKey] = {
-                            time: timestamp,
-                            open: Number(trade.avgPrice),
-                            high: Number(trade.avgPrice),
-                            low: Number(trade.avgPrice),
-                            close: Number(trade.avgPrice),
-                        };
-                    } else {
-                        acc[intervalKey].high = Math.max(acc[intervalKey].high, Number(trade.avgPrice));
-                        acc[intervalKey].low = Math.min(acc[intervalKey].low, Number(trade.avgPrice));
-                        acc[intervalKey].close = Number(trade.avgPrice);
-                    }
-                    return acc;
-                }, {});
-
-                const candlestickData = Object.values(aggregatedData).sort(
-                    (a, b) => a.time - b.time
-                );
-
-                candlestickSeries.setData(candlestickData);
-            }
-
-            chart.timeScale().fitContent();
-
-            return () => {
-                chart.remove();
-            };
-        }
-    }, [tradesData, aggregationInterval]);
 
 
     // useEffect(() => {
@@ -196,9 +136,9 @@ const Token = () => {
     //         if (trades) {
     //             const aggregatedData = trades.reduce((acc, trade) => {
     //                 const timestamp = trade.timestamp * 1000;
-    //                 const hourKey = Math.floor(timestamp / 3600000) * 3600000;
-    //                 if (!acc[hourKey]) {
-    //                     acc[hourKey] = {
+    //                 const intervalKey = Math.floor(timestamp / (aggregationInterval * 1000)) * (aggregationInterval * 1000);
+    //                 if (!acc[intervalKey]) {
+    //                     acc[intervalKey] = {
     //                         time: timestamp,
     //                         open: Number(trade.avgPrice),
     //                         high: Number(trade.avgPrice),
@@ -206,9 +146,9 @@ const Token = () => {
     //                         close: Number(trade.avgPrice),
     //                     };
     //                 } else {
-    //                     acc[hourKey].high = Math.max(acc[hourKey].high, Number(trade.avgPrice));
-    //                     acc[hourKey].low = Math.min(acc[hourKey].low, Number(trade.avgPrice));
-    //                     acc[hourKey].close = Number(trade.avgPrice);
+    //                     acc[intervalKey].high = Math.max(acc[intervalKey].high, Number(trade.avgPrice));
+    //                     acc[intervalKey].low = Math.min(acc[intervalKey].low, Number(trade.avgPrice));
+    //                     acc[intervalKey].close = Number(trade.avgPrice);
     //                 }
     //                 return acc;
     //             }, {});
@@ -226,7 +166,69 @@ const Token = () => {
     //             chart.remove();
     //         };
     //     }
-    // }, [tradesData]);
+    // }, [tradesData, aggregationInterval]);
+
+
+    useEffect(() => {
+        if (chartContainerRef.current) {
+            const chart = createChart(chartContainerRef.current, {
+                layout: {
+                    textColor: 'black',
+                    background: { type: 'solid', color: 'white' },
+                },
+                // crosshair: {
+                //     mode: CrosshairMode.Normal,
+                // },
+                timeScale: {
+                    timeVisible: true,
+                    secondsVisible: false,
+                },
+            });
+
+            const candlestickSeries = chart.addCandlestickSeries({
+                upColor: '#26a69a',
+                downColor: '#ef5350',
+                borderVisible: false,
+                wickUpColor: '#26a69a',
+                wickDownColor: '#ef5350',
+            });
+
+            const trades = tradesData?.trades;
+
+            if (trades) {
+                const aggregatedData = trades.reduce((acc, trade) => {
+                    const timestamp = trade.timestamp * 1000;
+                    const hourKey = Math.floor(timestamp / 3600000) * 3600000;
+                    if (!acc[hourKey]) {
+                        acc[hourKey] = {
+                            time: timestamp,
+                            open: Number(trade.avgPrice),
+                            high: Number(trade.avgPrice),
+                            low: Number(trade.avgPrice),
+                            close: Number(trade.avgPrice),
+                        };
+                    } else {
+                        acc[hourKey].high = Math.max(acc[hourKey].high, Number(trade.avgPrice));
+                        acc[hourKey].low = Math.min(acc[hourKey].low, Number(trade.avgPrice));
+                        acc[hourKey].close = Number(trade.avgPrice);
+                    }
+                    return acc;
+                }, {});
+
+                const candlestickData = Object.values(aggregatedData).sort(
+                    (a, b) => a.time - b.time
+                );
+
+                candlestickSeries.setData(candlestickData);
+            }
+
+            chart.timeScale().fitContent();
+
+            return () => {
+                chart.remove();
+            };
+        }
+    }, [tradesData]);
 
     const targetDivRef = useRef(null);
     const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
@@ -262,6 +264,8 @@ const Token = () => {
         datafeed: Datafeed,
     };
 
+    console.log('token', token)
+    console.log('bondingCurve', bondingCurve)
 
     return (
         <>
@@ -395,10 +399,11 @@ const Token = () => {
                             </div>
                         </div>
                         <div className="w-full">
-
                             <div className=''>
-                                <AdvancedRealTimeChart  ref={chartRef} data={realTimeData} height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
+                                {/* <AdvancedRealTimeChart symbol={'SPDX'} ref={chartRef} data={realTimeData} height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart> */}
+                                <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
                             </div>
+
 
                         </div>
                         <div className='w-full  flex-1'>

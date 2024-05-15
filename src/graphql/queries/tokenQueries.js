@@ -8,7 +8,14 @@ export const TOKENS_QUERY = gql`
       id
       name
       symbol
-      imageURL
+      metaData {
+        description
+        id
+        image
+        telegram
+        twitter
+        website
+      }
     }
   }
 `;
@@ -27,7 +34,6 @@ export const TOKEN_QUERY = gql`
       id
       name
       symbol
-      imageURL
       decimals
       totalSupply
       bondingCurve {

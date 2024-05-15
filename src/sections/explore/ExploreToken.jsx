@@ -14,7 +14,9 @@ const ExploreToken = () => {
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
-    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY);
+    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY,{
+        pollInterval: 2000
+    });
     const totalTokens = totalTokensData?.factory?.tokenCount || 0;
 
     const { data: tokensData, loading: tokensLoading, error: tokensError } = useQuery(TOKENS_QUERY, {
@@ -93,7 +95,7 @@ const ExploreToken = () => {
 export default ExploreToken;
 
 export const Item = ({ item }) => {
-    const { id, name, symbol, imageURL } = item;
+    const { id, name, symbol, metaData } = item;
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
     const navigate = useNavigate();
@@ -113,7 +115,7 @@ export const Item = ({ item }) => {
                     <span className="pfont-600 text-sm uppercase text-white">{symbol}</span>
                     <span className="text-sm text-[#cccccc] pfont-400">{name}</span>
                     <span>
-                        <img className="w-5" src={imageURL} alt="" />
+                        <img className="w-5" src={metaData?.image} alt="" />
                     </span>
                 </div>
             </td>

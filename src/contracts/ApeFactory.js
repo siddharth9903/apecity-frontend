@@ -7,7 +7,8 @@
 //localhost
 // export const deployedContractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'; // Replace with the actual ApeFactory contract address
 //base and baseIdTenderly
-export const deployedContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Replace with the actual ApeFactory contract address
+// export const deployedContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Replace with the actual ApeFactory contract address
+export const deployedContractAddress = '0x43bbaC1E810E19C1608a26626FCc04D45f5918f5'; // Replace with the actual ApeFactory contract address
 
 export const abi = [
     {
@@ -191,7 +192,7 @@ export const abi = [
             },
             {
                 "internalType": "string",
-                "name": "imageURL",
+                "name": "tokenURI",
                 "type": "string"
             }
         ],
@@ -265,30 +266,6 @@ export const abi = [
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "startIndex",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "endIndex",
-                "type": "uint256"
-            }
-        ],
-        "name": "getTokensInRange",
-        "outputs": [
-            {
-                "internalType": "address[]",
-                "name": "",
-                "type": "address[]"
             }
         ],
         "stateMutability": "view",

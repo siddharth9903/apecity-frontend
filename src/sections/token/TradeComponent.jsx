@@ -16,6 +16,7 @@ import { abi as erc20ABI } from '../../contracts/ERC20';
 import QuickSelect from './QuickSelect';
 import InputField from './InputField';
 import { useSnackbar } from 'notistack';
+import { CgLayoutGrid } from 'react-icons/cg';
 
 const TradeType = Object.freeze({
     BUY: 0,
@@ -121,7 +122,6 @@ const TradeComponent = ({ token, bondingCurve }) => {
 
     const onSubmit = async (values) => {
         try {
-            console.log('im in')
             let value = 0
             if (tabIndex === TradeType.BUY) {
                 if (ethTrade) {
@@ -170,8 +170,6 @@ const TradeComponent = ({ token, bondingCurve }) => {
             console.error('Error executing transaction:', error);
         }
     };
-
-    console.log('formErrors',formErrors)
 
 
     return (

@@ -19,7 +19,7 @@ export const abi = [
             },
             {
                 "internalType": "string",
-                "name": "_imageURL",
+                "name": "tokenURI_",
                 "type": "string"
             }
         ],
@@ -244,19 +244,6 @@ export const abi = [
     },
     {
         "inputs": [],
-        "name": "imageURL",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "name",
         "outputs": [
             {
@@ -271,6 +258,19 @@ export const abi = [
     {
         "inputs": [],
         "name": "symbol",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "tokenURI",
         "outputs": [
             {
                 "internalType": "string",

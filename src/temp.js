@@ -38,3 +38,17 @@ console.log('calculatePurchaseReturn:', calculatePurchaseReturn(supply, connecto
 console.log('calculateSaleReturn:', calculateSaleReturn(supply, connectorBalance, connectorWeight, sellAmount));
 console.log('estimateEthInForExactTokensOut:', estimateEthInForExactTokensOut(supply, connectorBalance, connectorWeight, tokenAmountOut));
 console.log('estimateTokenInForExactEthOut:', estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight, ethOut));
+
+
+/*
+
+
+    ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://localhost:3000", "http://127.0.0.1:5001", "https://webui.ipfs.io"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST"]'
+ipfs shutdown
+ipfs daemon &
+
+
+
+*/
