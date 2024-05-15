@@ -8,7 +8,8 @@
 // export const deployedContractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'; // Replace with the actual ApeFactory contract address
 //base and baseIdTenderly
 // export const deployedContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Replace with the actual ApeFactory contract address
-export const deployedContractAddress = '0x43bbaC1E810E19C1608a26626FCc04D45f5918f5'; // Replace with the actual ApeFactory contract address
+// export const deployedContractAddress = '0x43bbaC1E810E19C1608a26626FCc04D45f5918f5'; // Replace with the actual ApeFactory contract address
+export const deployedContractAddress = "0xb4FBc25204d26C4a937F4CBa67087F70B21bb6c5"; // Replace with the actual ApeFactory contract address
 
 export const abi = [
     {
@@ -204,7 +205,7 @@ export const abi = [
                 "type": "address"
             }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {

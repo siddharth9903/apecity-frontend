@@ -29,11 +29,11 @@ import { formatNumber } from '../utils/formats';
 import Datafeed from '../datafeed';
 import { createChart } from 'lightweight-charts';
 
-
 const Token = () => {
 
     const navigate = useNavigate()
     let { tokenAddress } = useParams();
+
     const chartContainerRef = useRef(null);
 
     const [tabIndex, setTabIndex] = useState(0);
@@ -50,6 +50,8 @@ const Token = () => {
     const onOpenModal2 = () => setOpen2(true);
     const [eth, setETH] = useState(true)
     const onCloseModal2 = () => setOpen2(false);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const [aggregationInterval, setAggregationInterval] = useState(300)
 
@@ -266,6 +268,11 @@ const Token = () => {
 
     console.log('token', token)
     console.log('bondingCurve', bondingCurve)
+
+
+    if ( tokenLoading || isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>

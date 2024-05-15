@@ -215,6 +215,25 @@ export const abi = [
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+            }
+        ],
+        "name": "buy",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "_supply",
                 "type": "uint256"
@@ -304,40 +323,6 @@ export const abi = [
             }
         ],
         "name": "estimateEthInForExactTokensOut",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_supply",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_connectorBalance",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_connectorWeight",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_ethOut",
-                "type": "uint256"
-            }
-        ],
-        "name": "estimateTokenInForExactEthOut",
         "outputs": [
             {
                 "internalType": "uint256",

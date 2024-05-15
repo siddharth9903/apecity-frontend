@@ -103,9 +103,16 @@ function estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight
     return formatDecimal(estimateTokenIn.div(DEC).toString())
 }
 
+const initialConstants = {
+    "circulatingSupply": "1000",
+    "poolBalance": "0.000000000008571428",
+    "reserveRatio": "500000"
+}
+
 export {
     calculatePurchaseReturn,
     calculateSaleReturn,
     estimateEthInForExactTokensOut,
     estimateTokenInForExactEthOut,
+    initialConstants
 };
