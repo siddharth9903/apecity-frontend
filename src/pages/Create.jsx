@@ -19,6 +19,11 @@ import QuickSelect from '../sections/token/QuickSelect';
 import ipfsClient from '../ipfs/client';
 import { ethers } from 'ethers';
 import { parseEventLogs } from 'viem';
+import { PINATA_API_KEY, PINATA_SECRET_API_KEY } from '../ipfs/pinataClient';
+
+const pinataApiKey = PINATA_API_KEY
+const pinataSecretApiKey = PINATA_SECRET_API_KEY
+
 
 const Create = () => {
     const [open1, setOpen1] = useState(false);
@@ -148,6 +153,52 @@ const Create = () => {
     }, [isConfirmed, error, enqueueSnackbar]);
 
 
+    const uploadToIPFSAndPin = async (imageFile, metadata) => {
+        try {
+            // Upload image to Pinata
+            const imageFormData = new FormData();
+            imageFormData.append('file', imageFile);
+
+            const imageUploadResponse = await axios.post(
+                'https://api.pinata.cloud/pinning/pinFileToIPFS',
+                imageFormData,
+                {
+                    headers: {
+                        'Content-Type': `multipart/form-data; boundary=${imageFormData._boundary}`,
+                        pinata_api_key: pinataApiKey,
+                        pinata_secret_api_key: pinataSecretApiKey,
+                    },
+                }
+            );
+
+            const imageURI = `https://ipfs.io/ipfs/${imageUploadResponse.data.IpfsHash}`;
+
+            console.log('imageURI', imageURI)
+            return
+            // Update the metadata with the image IPFS link
+            metadata.image = imageURI;
+
+            // Upload metadata to Pinata
+            const metadataUploadResponse = await axios.post(
+                'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+                metadata,
+                {
+                    headers: {
+                        pinata_api_key: pinataApiKey,
+                        pinata_secret_api_key: pinataSecretApiKey,
+                    },
+                }
+            );
+
+            const metadataURI = `https://ipfs.io/ipfs/${metadataUploadResponse.data.IpfsHash}`;
+
+            return metadataURI;
+        } catch (error) {
+            console.error('Error uploading to IPFS:', error);
+            throw error;
+        }
+    };
+
     const executeTokenCreation = async () => {
         try {
 
@@ -156,10 +207,23 @@ const Create = () => {
 
             // Upload image to IPFS
             const imageFile = values.image[0];
-            const imageAdded = await ipfsClient.add(imageFile);
-            const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
 
-            await ipfsClient.pin.add(imageAdded.path);
+            const imageFormData = new FormData();
+            imageFormData.append('file', imageFile);
+
+            const imageUploadResponse = await axios.post(
+                'https://api.pinata.cloud/pinning/pinFileToIPFS',
+                imageFormData,
+                {
+                    headers: {
+                        'Content-Type': `multipart/form-data; boundary=${imageFormData._boundary}`,
+                        pinata_api_key: pinataApiKey,
+                        pinata_secret_api_key: pinataSecretApiKey,
+                    },
+                }
+            );
+
+            const imageURI = `https://ipfs.io/ipfs/${imageUploadResponse.data.IpfsHash}`;
 
             // Create metadata with the image URI
             const metadata = {
@@ -172,15 +236,27 @@ const Create = () => {
                 website: values.website,
             };
 
-            // Upload metadata to IPFS
-            const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
-            const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
+            console.log('metadata', metadata)
 
-            // Pin the metadata
-            await ipfsClient.pin.add(metadataAdded.path);
+            const metadataUploadResponse = await axios.post(
+                'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+                metadata,
+                {
+                    headers: {
+                        pinata_api_key: pinataApiKey,
+                        pinata_secret_api_key: pinataSecretApiKey,
+                    },
+                }
+            );
+
+            const metadataURI = `https://ipfs.io/ipfs/${metadataUploadResponse.data.IpfsHash}`;
+
+            console.log('imageURI', imageURI)
+            console.log('metadataURI', metadataURI)
+
+            const tokenURI = metadataURI
 
             const args = [values.name, values.symbol, tokenURI]
-
 
             let value = 0;
             if (ethTrade) {
@@ -208,10 +284,77 @@ const Create = () => {
                 value: adjustedInputAmount.toFixed(),
             });
 
+            return
         } catch (error) {
             console.error('Error executing transaction:', error);
         }
     };
+
+
+    // const executeTokenCreation = async () => {
+    //     try {
+
+    //         onCloseModal();
+    //         const values = getValues()
+
+    //         // Upload image to IPFS
+    //         const imageFile = values.image[0];
+    //         const imageAdded = await ipfsClient.add(imageFile);
+    //         const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
+
+    //         await ipfsClient.pin.add(imageAdded.path);
+
+    //         // Create metadata with the image URI
+    //         const metadata = {
+    //             name: values.name,
+    //             description: values.description,
+    //             symbol: values.symbol,
+    //             image: imageURI,
+    //             twitter: values.twitter,
+    //             telegram: values.telegram,
+    //             website: values.website,
+    //         };
+
+    //         // Upload metadata to IPFS
+    //         const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
+    //         const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
+
+    //         // Pin the metadata
+    //         await ipfsClient.pin.add(metadataAdded.path);
+
+    //         const args = [values.name, values.symbol, tokenURI]
+
+
+    //         let value = 0;
+    //         if (ethTrade) {
+    //             value = values?.buyAmountEth;
+    //         } else {
+    //             const estimateEthIn = new BigNumber(
+    //                 estimateEthInForExactTokensOut(
+    //                     initialConstants.circulatingSupply,
+    //                     initialConstants.poolBalance,
+    //                     initialConstants.reserveRatio,
+    //                     values?.buyAmountToken || '0'
+    //                 )
+    //             ).toString();
+    //             value = estimateEthIn;
+    //         }
+
+    //         const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
+    //         const adjustedInputAmount = inputAmount.mul(1.01);
+
+    //         await writeContractAsync({
+    //             abi: apeFactoryABI,
+    //             address: apeFactoryContractAddress,
+    //             functionName: 'createToken',
+    //             args: args,
+    //             value: adjustedInputAmount.toFixed(),
+    //         });
+
+    //     } catch (error) {
+    //         console.error('Error executing transaction:', error);
+    //     }
+    // };
 
 
     // const onSubmit = async (values) => {
