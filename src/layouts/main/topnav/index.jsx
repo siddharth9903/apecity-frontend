@@ -1,23 +1,15 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 import SimpleBarReact from "simplebar-react";
 import 'simplebar-react/dist/simplebar.min.css';
-import { ControlledMenu, MenuDivider, MenuItem, useClick } from '@szhsin/react-menu';
-import '@szhsin/react-menu/dist/index.css';
-import '@szhsin/react-menu/dist/transitions/slide.css';
+
 import { Menu, Bell, ShoppingCart, DollarSign, Truck } from 'feather-icons-react'
-import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2, FaUserCircle, FaWallet, SiBlueprint, AiOutlineDisconnect } from "./../../../assets/icons/vander.jsx"
-import 'react-responsive-modal/styles.css';
-import { Modal } from 'react-responsive-modal';
+import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout } from "./../../../assets/icons/vander.jsx"
+
 export default function Topnav({ setToggle, toggle }) {
-    const [open, setOpen] = useState(false);
-    const onOpenModal = () => setOpen(true);
-    const onCloseModal = () => setOpen(false);
     const [notification, setNotification] = useState(false);
     const [userData, setUserData] = useState(false);
-    const ref = useRef(null);
-    const [open2, setOpen2] = useState(false);
-    const anchorProps = useClick(open2, setOpen2);
+
     useEffect(() => {
         let handlar = () => {
             setNotification(false)
@@ -106,79 +98,28 @@ export default function Topnav({ setToggle, toggle }) {
     }
     return (
         <div className="top-header">
-            <div className="header-bar">
-                <div>
-                    <div className="row px-3 sm:px-5 items-center lg:px-3 py-2.5">
-                        <div className="col-lg-4 col-md-2 col-sm-3 col-4">
-                            <div className="flex items-center space-x-1">
-                                <Link to="#" className="flex items-center">
-                                    <img src={'/images/logo/logo1.png'} className="w-12" alt="" />
-                                    {/* <span className="text-white lilita-400 tracking-[2px] text-2xl">Ape city</span> */}
-                                    {/* <span className="md:block hidden">
+            <div className="header-bar flex justify-between">
+                <div className="flex items-center space-x-1">
+                    <Link to="#" className="xl:hidden block me-2">
+                        <img src={'/images/logo/logo-icon-32.png'} className="md:hidden block" alt="" />
+                        <span className="md:block hidden">
                             <img src={'/images/logo/logo-dark.png'} className="inline-block dark:hidden" alt="" />
                             <img src={'/images/logo/logo-light.png'} className="hidden dark:inline-block" alt="" />
-                        </span> */}
-                                </Link>
-                                {/* <Link to="#" id="close-sidebar" className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white">
+                        </span>
+                    </Link>
+                    {/* <Link to="#" id="close-sidebar" className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white">
                         <Menu className="h-4 w-4" onClick={toggleHandler} />
                     </Link> */}
-                                {/* <div className="ps-1.5">
+                    {/* <div className="ps-1.5">
                         <div className="form-icon relative sm:block hidden">
                             <LuSearch className="absolute top-1/2 -translate-y-1/2 start-3" />
                             <input type="text" className="form-input w-56 ps-9 py-2 px-3 h-8 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded-md outline-none border border-gray-100 dark:border-gray-800 focus:ring-0 bg-white" name="s" id="searchItem" placeholder="Search..." />
                         </div>
                     </div> */}
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-md-4 col-6 max-sm:hidden">
-                            <div className="">
-                                <div className="flex items-center justify-center md:justify-start lg:justify-center gap-x-4">
-                                    <div>
-                                        <Link className="pfont-400 tracking-[1px] text-white" to={''}>Explore</Link>
-                                    </div>
-                                    <div>
-                                        <button onClick={onOpenModal} className="pfont-400 bg-transparent border-none tracking-[1px] text-white">Blueprint</button>
-                                        <Modal styles={{
-                                            padding: 0
-                                        }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
-                                            <div className='md:w-[600px] border px-4 py-4 sm:py-6 sm:px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
-                                                <div className='w-full   flex justify-center items-center'>
-                                                    <div className="text-center">
-                                                        <h3 className="text-center tracking-[0.5px] pfont-500 text-white text-xl">Blueprint</h3>
-                                                    </div>
-                                                    {/* <div className="">
-                                            <button onClick={onCloseModal} className="bg-transparent rounded p-1 border border-[#ffffff29]">
-                                                <RxCross2 className='text-white text-xl' />
-                                            </button>
-                                        </div> */}
-                                                </div>
-                                                <div>
-                                                    <p className="pfont-400 max-sm:text-sm tracking-[0.5px] text-white text-center">
-                                                    Ape City is a fair-launch platform ensuring secure and equitable on-chain trading. Each token launched through our platform is anti-rug, with no presales or team allocations. This enhances transparency and a level playing field for all users.
+                </div>
 
-
-                                                    </p>
-                                                    <h4 className="text-center tracking-[0.5px] mt-5 pfont-500 text-white text-lg">Get Started: </h4>
-                                                    <div className="flex flex-col mt-4 gap-y-3">
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 1 :</span> Discover a token that aligns with your interests and investment goals.</p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 2 :</span> Buy the token on its bonding curve, a mechanism that adjusts the price dynamically as more tokens are purchased. </p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 3 :</span> Sell your token at any time to realize your PnL.</p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 4 :</span> Once your token reaches a market cap of $69,000*, a liquidity pool is automatically created on Uniswap.</p>
-                                                        <p className="text-gray-300 max-sm:text-sm pfont-400 text-center tracking-[0.5px]"><span className="text-white">Step 5 :</span> The LP tokens generated from this liquidity pool are burned, enhancing the token’s liquidity and potentially increasing its value.</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex mt-2 justify-center">
-                                                    <button onClick={onCloseModal} className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 px-6 py-2 rounded-md">I’m Ready to Ape</button>
-                                                </div>
-                                            </div>
-                                        </Modal>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-md-6 col-sm-3 col-8">
-                            <div className="flex justify-end items-center gap-x-5 md:gap-x-4">
-                                {/* <li className="dropdown inline-block relative">
+                <ul className="list-none mb-0 space-x-1">
+                    <li className="dropdown inline-block relative">
                         <button data-dropdown-toggle="dropdown" className="dropdown-toggle btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white" type="button" onClick={notificationtoggle}>
                             <Bell className="h-4 w-4" />
                             <span className="absolute top-0 end-0 flex items-center justify-center bg-emerald-600 text-white text-[10px] font-bold rounded-full w-2 h-2 after:content-[''] after:absolute after:h-2 after:w-2 after:bg-emerald-600 after:top-0 after:end-0 after:rounded-full after:animate-ping"></span>
@@ -254,53 +195,15 @@ export default function Topnav({ setToggle, toggle }) {
                                 </ul>
                             </SimpleBarReact>
                         </div>
-                    </li> */}
-                                <div className="sm:hidden">
-                                    <button onClick={onOpenModal} className="bg-transparent flex items-center border-none outline-none">
-                                        <SiBlueprint className="text-white text-lg" />
-                                    </button>
-                                </div>
-                                <div className="">
-                                    <a className="text-white" href="">
-                                        <FaTwitter className="text-lg" />
-                                    </a>
-                                </div>
-                                <div className="">
-                                    <a className="text-white" href="">
-                                        <FaTelegramPlane className="text-xl" />
-                                    </a>
-                                </div>
-                                <div className="">
-                                    <Link to="#" ref={ref} {...anchorProps} className="md:bg-[#475dc0] transition-all duration-300 md:hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center md:gap-x-2 md:px-4 md:py-2 rounded-md text-sm"><span className="pfont-500 max-md:hidden">Connect Wallet</span><FaWallet className="text-lg md:hidden" /><BiWallet className="text-lg max-md:hidden" /></Link>
-                                </div>
-                                <div className="dropdown inline-block cursor-pointer relative">
-                                    <button data-dropdown-toggle="dropdown" className="dropdown-toggle  cursor-pointer mt-1 items-center" type="button">
-                                        <span className="" onClick={userHandler}><FaUserCircle className="text-[#999999] text-[25px]" /> </span>
-                                    </button>
-                                    <ControlledMenu
-                                        state={open2 ? 'open' : 'closed'}
-                                        anchorRef={ref}
-                                        onClose={() => setOpen2(false)}
-                                        arrow={false}
-                                        align="end"
-                                        gap={12}
-                                        menuClassName="wallet-menu"
-                                    >
-                                        <MenuItem className={({ hover }) => hover ? 'menu-item1-hover' : 'menu-item1'}>
-                                            <div className="gap-x-3 flex items-center">
-                                                <span><FaWallet /></span>
-                                                <span>Change Wallet</span>
-                                            </div>
-                                        </MenuItem>
-                                        <MenuDivider />
-                                        <MenuItem className={({ hover }) => hover ? 'menu-item2-hover' : 'menu-item2'}>
-                                            <div className="flex gap-x-3 items-center">
-                                                <span><AiOutlineDisconnect className="text-xl" /></span>
-                                                <span>Disconnect Wallet</span>
-                                            </div>
-                                        </MenuItem>
-                                    </ControlledMenu>
-                                    {/* <div className={`dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 ${userData ? "block" : "hidden"}`} >
+                    </li>
+                    <li className="inline-block mb-0">
+                        <Link to="#" onClick={metamask} id="connectWallet" className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white"><BiWallet /></Link>
+                    </li>
+                    <li className="dropdown inline-block relative">
+                        <button data-dropdown-toggle="dropdown" className="dropdown-toggle items-center" type="button">
+                            <span className="btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white" onClick={userHandler}><img src={'/images/client/05.jpg'} className="rounded-full" alt="" /></span>
+                        </button>
+                        <div className={`dropdown-menu absolute end-0 m-0 mt-4 z-10 w-48 rounded-md overflow-hidden bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 ${userData ? "block" : "hidden"}`} >
                             <div className="relative">
                                 <div className="py-8 bg-gradient-to-tr from-violet-600 to-red-600"></div>
                                 <div className="absolute px-4 -bottom-7 start-0">
@@ -336,15 +239,9 @@ export default function Topnav({ setToggle, toggle }) {
                                     <Link to="/login" className="flex items-center text-[14px] font-semibold py-1.5 px-4 hover:text-violet-600"><AiOutlineLogout className="text-[16px] align-middle me-1" /> Logout</Link>
                                 </li>
                             </ul>
-                        </div> */}
-                                </div>
-                            </div>
                         </div>
-                    </div>
-
-
-
-                </div>
+                    </li>
+                </ul>
             </div>
         </div>
     )

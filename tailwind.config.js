@@ -8,12 +8,12 @@ export default {
   theme: {
     extend: {
       screens: {
-        xs: "420px",
-        sm: "576px",
+        xs: "460px",
+        sm: "640px",
         md: "768px",
-        lg: "992px",
-        xl: "1200px",
-        xxl: "1400px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
       },
     },
   },

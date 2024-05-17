@@ -1,10 +1,10 @@
 const Tokens = () => {
     return (
         <>
-            <table className="min-[845px]:w-full w-[800px] border-separate border-spacing-y-3">
+            <table className="w-full border-separate border-spacing-y-3">
                 <tbody>
                     {Array.from({ length: 40 }).map((item, index) => (
-                        <tr key={index} className="bg-[#28282d] hover:bg-[#39393e] rounded-md">
+                        <tr key={index} className="bg-[#28282d] rounded-md">
                             <td className="w-[40%] px-4 py-3">
                                 <div className="flex items-center gap-x-2">
                                     <span className="text-sm text-[#848489] pfont-400">#{index + 1}</span>
