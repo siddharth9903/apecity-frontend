@@ -200,6 +200,9 @@ const Token = () => {
                             </div>
 
                         </div>
+                        <div className='text-white font-italik pfont-500 text-sm p-2'>
+                            Charts are powered by <b><a href='https://in.tradingview.com/' target='_blank'>TradingView</a></b>
+                        </div>
                         <div className='w-full  flex-1'>
                             <div>
                                 <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
