@@ -43,12 +43,29 @@ console.log('estimateTokenInForExactEthOut:', estimateTokenInForExactEthOut(supp
 /*
 
 
-    ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://localhost:3000", "http://127.0.0.1:5001", "https://webui.ipfs.io"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5001", "http://localhost:3000", "http://127.0.0.1:5001", "https://webui.ipfs.io"]'
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST"]'
 ipfs shutdown
 ipfs daemon &
 
+*/
 
+// 
+/*
+[Unit]
+Description=IPFS Daemon
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+Type=simple
+ExecStart=/usr/local/bin/ipfs daemon --migrate=true --enable-gc=true --enable-pubsub-experiment=true
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
 
 */

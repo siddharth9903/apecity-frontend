@@ -36,7 +36,24 @@ export const TOKEN_QUERY = gql`
       symbol
       decimals
       totalSupply
+      metaData {
+        description
+        id
+        image
+        telegram
+        twitter
+        website
+      }
       bondingCurve {
+        id
+      }
+    }
+  }
+`;
+
+export const BONDING_CURVE_QUERY = gql`
+  query GetBondingCurve($id: ID!) {
+      bondingCurve(id: $id) {
         id
         reserveRatio
         poolBalance
@@ -54,7 +71,6 @@ export const TOKEN_QUERY = gql`
         createdAtTimestamp
         createdAtBlockNumber
       }
-    }
   }
 `;
 

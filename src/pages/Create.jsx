@@ -152,6 +152,102 @@ const Create = () => {
         }
     }, [isConfirmed, error, enqueueSnackbar]);
 
+    // const executeTokenCreation = async () => {
+    //     try {
+
+    //         onCloseModal();
+    //         const values = getValues()
+
+    //         // Upload image to IPFS
+    //         const imageFile = values.image[0];
+
+    //         const imageFormData = new FormData();
+    //         imageFormData.append('file', imageFile);
+
+    //         const imageUploadResponse = await axios.post(
+    //             'https://api.pinata.cloud/pinning/pinFileToIPFS',
+    //             imageFormData,
+    //             {
+    //                 headers: {
+    //                     'Content-Type': `multipart/form-data; boundary=${imageFormData._boundary}`,
+    //                     pinata_api_key: pinataApiKey,
+    //                     pinata_secret_api_key: pinataSecretApiKey,
+    //                 },
+    //             }
+    //         );
+
+    //         const imgIpfsHash = imageUploadResponse.data.IpfsHash
+    //         const imageURI = `https://ipfs.io/ipfs/${imgIpfsHash}`;
+    //         console.log('imageURI', imageURI)
+    //         // await ipfsClient.pin.add(imgIpfsHash);
+    //         // console.log('also added to local ipfs')
+
+    //         // Create metadata with the image URI
+    //         const metadata = {
+    //             name: values.name,
+    //             description: values.description,
+    //             symbol: values.symbol,
+    //             image: imageURI,
+    //             twitter: values.twitter,
+    //             telegram: values.telegram,
+    //             website: values.website,
+    //         };
+
+    //         console.log('metadata', metadata)
+
+    //         const metadataUploadResponse = await axios.post(
+    //             'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+    //             metadata,
+    //             {
+    //                 headers: {
+    //                     pinata_api_key: pinataApiKey,
+    //                     pinata_secret_api_key: pinataSecretApiKey,
+    //                 },
+    //             }
+    //         );
+
+    //         const metaDataIpfsHash = metadataUploadResponse.data.IpfsHash
+    //         const metadataURI = `https://ipfs.io/ipfs/${metaDataIpfsHash}`;
+    //         console.log('metadataURI', metadataURI)
+    //         // await ipfsClient.pin.add(metaDataIpfsHash);
+
+    //         const tokenURI = metadataURI
+
+    //         const args = [values.name, values.symbol, tokenURI]
+
+    //         let value = 0;
+    //         if (ethTrade) {
+    //             value = values?.buyAmountEth;
+    //         } else {
+    //             const estimateEthIn = new BigNumber(
+    //                 estimateEthInForExactTokensOut(
+    //                     initialConstants.circulatingSupply,
+    //                     initialConstants.poolBalance,
+    //                     initialConstants.reserveRatio,
+    //                     values?.buyAmountToken || '0'
+    //                 )
+    //             ).toString();
+    //             value = estimateEthIn;
+    //         }
+
+    //         const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
+    //         const adjustedInputAmount = inputAmount.mul(1.01);
+
+    //         await writeContractAsync({
+    //             abi: apeFactoryABI,
+    //             address: apeFactoryContractAddress,
+    //             functionName: 'createToken',
+    //             args: args,
+    //             value: adjustedInputAmount.toFixed(),
+    //         });
+
+    //         return
+    //     } catch (error) {
+    //         console.error('Error executing transaction:', error);
+    //     }
+    // };
+
+
     const executeTokenCreation = async () => {
         try {
 
@@ -160,23 +256,10 @@ const Create = () => {
 
             // Upload image to IPFS
             const imageFile = values.image[0];
+            const imageAdded = await ipfsClient.add(imageFile);
+            const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
 
-            const imageFormData = new FormData();
-            imageFormData.append('file', imageFile);
-
-            const imageUploadResponse = await axios.post(
-                'https://api.pinata.cloud/pinning/pinFileToIPFS',
-                imageFormData,
-                {
-                    headers: {
-                        'Content-Type': `multipart/form-data; boundary=${imageFormData._boundary}`,
-                        pinata_api_key: pinataApiKey,
-                        pinata_secret_api_key: pinataSecretApiKey,
-                    },
-                }
-            );
-
-            const imageURI = `https://ipfs.io/ipfs/${imageUploadResponse.data.IpfsHash}`;
+            await ipfsClient.pin.add(imageAdded.path);
 
             // Create metadata with the image URI
             const metadata = {
@@ -189,27 +272,19 @@ const Create = () => {
                 website: values.website,
             };
 
-            console.log('metadata', metadata)
+            // Upload metadata to IPFS
+            const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
+            const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
 
-            const metadataUploadResponse = await axios.post(
-                'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-                metadata,
-                {
-                    headers: {
-                        pinata_api_key: pinataApiKey,
-                        pinata_secret_api_key: pinataSecretApiKey,
-                    },
-                }
-            );
-
-            const metadataURI = `https://ipfs.io/ipfs/${metadataUploadResponse.data.IpfsHash}`;
+            // Pin the metadata
+            await ipfsClient.pin.add(metadataAdded.path);
 
             console.log('imageURI', imageURI)
-            console.log('metadataURI', metadataURI)
+            console.log('tokenURI', tokenURI)
 
-            const tokenURI = metadataURI
-
+            // return
             const args = [values.name, values.symbol, tokenURI]
+
 
             let value = 0;
             if (ethTrade) {
@@ -242,72 +317,7 @@ const Create = () => {
             console.error('Error executing transaction:', error);
         }
     };
-
-
-    // const executeTokenCreation = async () => {
-    //     try {
-
-    //         onCloseModal();
-    //         const values = getValues()
-
-    //         // Upload image to IPFS
-    //         const imageFile = values.image[0];
-    //         const imageAdded = await ipfsClient.add(imageFile);
-    //         const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
-
-    //         await ipfsClient.pin.add(imageAdded.path);
-
-    //         // Create metadata with the image URI
-    //         const metadata = {
-    //             name: values.name,
-    //             description: values.description,
-    //             symbol: values.symbol,
-    //             image: imageURI,
-    //             twitter: values.twitter,
-    //             telegram: values.telegram,
-    //             website: values.website,
-    //         };
-
-    //         // Upload metadata to IPFS
-    //         const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
-    //         const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
-
-    //         // Pin the metadata
-    //         await ipfsClient.pin.add(metadataAdded.path);
-
-    //         const args = [values.name, values.symbol, tokenURI]
-
-
-    //         let value = 0;
-    //         if (ethTrade) {
-    //             value = values?.buyAmountEth;
-    //         } else {
-    //             const estimateEthIn = new BigNumber(
-    //                 estimateEthInForExactTokensOut(
-    //                     initialConstants.circulatingSupply,
-    //                     initialConstants.poolBalance,
-    //                     initialConstants.reserveRatio,
-    //                     values?.buyAmountToken || '0'
-    //                 )
-    //             ).toString();
-    //             value = estimateEthIn;
-    //         }
-
-    //         const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
-    //         const adjustedInputAmount = inputAmount.mul(1.01);
-
-    //         await writeContractAsync({
-    //             abi: apeFactoryABI,
-    //             address: apeFactoryContractAddress,
-    //             functionName: 'createToken',
-    //             args: args,
-    //             value: adjustedInputAmount.toFixed(),
-    //         });
-
-    //     } catch (error) {
-    //         console.error('Error executing transaction:', error);
-    //     }
-    // };
+    
     console.log('errors', errors)
 
     if (isConfirming || isLoading) {
