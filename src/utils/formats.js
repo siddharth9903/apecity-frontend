@@ -35,5 +35,11 @@ function formatNumber(number) {
         return sign + absNumber.toFixed(2).replace(/\.?0+$/, '');
     }
 }
+function convertIpfsUrl(originalUrl) {
+    // Replace the beginning of the URL with the new domain
+    const newUrl = originalUrl?.replace('https://ipfs.io', import.meta.env.VITE_IPFS_ENDPOINT);
+    return newUrl;
+}
 
-export { formatNumber };
+export { formatNumber, convertIpfsUrl };
+

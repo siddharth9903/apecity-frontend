@@ -25,7 +25,7 @@ import { useQuery } from '@apollo/client';
 import { BONDING_CURVE_QUERY, TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
 import TokenDetails from '../sections/token/TokenDetails';
 import TradeComponent from '../sections/token/TradeComponent';
-import { formatNumber } from '../utils/formats';
+import { convertIpfsUrl, formatNumber } from '../utils/formats';
 import Datafeed from '../datafeed';
 import { createChart } from 'lightweight-charts';
 
@@ -474,7 +474,7 @@ const Token = () => {
                             <div className='bg-[#222227] px-3 py-2'>
                                 <div className='flex items-center justify-between'>
                                     <div className='flex items-center gap-x-2'>
-                                        <img className='w-7' src={token?.metaData?.image} alt="" />
+                                        <img className='w-7' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
                                         <p className='space-500 text-[17px] text-white'>{token?.name}</p>
                                     </div>
                                     <div className='border cursor-pointer hover:bg-[#ffffff14] py-1.5 px-1.5 flex justify-center items-center border-[#ffffff29] rounded'>
@@ -512,7 +512,7 @@ const Token = () => {
                                 </div>
                             </div>
                             <div className='relative overflow-hidden '>
-                                <img className='hover:scale-105 w-full  transition-all duration-300' src={token?.metaData?.image} alt="" />
+                                <img className='hover:scale-105 w-full  transition-all duration-300' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex gap-x-[1px]'>
@@ -656,7 +656,7 @@ const Token = () => {
                                         <div className='translate-y-[-2rem]'>
                                             <div className='flex justify-center'>
                                                 {/* <img className='w-[30%]' src="/images/token/token1.webp" alt="" /> */}
-                                                <img className='w-[30%]' src={token?.metaData?.image} alt="" />
+                                                <img className='w-[30%]' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
                                             </div>
                                             <div className='mt-2'>
                                                 <p className='text-center text-white text-2xl space-500'>{token?.symbol}</p>
