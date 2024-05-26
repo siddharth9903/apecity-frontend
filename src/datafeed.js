@@ -1,5 +1,19 @@
 import client from './graphql/client';
-import { GET_BONDING_CURVES, GET_BONDING_CURVE_TRADES } from './graphql/queries/chartQueries';
+import { GET_BONDING_CURVE, GET_BONDING_CURVES, GET_BONDING_CURVE_TRADES } from './graphql/queries/chartQueries';
+
+const configurationData = {
+    // Represents the resolutions for bars supported by your datafeed
+    // supported_resolutions: ['5','1D', '1W', '1M'],
+    // The `exchanges` arguments are used for the `searchSymbols` method if a user selects the exchange
+    exchanges: [
+        { value: 'Apecity', name: 'Apecity', desc: 'Apecity' },
+        // { value: 'Kraken', name: 'Kraken', desc: 'Kraken bitcoin exchange' },
+    ],
+    // The `symbols_types` arguments are used for the `searchSymbols` method if a user selects this symbol type
+    symbols_types: [
+        { name: 'Coins', value: 'Coins' }
+    ]
+};
 
 export default {
     onReady: (callback) => {
@@ -15,40 +29,45 @@ export default {
         const symbols = data.bondingCurves.map((curve) => ({
             symbol: curve.token.symbol,
             full_name: curve.token.name,
-            description: curve.token.name,
-            exchange: 'DEX',
-            type: 'crypto',
+            description: curve.token.metaData?.description,
+            exchange: 'Apecity',
+            type: 'Coin',
+            tokenAddress: curve.token.id,
+            bondingCurveAddress: curve.id,
             ticker: curve.id,
         }));
         onResultReadyCallback(symbols);
     },
 
-    resolveSymbol: async (symbolName, onSymbolResolvedCallback, onResolveErrorCallback) => {
-        console.log('[resolveSymbol]: Method call', symbolName);
+    resolveSymbol: async (symbol, onSymbolResolvedCallback, onResolveErrorCallback) => {
+        console.log('[resolveSymbol]: Method call', symbol);
+
         const { data } = await client.query({
-            query: GET_BONDING_CURVES,
+            query: GET_BONDING_CURVE,
+            variables: { id: symbol },
         });
-        const symbolItem = data.bondingCurves.find((curve) => curve.id === symbolName);
-        if (!symbolItem) {
-            console.log('[resolveSymbol]: Cannot resolve symbol', symbolName);
-            onResolveErrorCallback('Cannot resolve symbol');
-            return;
-        }
+        const bondingCurve = data.bondingCurve
+        const token = bondingCurve.token
         const symbolInfo = {
-            ticker: symbolItem.id,
-            name: symbolItem.token.name,
-            description: symbolItem.token.name,
-            type: 'crypto',
+            symbol: token.symbol,
+            name: token.name,
+            // description: token.metaData?.description,
+            type: 'Coin',
             session: '24x7',
             timezone: 'Etc/UTC',
-            exchange: 'DEX',
+            exchange: 'Apecity',
             minmov: 1,
             pricescale: 100,
             has_intraday: true,
             has_weekly_and_monthly: false,
             supported_resolutions: ['1', '15', '30', '60', '1D', '1W', '1M'],
         };
-        console.log('[resolveSymbol]: Symbol resolved', symbolName);
+        if (!symbolInfo) {
+            console.log('[resolveSymbol]: Cannot resolve symbol', symbol);
+            onResolveErrorCallback('Cannot resolve symbol');
+            return;
+        }
+        console.log('[resolveSymbol]: Symbol resolved', symbol);
         onSymbolResolvedCallback(symbolInfo);
     },
 

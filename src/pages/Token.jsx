@@ -29,6 +29,7 @@ import { convertIpfsUrl, formatNumber } from '../utils/formats';
 import Datafeed from '../datafeed';
 import { createChart } from 'lightweight-charts';
 import { MdOutlineShowChart } from "react-icons/md";
+import { TVChartContainer } from '../components/TVChartContainer';
 const Token = () => {
 
     const navigate = useNavigate()
@@ -117,69 +118,6 @@ const Token = () => {
     const trades = tradesData?.trades;
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
-
-
-    // useEffect(() => {
-    //     if (chartContainerRef.current) {
-    //         const chart = createChart(chartContainerRef.current, {
-    //             layout: {
-    //                 textColor: 'black',
-    //                 background: { type: 'solid', color: 'white' },
-    //             },
-    //             // crosshair: {
-    //             //     mode: CrosshairMode.Normal,
-    //             // },
-    //             timeScale: {
-    //                 timeVisible: true,
-    //                 secondsVisible: false,
-    //             },
-    //         });
-
-    //         const candlestickSeries = chart.addCandlestickSeries({
-    //             upColor: '#26a69a',
-    //             downColor: '#ef5350',
-    //             borderVisible: false,
-    //             wickUpColor: '#26a69a',
-    //             wickDownColor: '#ef5350',
-    //         });
-
-    //         const trades = tradesData?.trades;
-
-    //         if (trades) {
-    //             const aggregatedData = trades.reduce((acc, trade) => {
-    //                 const timestamp = trade.timestamp * 1000;
-    //                 const intervalKey = Math.floor(timestamp / (aggregationInterval * 1000)) * (aggregationInterval * 1000);
-    //                 if (!acc[intervalKey]) {
-    //                     acc[intervalKey] = {
-    //                         time: timestamp,
-    //                         open: Number(trade.avgPrice),
-    //                         high: Number(trade.avgPrice),
-    //                         low: Number(trade.avgPrice),
-    //                         close: Number(trade.avgPrice),
-    //                     };
-    //                 } else {
-    //                     acc[intervalKey].high = Math.max(acc[intervalKey].high, Number(trade.avgPrice));
-    //                     acc[intervalKey].low = Math.min(acc[intervalKey].low, Number(trade.avgPrice));
-    //                     acc[intervalKey].close = Number(trade.avgPrice);
-    //                 }
-    //                 return acc;
-    //             }, {});
-
-    //             const candlestickData = Object.values(aggregatedData).sort(
-    //                 (a, b) => a.time - b.time
-    //             );
-
-    //             candlestickSeries.setData(candlestickData);
-    //         }
-
-    //         chart.timeScale().fitContent();
-
-    //         return () => {
-    //             chart.remove();
-    //         };
-    //     }
-    // }, [tradesData, aggregationInterval]);
-
 
     useEffect(() => {
         if (chartContainerRef.current) {
@@ -270,7 +208,7 @@ const Token = () => {
     const widgetOptions = {
         symbol: token?.id,
         interval: '60',
-        fullscreen: false,
+        fullscreen: true,
         container: 'tv_chart_container',
         library_path: '/charting_library/',
         datafeed: Datafeed,
@@ -666,12 +604,19 @@ const Token = () => {
                         </div>
                         <div className="w-full">
                             <div className=''>
-                                {/* <AdvancedRealTimeChart symbol={'SPDX'} ref={chartRef} data={realTimeData} height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart> */}
-                                <AdvancedRealTimeChart height={450} width={'100%'} theme="dark"></AdvancedRealTimeChart>
+                                <div style={{ height: 'calc(100vh - 200px)' }}>
+                                    <TVChartContainer
+                                        symbol={token?.symbol}
+                                        tokenAddress={tokenAddress}
+                                        bondingCurveAddress={bondingCurve?.id}
+                                        width={'100%'}
+                                        height={'78%'}
+                                    />
+                                </div>
                             </div>
-                            <div className='text-white font-italik pfont-500 text-sm p-2'>
+                            {/* <div className='text-white font-italik pfont-500 text-sm p-2'>
                                 Charts are powered by <b><a href='https://in.tradingview.com/' target='_blank'>TradingView</a></b>
-                            </div>
+                            </div> */}
                         </div>
                         <div className='w-full  flex-1'>
                             <div>
@@ -702,13 +647,6 @@ const Token = () => {
                                                     <span className='pfont-500 text-sm ml-1.5'>Holders(706)</span>
                                                 </div>
                                             </Tab>
-                                            {/* <Tab className='focus:border-none focus:outline-none'>
-                                                <div className={`${tabIndex == 4 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
-                                                    <span className='text-sm'><FaWater /></span>
-                                                    <span className='pfont-500 text-sm ml-1.5'> Liquidity Providers(2)</span>
-                                                </div>
-                                            </Tab> */}
-
                                         </TabList>
                                     </div>
                                     <TabPanel>
@@ -720,17 +658,6 @@ const Token = () => {
                     </div>
                     <div className={`lg:border-l  ${tabIndex3 == 1 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute  lg:right-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[320px] xxl:w-[400px] token-right`}>
                         <div className='pb-10'>
-                            {/* <div className='bg-[#222227] px-3 py-2'>
-                                <div className='flex items-center justify-between'>
-                                    <div className='flex items-center gap-x-2'>
-                                        <img className='w-7' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
-                                        <p className='space-500 text-[17px] text-white'>{token?.name}</p>
-                                    </div>
-                                    <div className='border cursor-pointer hover:bg-[#ffffff14] py-1.5 px-1.5 flex justify-center items-center border-[#ffffff29] rounded'>
-                                        <BsThreeDotsVertical className='text-white' />
-                                    </div>
-                                </div>
-                            </div> */}
                             <div className='bg-[#111116] py-1.5 flex justify-center'>
                                 <div>
                                     <div className='flex gap-x-2 justify-center items-center'>
@@ -760,50 +687,7 @@ const Token = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <div className='relative overflow-hidden '>
-                                <img className='hover:scale-105 w-full  transition-all duration-300' src={token?.metaData?.image} alt="" />
-                            </div> */}
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
-                                {/* <div className='flex gap-x-[1px]'>
-                                    {token?.metaData?.website && (
-                                        <a href={token?.metaData?.website} target='_blank'>
-                                            <button className='bg-[#4b4b50] flex-1 rounded-s  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                                <img className='w-4' src="/images/icons/svg/web.svg" alt="" />
-                                                <span className='pfont-500 ml-2 text-sm'>
-                                                    Website
-                                                </span>
-                                            </button>
-                                        </a>
-                                    )}
-
-                                    {token?.metaData?.twitter && (
-                                        <a href={token?.metaData?.twitter} target='_blank'>
-                                            <button className='bg-[#4b4b50]  flex-1 flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                                <BsTwitterX className='text-sm' />
-                                                <span className='pfont-500 ml-2 text-sm'>
-                                                    Twitter
-                                                </span>
-                                            </button>
-                                        </a>
-                                    )}
-
-
-                                    {token?.metaData?.telegram && (
-                                        <a href={token?.metaData?.telegram} target='_blank'>
-                                            <button className='bg-[#4b4b50]  flex-1 flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                                <FaTelegramPlane className='' />
-                                                <span className='pfont-500 ml-2 text-sm'>
-                                                    Telegram
-                                                </span>
-                                            </button>
-                                        </a>
-                                    )}
-                                    <button onClick={handleClick} className='bg-[#4b4b50] rounded-e  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                        <span className=''>
-                                            <FiChevronDown />
-                                        </span>
-                                    </button>
-                                </div> */}
                                 <div className='flex mt-3 gap-x-2'>
                                     <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                         <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
@@ -814,27 +698,6 @@ const Token = () => {
                                         <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? Number(bondingCurve.currentPrice).toFixed(10) : null} WETH</p>
                                     </div>
                                 </div>
-                                {/* <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
-                                    <div className='flex items-center gap-x-2'>
-                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
-                                        <FaInfoCircle data-tooltip-id='bonding_curve' className='text-[#8e94a0] cursor-pointer' />
-                                    </div>
-                                    <div className='mt-2'>
-                                        <div className={`rounded-full w-full sm:w-[100%] h-4 bg-[#374151]`}>
-                                            <a className='w-full' data-tooltip-id='bonding_curve' >
-                                                <div style={{ width: '80%' }} className='srounded-full cursor-pointer h-full bg-[#48bb78]'>
-                                                </div>
-                                            </a>
-                                            <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
-                                                <div className='w-[330px]'>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
-                                                </div>
-                                            </Tooltip>
-                                        </div>
-                                    </div>
-
-                                </div> */}
                                 <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
                                     <div className='flex items-center gap-x-2'>
                                         <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
@@ -863,101 +726,7 @@ const Token = () => {
                                 {
                                     token && trades && <TokenDetails token={token} trades={trades} />
                                 }
-
-                                {/* <div className='flex mt-5 gap-x-2'>
-                                    <div className='flex-1 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
-                                        <BsTwitterX className='text-white  text-sm' />
-                                        <p className='text-white text-sm text-center pfont-500'>Search on Twitter</p>
-                                    </div>
-                                    <div className='flex-1 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
-                                        <FaSearch className='text-white  text-sm' />
-                                        <p className='text-white text-sm text-center pfont-500'>Other Pairs</p>
-                                    </div>
-                                </div> */}
-                                {/* <div className='flex mt-5 gap-x-2'>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/rocket.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>1917</p>
-                                    </div>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/fire.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>198</p>
-                                    </div>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/emoji.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>198</p>
-                                    </div>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/flag.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>198</p>
-                                    </div>
-                                </div> */}
-                                {/* <div ref={targetDivRef} className='pt-[2rem] mt-5'>
-                                    <div className='gradient-1 sm:px-5 shadow-1 rounded-2xl'>
-                                        <div className='translate-y-[-2rem]'>
-                                            <div className='flex justify-center'>
-                                               
-                                                <img className='w-[30%]' src={token?.metaData?.image} alt="" />
-                                            </div>
-                                            <div className='mt-2'>
-                                                <p className='text-center text-white text-2xl space-500'>{token?.symbol}</p>
-                                            </div>
-                                            <div className='flex flex-wrap justify-center mt-4 gap-3'>
-                                                {
-                                                    token?.metaData?.website && (
-                                                        <a href={token?.metaData?.website} target='_blank'>
-                                                            <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
-                                                                <img className='w-4' src="/images/icons/svg/web.svg" alt="" />
-                                                                <span className='pfont-600 ml-2 text-sm'>
-                                                                    Website
-                                                                </span>
-                                                            </button>
-                                                        </a>
-                                                    )
-                                                }
-                                                {
-                                                    token?.metaData?.twitter && (
-                                                        <a href={token?.metaData?.twitter} target='_blank'>
-                                                            <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
-                                                                <BsTwitterX className='text-sm' />
-                                                                <span className='pfont-600 ml-2 text-sm'>
-                                                                    Twitter
-                                                                </span>
-                                                            </button>
-                                                        </a>
-                                                    )
-                                                }
-                                                {
-                                                    token?.metaData?.telegram && (
-                                                        <a href={token?.metaData?.telegram} target='_blank'>
-                                                            <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
-                                                                <FaTelegramPlane className='' />
-                                                                <span className='pfont-600 ml-2 text-sm'>
-                                                                    Telegram
-                                                                </span>
-                                                            </button>
-                                                        </a>
-                                                    )
-                                                }
-
-                                            </div>
-                                            <div className='mt-4 px-3'>
-                                                <p className='text-white pfont-400 text-center'>
-                                                    {token?.metaData?.description}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
-                            </div>
+                           </div>
                         </div>
                     </div>
                 </div>

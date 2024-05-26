@@ -92,6 +92,8 @@ export const TOKEN_TRADES_QUERY = gql`
       inAmount
       outAmount
       avgPrice
+      openPrice
+      closePrice
       user {
         id
       }

@@ -8,6 +8,9 @@ export const GET_BONDING_CURVES = gql`
         id
         symbol
         name
+        metaData {
+          description
+        }
       }
       currentPrice
       marketCap
@@ -29,6 +32,27 @@ export const GET_BONDING_CURVE_TRADES = gql`
       inAmount
       outAmount
       avgPrice
+      openPrice
+      closePrice
     }
   }
 `;
+
+export const GET_BONDING_CURVE = gql`
+  query GetBondingCurve($id: ID!) {
+      bondingCurve(id: $id) {
+        id
+        token {
+          id
+          symbol
+          name
+          metaData {
+            description
+          }
+        }
+        currentPrice
+        marketCap
+        createdAtTimestamp
+      }
+  }
+`
