@@ -41,6 +41,7 @@ export const TVChartContainer = (props) => {
 			width: defaultProps.width, 
 		};
 
+		// const tvWidget = new window.TradingView.widget(widgetOptions);
 		const tvWidget = new widget(widgetOptions);
 
 		tvWidget.onChartReady(() => {
