@@ -25,7 +25,7 @@ import { useQuery } from '@apollo/client';
 import { BONDING_CURVE_QUERY, TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
 import TokenDetails from '../sections/token/TokenDetails';
 import TradeComponent from '../sections/token/TradeComponent';
-import { formatNumber } from '../utils/formats';
+import { convertIpfsUrl, formatNumber } from '../utils/formats';
 import Datafeed from '../datafeed';
 import { createChart } from 'lightweight-charts';
 import { MdOutlineShowChart } from "react-icons/md";
@@ -723,7 +723,7 @@ const Token = () => {
                             {/* <div className='bg-[#222227] px-3 py-2'>
                                 <div className='flex items-center justify-between'>
                                     <div className='flex items-center gap-x-2'>
-                                        <img className='w-7' src={token?.metaData?.image} alt="" />
+                                        <img className='w-7' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
                                         <p className='space-500 text-[17px] text-white'>{token?.name}</p>
                                     </div>
                                     <div className='border cursor-pointer hover:bg-[#ffffff14] py-1.5 px-1.5 flex justify-center items-center border-[#ffffff29] rounded'>
