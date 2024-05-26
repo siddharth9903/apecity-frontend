@@ -110,7 +110,7 @@ export default function Topnav({ setToggle, toggle }) {
             <div className="header-bar">
                 <div>
                     <div className="row px-3 sm:px-5 items-center lg:px-3 py-2.5">
-                        <div className="col-lg-4 col-md-2 col-sm-3 col-4">
+                        <div className="col-lg-4 col-sm-1  col-4">
                             <div className="flex items-center space-x-1">
                                 <Link to="#" className="flex items-center">
                                     <img src={'/images/logo/logo1.png'} className="w-12" alt="" />
@@ -131,9 +131,9 @@ export default function Topnav({ setToggle, toggle }) {
                     </div> */}
                             </div>
                         </div>
-                        <div className="col-lg-4 col-md-4 col-6 max-sm:hidden">
+                        <div className="col-lg-4 col-sm-4  max-sm:hidden">
                             <div className="">
-                                <div className="flex items-center justify-center md:justify-start lg:justify-center gap-x-4">
+                                <div className="flex items-center justify-start lg:justify-center gap-x-4">
                                     <div>
                                         <Link className="pfont-400 tracking-[1px] text-white" to={''}>Explore</Link>
                                     </div>
@@ -177,7 +177,7 @@ export default function Topnav({ setToggle, toggle }) {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-4 col-md-6 col-sm-3 col-8">
+                        <div className="col-lg-4 col-md-7 col-sm-7 col-8">
                             <div className="flex justify-end items-center gap-x-5 md:gap-x-4">
                                 {/* <li className="dropdown inline-block relative">
                         <button data-dropdown-toggle="dropdown" className="dropdown-toggle btn btn-icon btn-sm rounded-full inline-flex bg-violet-600 hover:bg-violet-700 border-violet-600 hover:border-violet-700 text-white" type="button" onClick={notificationtoggle}>

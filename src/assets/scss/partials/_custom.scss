@@ -28,6 +28,19 @@
     border-radius: 8px;
 }
 
+.token-info::-webkit-scrollbar {
+    width: 9px;
+}
+
+.token-info::-webkit-scrollbar-track {
+    background-color: #28282d;
+}
+
+.token-info::-webkit-scrollbar-thumb {
+    background-color: #4d4d4d;
+    border-radius: 8px;
+}
+
 // .token-left::-webkit-scrollbar-thumb:hover {
 //     /* Adjust hover styles */
 //     background-color: blue;
