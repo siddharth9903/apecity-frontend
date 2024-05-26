@@ -112,7 +112,7 @@ export default function Topnav({ setToggle, toggle }) {
                     <div className="row px-3 sm:px-5 items-center lg:px-3 py-2.5">
                         <div className="col-lg-4 col-sm-1  col-4">
                             <div className="flex items-center space-x-1">
-                                <Link to="#" className="flex items-center">
+                                <Link to="/" className="flex items-center">
                                     <img src={'/images/logo/logo1.png'} className="w-12" alt="" />
                                     {/* <span className="text-white lilita-400 tracking-[2px] text-2xl">Ape city</span> */}
                                     {/* <span className="md:block hidden">
