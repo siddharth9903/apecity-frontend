@@ -57,33 +57,6 @@ const Token = () => {
     const [aggregationInterval, setAggregationInterval] = useState(300)
 
     const [realTimeData, setRealTimeData] = useState([]);
-    // const chartRef = useRef();
-
-    // // Function to generate fake data
-    // const generateFakeData = () => {
-    //     // Generate fake data for demonstration
-    //     const newData = Array.from({ length: 10 }, () => ({
-    //         timestamp: new Date(),
-    //         value: Math.random() * 10000// Generate random values for demonstration
-    //     }));
-
-    //     if (chartRef.current) {
-    //         chartRef.current.updateData(newData);
-    //     }
-    // };
-
-    // // useEffect to generate fake data on component mount and updates
-    // useEffect(() => {
-    //     // Call generateFakeData function initially
-    //     generateFakeData();
-
-    //     // Set interval to continuously generate fake data at a certain interval
-    //     const interval = setInterval(generateFakeData, 100); // Example: Generate data every 5 seconds
-
-    //     // Clean up interval on component unmount
-    //     return () => clearInterval(interval);
-    // }, []);
-
 
     const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
         variables: { id: tokenAddress },
@@ -239,186 +212,19 @@ const Token = () => {
                                     </div> */}
                                 </div>
                             </div>
-                            {/* <div className='bg-[#111116] py-1.5 flex justify-center'>
-                                <div>
-                                    <div className='flex gap-x-2 justify-center items-center'>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span className='text-white text-[17px] space-600'>{token?.symbol}</span>
-                                            <span className='text-[#A7A7AC]'><FaRegCopy /></span>
-                                        </div>
-                                        <span className='text-white'>/</span>
-                                        <span className='uppercase text-white text-[17px] space-600'>weth</span>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span><img src="/images/icons/svg/rank.svg" alt="" /></span>
-                                            <span className='text-[#ff9900] pfont-600'>#2</span>
-                                        </div>
-                                    </div>
-                                    <div className='flex gap-x-2 mt-1 justify-center items-center'>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span><img className='w-4' src="/images/icons/svg/base.svg" alt="" /></span>
-                                            <span className='text-[#A7A7AC] pfont-400 text-sm'>Base</span>
-                                        </div>
-                                        <div>
-                                            <span className='text-[#A7A7AC] text-sm'><FaChevronRight /></span>
-                                        </div>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span><img className='w-4' src="/images/icons/svg/uniswap.webp" alt="" /></span>
-                                            <span className='text-[#A7A7AC] pfont-400 text-sm'>Uniswap</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                             <div className='relative overflow-hidden '>
                                 <img className='hover:scale-105 w-full  transition-all duration-300' src={token?.metaData?.image} alt="" />
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
-                                {/* <div className='flex gap-x-[1px]'>
-                                    {token?.metaData?.website && (
-                                        <a href={token?.metaData?.website} target='_blank'>
-                                            <button className='bg-[#4b4b50] flex-1 rounded-s  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                                <img className='w-4' src="/images/icons/svg/web.svg" alt="" />
-                                                <span className='pfont-500 ml-2 text-sm'>
-                                                    Website
-                                                </span>
-                                            </button>
-                                        </a>
-                                    )}
-
-                                    {token?.metaData?.twitter && (
-                                        <a href={token?.metaData?.twitter} target='_blank'>
-                                            <button className='bg-[#4b4b50]  flex-1 flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                                <BsTwitterX className='text-sm' />
-                                                <span className='pfont-500 ml-2 text-sm'>
-                                                    Twitter
-                                                </span>
-                                            </button>
-                                        </a>
-                                    )}
-
-
-                                    {token?.metaData?.telegram && (
-                                        <a href={token?.metaData?.telegram} target='_blank'>
-                                            <button className='bg-[#4b4b50]  flex-1 flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                                <FaTelegramPlane className='' />
-                                                <span className='pfont-500 ml-2 text-sm'>
-                                                    Telegram
-                                                </span>
-                                            </button>
-                                        </a>
-                                    )}
-                                    <button onClick={handleClick} className='bg-[#4b4b50] rounded-e  flex justify-center items-center px-3 py-1  text-[#FFFFFFFB]'>
-                                        <span className=''>
-                                            <FiChevronDown />
-                                        </span>
-                                    </button>
-                                </div> */}
-                                {/* <div className='flex mt-3 gap-x-2'>
-                                    <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
-                                        <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
-                                        <p className='text-white text-[15px] text-center pfont-600'>$0.0886777</p>
-                                    </div>
-                                    <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
-                                        <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
-                                        <p className='text-white text-[15px] text-center pfont-600'>{bondingCurve?.currentPrice} WETH</p>
-                                    </div>
-                                </div> */}
-
-                                {/* <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
-                                    <div className='flex items-center gap-x-2'>
-                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
-                                        <FaInfoCircle data-tooltip-id='bonding_curve' className='text-[#8e94a0] cursor-pointer' />
-                                    </div>
-                                    <div className='mt-2'>
-                                        <div className={`rounded-full w-full sm:w-[100%] h-4 bg-[#374151]`}>
-                                            <a className='w-full' data-tooltip-id='bonding_curve' >
-                                                <div style={{ width: '80%' }} className='srounded-full cursor-pointer h-full bg-[#48bb78]'>
-                                                </div>
-                                            </a>
-                                            <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
-                                                <div className='w-[330px]'>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
-                                                </div>
-                                            </Tooltip>
-                                        </div>
-                                    </div>
-
-                                </div> */}
-                                {/* <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
-                                    <div className='flex items-center gap-x-2'>
-                                        <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
-                                        <FaInfoCircle data-tooltip-id='bonding_curve' className='text-[#8e94a0] cursor-pointer' />
-                                    </div>
-                                    <div className='mt-2'>
-                                        <div className={`rounded-full w-full sm:w-[100%] h-4 bg-[#374151] relative`}>
-                                            <a className='w-full' data-tooltip-id='bonding_curve'>
-                                                <div style={{ width: `${bondingCurveProgess}%` }} className='srounded-full cursor-pointer h-full bg-[#48bb78] absolute top-0 left-0'>
-                                                </div>
-                                            </a>
-                                            <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
-                                                <div className='w-[330px]'>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
-                                                </div>
-                                            </Tooltip>
-                                        </div>
-                                    </div>
-                                </div> */}
-
-                                {/* {
-                                    token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
-                                } */}
-                                {/* 
-                                {
-                                    token && trades && <TokenDetails token={token} trades={trades} />
-                                } */}
-
                                 <div className='flex justify-center mt-5 gap-x-2'>
                                     <div className='px-3 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
                                         <BsTwitterX className='text-white  text-sm' />
                                         <p className='text-white text-sm text-center pfont-500'>Search on Twitter</p>
                                     </div>
-                                    {/* <div className='flex-1 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
-                                        <FaSearch className='text-white  text-sm' />
-                                        <p className='text-white text-sm text-center pfont-500'>Other Pairs</p>
-                                    </div> */}
                                 </div>
-                                {/* <div className='flex mt-5 gap-x-2'>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/rocket.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>1917</p>
-                                    </div>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/fire.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>198</p>
-                                    </div>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/emoji.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>198</p>
-                                    </div>
-                                    <div className='hover:bg-[#ffffff14] py-2 flex-1 rounded border border-[#ffffff29]'>
-                                        <div className='flex justify-center'>
-                                            <img src="/images/icons/svg/flag.svg" alt="" />
-                                        </div>
-                                        <p className='pfont-400 text-white text-center'>198</p>
-                                    </div>
-                                </div> */}
                                 <div ref={targetDivRef} className=' mt-5'>
                                     <div className='gradient-1 py-5 sm:px-5 shadow-1 rounded-2xl'>
                                         <div className=''>
-                                            {/* <div className='flex justify-center'>
-                                               
-                                                <img className='w-[30%]' src={token?.metaData?.image} alt="" />
-                                            </div> */}
-                                            {/* <div className='mt-2'>
-                                                <p className='text-center text-white text-2xl space-500'>{token?.symbol}</p>
-                                            </div> */}
                                             <div className='flex flex-wrap justify-center mt-4 gap-3'>
                                                 {
                                                     token?.metaData?.website && (
