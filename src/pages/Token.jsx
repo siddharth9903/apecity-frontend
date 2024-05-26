@@ -26,7 +26,6 @@ import { BONDING_CURVE_QUERY, TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql
 import TokenDetails from '../sections/token/TokenDetails';
 import TradeComponent from '../sections/token/TradeComponent';
 import { convertIpfsUrl, formatNumber } from '../utils/formats';
-import Datafeed from '../datafeed';
 import { createChart } from 'lightweight-charts';
 import { MdOutlineShowChart } from "react-icons/md";
 import { TVChartContainer } from '../components/TVChartContainer';

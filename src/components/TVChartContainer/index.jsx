@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import './index.css';
 import { widget } from '../../charting_library';
-import datafeed from '../../datafeed';
 import createDataFeed from '../../createDataFeed';
 
 function getLanguageFromURL() {
