@@ -174,21 +174,6 @@ const Token = () => {
         return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
     }, [value])
 
-    console.log("tokenAddress", tokenAddress)
-
-
-    const widgetOptions = {
-        symbol: token?.id,
-        interval: '60',
-        fullscreen: true,
-        container: 'tv_chart_container',
-        library_path: '/charting_library/',
-        datafeed: Datafeed,
-    };
-
-    console.log('token', token)
-    console.log('bondingCurve', bondingCurve)
-
 
     if (tokenLoading || isLoading) {
         return <div>Loading...</div>;

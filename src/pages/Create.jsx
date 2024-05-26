@@ -96,34 +96,6 @@ const Create = () => {
             hash: hash,
         })
 
-    // console.log('tx receipt data: ', receiptData);
-
-    // // // parseEventLogs(receiptData.logs)
-    // const eventLogs = parseEventLogs({
-    //     abi: apeFactoryABI,
-    //     eventName: 'TokenCreated',
-    //     logs: receiptData?.logs,
-    // })
-
-    // console.log('ssslogs', eventLogs)
-
-
-    // // const factoryInterface = new ethers.Interface(apeFactoryABI);
-    // // const decodedLogs = data.logs.map((log) => factoryInterface.parseLog(log));
-
-    // // console.log('sssDecodedLogs', decodedLogs)
-    // // const tokenCreatedEvent = decodedLogs.find(
-    // //     (event) => event.name === 'TokenCreated'
-    // // );
-    // // const tokenAddress = tokenCreatedEvent.args.token;
-
-    // // console.log('newest created token address', tokenAddress)
-    // // const transactionDetails = useTransaction({
-    // //     hash,
-    // // })
-
-    // console.log('transactionDetails',transactionDetails);
-
     useEffect(() => {
         if (isConfirmed) {
             enqueueSnackbar('Transaction successful of Token creation', { variant: 'success' });
@@ -132,10 +104,8 @@ const Create = () => {
                 eventName: 'TokenCreated',
                 logs: receiptData?.logs,
             })
-            console.log('eventLogs', eventLogs)
             if (eventLogs?.length > 0) {
                 let tokenAddress = eventLogs[0]?.args?.token
-                console.log('tokenAddress', tokenAddress.toLowerCase())
                 setIsLoading(true);
 
                 setTimeout(() => {
@@ -278,9 +248,6 @@ const Create = () => {
 
             // Pin the metadata
             await ipfsClient.pin.add(metadataAdded.path);
-
-            console.log('imageURI', imageURI)
-            console.log('tokenURI', tokenURI)
 
             // return
             const args = [values.name, values.symbol, tokenURI]

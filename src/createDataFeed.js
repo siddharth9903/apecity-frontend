@@ -34,12 +34,10 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
 
     const modifiedDataFeed = {
         onReady: (callback) => {
-            console.log('[onReady]: Method call');
             setTimeout(() => callback(configurationData));
         },
 
         searchSymbols: async (userInput, exchange, symbolType, onResultReadyCallback) => {
-            console.log('[searchSymbols]: Method call');
             const { data } = await client.query({
                 query: GET_BONDING_CURVES,
             });
@@ -58,7 +56,6 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
         },
 
         resolveSymbol: async (symbol, onSymbolResolvedCallback, onResolveErrorCallback) => {
-            console.log('[resolveSymbol]: Method call', symbol);
 
             const { data } = await client.query({
                 query: GET_BONDING_CURVE,
@@ -94,11 +91,6 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
         },
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-            console.log('symbolInfo', symbolInfo);
-            console.log('resolution', resolution);
-            console.log('periodParams', periodParams);
-            console.log('[getBars]: Method call', symbolInfo);
-
             const { from, to, firstDataRequest } = periodParams;
 
             try {
