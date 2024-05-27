@@ -72,7 +72,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 timezone: 'Etc/UTC',
                 exchange: 'Apecity',
                 minmov: 1,
-                pricescale: 1000000000,
+                pricescale: 10000000000,
                 has_intraday: true,
                 // visible_plots_set: 'ohlcv',
                 visible_plots_set: 'ohlc',
@@ -126,15 +126,15 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                     if (!currentBar.time) {
                         // Start a new bar
                         currentBar.time = tradeTime;
-                        currentBar.open = tradeOpenPrice.toFixed(9);
-                        currentBar.high = (tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(9);
-                        currentBar.low = (tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(9);
-                        currentBar.close = tradeClosePrice.toFixed(9);
+                        currentBar.open = tradeOpenPrice.toFixed(18);
+                        currentBar.high = (tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18);
+                        currentBar.low = (tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18);
+                        currentBar.close = tradeClosePrice.toFixed(18);
                     } else {
                         // Update the current bar
-                        currentBar.high = (Math.max(parseFloat(currentBar.high), tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice)).toFixed(9);
-                        currentBar.low = (Math.min(parseFloat(currentBar.low), tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice)).toFixed(9);
-                        currentBar.close = tradeClosePrice.toFixed(9);
+                        currentBar.high = (Math.max(parseFloat(currentBar.high), tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice)).toFixed(18);
+                        currentBar.low = (Math.min(parseFloat(currentBar.low), tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice)).toFixed(18);
+                        currentBar.close = tradeClosePrice.toFixed(18);
 
                         // Check if the trade time is beyond the current bar period
                         const barPeriod = getBarPeriod(resolution);
@@ -145,10 +145,10 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                             bars.push({ ...currentBar });
                             currentBar = {
                                 time: tradeTime,
-                                open: tradeOpenPrice.toFixed(9),
-                                high: (tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(9),
-                                low: (tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(9),
-                                close: tradeClosePrice.toFixed(9),
+                                open: tradeOpenPrice.toFixed(18),
+                                high: (tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18),
+                                low: (tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18),
+                                close: tradeClosePrice.toFixed(18),
                             };
                         }
                     }
