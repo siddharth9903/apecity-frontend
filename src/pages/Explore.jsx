@@ -3,11 +3,11 @@ import ExploreToken from "../sections/explore/ExploreToken"
 import Select from 'react-select';
 import { IoSearch } from "react-icons/io5";
 import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from "../graphql/queries/tokenQueries";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { TOKENS_QUERY, TOKEN_SEARCH_QUERY, TOTAL_TOKENS_QUERY } from "../graphql/queries/tokenQueries";
 const Explore = () => {
     const navigate = useNavigate();
-    const filterOptions = [
+    const sortingOptions = [
         { value: '0', label: 'Bump Order' },
         // { value: '1', label: 'Last Reply' },
         // { value: '2', label: 'Reply Count' },
@@ -25,15 +25,21 @@ const Explore = () => {
         { value: '4', label: 'Every 10s' },
         { value: '5', label: 'Every 30s' }
     ];
-    const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('bondingCurve__createdAtTimestamp');
     const [orderBy, setOrderBy] = useState('desc');
     const [reorderInterval, setReorderInterval] = useState(2000);
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [getSearchResults, { loading: searchLoading, error: searchError }] = useLazyQuery(TOKEN_SEARCH_QUERY, {
+        onCompleted: (data) => {
+            const resultTokens = data?.tokenMetaDataSearch?.map(result => result?.token)
+            setSearchResults(resultTokens);
+        }
+    });
+    const handleSearch = () => {
+        getSearchResults({ variables: { searchTerm } });
     };
-
     const handleSortBy = (option) => {
         switch (option.value) {
             case '0':
@@ -49,7 +55,7 @@ const Explore = () => {
                 setOrderBy('desc');
                 break;
             default:
-                setSortBy('id');
+                setSortBy('bondingCurve__createdAtTimestamp');
                 setOrderBy('desc');
         }
     };
@@ -89,15 +95,22 @@ const Explore = () => {
                         <div className="col-12 rounded-md mt-10 py-4 px-2 bg-[#28282d]">
                             <div className="row filter-section">
                                 <div className="col-lg-4 col-xs-6 px-2">
-                                    <h3 className="text-white roboto-400 ">Search :</h3>
+                                    <h3 className="text-white roboto-400 ">Search for token:</h3>
                                     <div className="mt-1.5 items-center border-[2px] rounded gap-x-2 border-[#4b4b50] px-4 flex">
-                                        <IoSearch className="text-xl text-[#6e767d]" />
-                                        <input 
-                                            type="text" 
-                                            placeholder="Search" 
-                                            className="w-full text-white focus:outline-none  border-none bg-transparent placeholder:text-[#6e767d] roboto-400 rounded h-[42px]" 
-                                            onChange={handleSearch}    
+                                        <input
+                                            type="text"
+                                            placeholder="Search"
+                                            className="w-full text-white focus:outline-none border-none bg-transparent placeholder:text-[#6e767d] roboto-400 rounded h-[42px]"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
                                         />
+                                        <button
+                                            className="bg-[#475dc0] text-white px-4 py-2 rounded-md"
+                                            onClick={handleSearch}
+                                            disabled={searchLoading}
+                                        >
+                                            {searchLoading ? 'Searching...' : <IoSearch className="text-xl" />}
+                                        </button>
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-xs-6 max-xs:mt-4 px-2">
@@ -106,7 +119,7 @@ const Explore = () => {
                                         <Select 
                                             placeholder='Sort By' 
                                             className="roboto-400" 
-                                            options={filterOptions} 
+                                            options={sortingOptions} 
                                             onChange={handleSortBy}
                                         />
                                     </div>
@@ -140,7 +153,7 @@ const Explore = () => {
 
                         <div className="col-12  mb-3 mt-3">
                             <ExploreToken
-                                searchTerm={searchTerm}
+                                searchResults={searchResults}
                                 sortBy={sortBy}
                                 orderBy={orderBy}
                                 reorderInterval={reorderInterval}

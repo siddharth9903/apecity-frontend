@@ -20,7 +20,6 @@ import { deployedContractAddress as apeFactoryAddress } from '../../contracts/Ap
 //   }
 // `;
 
-// $searchTerm: String
 // where: { name_contains: $searchTerm, symbol_contains: $searchTerm }
 
 export const TOKENS_QUERY = gql`
@@ -52,6 +51,34 @@ export const TOKENS_QUERY = gql`
         createdAtTimestamp
         trades(orderBy: timestamp, orderDirection: desc, first: 1) {
           timestamp
+        }
+      }
+    }
+  }
+`;
+
+export const TOKEN_SEARCH_QUERY = gql`
+  query TokenSearch($searchTerm: String) {
+    tokenMetaDataSearch(text: $searchTerm) {
+      id
+      token {
+        id
+        name
+        symbol
+        metaData {
+          description
+          id
+          image
+          telegram
+          twitter
+          website
+        }
+        bondingCurve {
+          marketCap
+          createdAtTimestamp
+          trades(orderBy: timestamp, orderDirection: desc, first: 1) {
+            timestamp
+          }
         }
       }
     }

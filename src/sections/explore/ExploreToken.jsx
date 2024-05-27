@@ -8,7 +8,7 @@ import { useRaisedShadow } from '../../hooks/useRaisedShadow';
 import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQueries';
 import { convertIpfsUrl } from '../../utils/formats';
 
-const ExploreToken = ({ searchTerm, sortBy, orderBy, reorderInterval }) => {
+const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
     const [tokens, setTokens] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -26,11 +26,15 @@ const ExploreToken = ({ searchTerm, sortBy, orderBy, reorderInterval }) => {
             skip: (currentPage - 1) * pageSize,
             orderBy: sortBy,
             orderDirection: orderBy,
-            // searchTerm: searchTerm || undefined,
         },
-        pollInterval: reorderInterval ? reorderInterval * 1000 : 0,
+        pollInterval: reorderInterval ? reorderInterval * 1000 : 2000,
     });
 
+    useEffect(() => {
+        if (searchResults) {
+            setTokens(searchResults);
+        }
+    }, [searchResults]);
 
     useEffect(() => {
         if (tokensData) {
@@ -41,6 +45,11 @@ const ExploreToken = ({ searchTerm, sortBy, orderBy, reorderInterval }) => {
     useEffect(() => {
         setTotalPages(Math.ceil(totalTokens / pageSize));
     }, [totalTokens, pageSize]);
+
+    useEffect(() => {
+        const searchResultTokens = searchResults.length
+        setTotalPages(Math.ceil(searchResultTokens / pageSize));
+    }, [searchResults, pageSize]);
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {
@@ -67,7 +76,7 @@ const ExploreToken = ({ searchTerm, sortBy, orderBy, reorderInterval }) => {
             <div className="overflow-x-auto">
                 <table className="md:w-full max-md:w-[720px] max-md:overflow-x-auto border-separate border-spacing-y-3">
                     <Reorder.Group as="tbody" axis="y" values={tokens}>
-                        {tokens.map((item) => (
+                        {tokens && tokens?.map((item) => (
                             <Item key={item.id} item={item} />
                         ))}
                     </Reorder.Group>
