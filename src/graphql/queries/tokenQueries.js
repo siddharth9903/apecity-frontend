@@ -1,10 +1,41 @@
 import { gql } from '@apollo/client';
 import { deployedContractAddress as apeFactoryAddress } from '../../contracts/ApeFactory';
 
+// export const TOKENS_QUERY = gql`
+//   query GetTokens($first: Int!, $skip: Int!) {
+//     # tokens(first: $first, skip: $skip, orderBy: createdAtTimestamp, orderDirection: desc) {
+//     tokens(first: $first, skip: $skip, orderDirection: desc) {
+//       id
+//       name
+//       symbol
+//       metaData {
+//         description
+//         id
+//         image
+//         telegram
+//         twitter
+//         website
+//       }
+//     }
+//   }
+// `;
+
+// $searchTerm: String
+// where: { name_contains: $searchTerm, symbol_contains: $searchTerm }
+
 export const TOKENS_QUERY = gql`
-  query GetTokens($first: Int!, $skip: Int!) {
-    # tokens(first: $first, skip: $skip, orderBy: createdAtTimestamp, orderDirection: desc) {
-    tokens(first: $first, skip: $skip, orderDirection: desc) {
+  query GetTokens(
+    $first: Int!
+    $skip: Int!
+    $orderBy: String!
+    $orderDirection: String!
+  ) {
+    tokens(
+      first: $first
+      skip: $skip
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+    ) {
       id
       name
       symbol
@@ -15,6 +46,13 @@ export const TOKENS_QUERY = gql`
         telegram
         twitter
         website
+      }
+      bondingCurve {
+        marketCap
+        createdAtTimestamp
+        trades(orderBy: timestamp, orderDirection: desc, first: 1) {
+          timestamp
+        }
       }
     }
   }

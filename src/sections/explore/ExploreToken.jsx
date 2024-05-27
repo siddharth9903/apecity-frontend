@@ -8,14 +8,14 @@ import { useRaisedShadow } from '../../hooks/useRaisedShadow';
 import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQueries';
 import { convertIpfsUrl } from '../../utils/formats';
 
-const ExploreToken = () => {
+const ExploreToken = ({ searchTerm, sortBy, orderBy, reorderInterval }) => {
     const [tokens, setTokens] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
-    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY,{
+    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY, {
         pollInterval: 2000
     });
     const totalTokens = totalTokensData?.factory?.tokenCount || 0;
@@ -24,8 +24,13 @@ const ExploreToken = () => {
         variables: {
             first: pageSize,
             skip: (currentPage - 1) * pageSize,
+            orderBy: sortBy,
+            orderDirection: orderBy,
+            // searchTerm: searchTerm || undefined,
         },
+        pollInterval: reorderInterval ? reorderInterval * 1000 : 0,
     });
+
 
     useEffect(() => {
         if (tokensData) {
