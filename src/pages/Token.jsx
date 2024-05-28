@@ -29,6 +29,7 @@ import { convertIpfsUrl, formatNumber } from '../utils/formats';
 import { createChart } from 'lightweight-charts';
 import { MdOutlineShowChart } from "react-icons/md";
 import { TVChartContainer } from '../components/TVChartContainer';
+
 const Token = () => {
 
     const navigate = useNavigate()
@@ -91,74 +92,11 @@ const Token = () => {
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
 
-    useEffect(() => {
-        if (chartContainerRef.current) {
-            const chart = createChart(chartContainerRef.current, {
-                layout: {
-                    textColor: 'black',
-                    background: { type: 'solid', color: 'white' },
-                },
-                // crosshair: {
-                //     mode: CrosshairMode.Normal,
-                // },
-                timeScale: {
-                    timeVisible: true,
-                    secondsVisible: false,
-                },
-            });
-
-            const candlestickSeries = chart.addCandlestickSeries({
-                upColor: '#26a69a',
-                downColor: '#ef5350',
-                borderVisible: false,
-                wickUpColor: '#26a69a',
-                wickDownColor: '#ef5350',
-            });
-
-            const trades = tradesData?.trades;
-
-            if (trades) {
-                const aggregatedData = trades.reduce((acc, trade) => {
-                    const timestamp = trade.timestamp * 1000;
-                    const hourKey = Math.floor(timestamp / 3600000) * 3600000;
-                    if (!acc[hourKey]) {
-                        acc[hourKey] = {
-                            time: timestamp,
-                            open: Number(trade.avgPrice),
-                            high: Number(trade.avgPrice),
-                            low: Number(trade.avgPrice),
-                            close: Number(trade.avgPrice),
-                        };
-                    } else {
-                        acc[hourKey].high = Math.max(acc[hourKey].high, Number(trade.avgPrice));
-                        acc[hourKey].low = Math.min(acc[hourKey].low, Number(trade.avgPrice));
-                        acc[hourKey].close = Number(trade.avgPrice);
-                    }
-                    return acc;
-                }, {});
-
-                const candlestickData = Object.values(aggregatedData).sort(
-                    (a, b) => a.time - b.time
-                );
-
-                candlestickSeries.setData(candlestickData);
-            }
-
-            chart.timeScale().fitContent();
-
-            return () => {
-                chart.remove();
-            };
-        }
-    }, [tradesData]);
-
     const targetDivRef = useRef(null);
     const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
         // resolver: yupResolver(TradeSchema)
     })
-    const onSubmit = (values) => {
 
-    }
     const value = useWatch({
         name: 'value',
         control
@@ -173,7 +111,6 @@ const Token = () => {
     const price = useMemo(() => {
         return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
     }, [value])
-
 
     if (tokenLoading || isLoading) {
         return <div>Loading...</div>;

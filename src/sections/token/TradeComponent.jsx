@@ -9,9 +9,9 @@ import { Modal } from 'react-responsive-modal';
 import { calculatePurchaseReturn, calculateSaleReturn, estimateEthInForExactTokensOut, estimateTokenInForExactEthOut } from '../../utils/apeFormula';
 import 'react-responsive-modal/styles.css';
 import { formatNumber } from '../../utils/formats';
-import { useAccount, useBalance, useSendTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useAccount, useBalance, useReadContract, useSendTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { abi as bondingCurveABI } from '../../contracts/BondingCurve';
-import { parseEther } from 'viem';
+import { erc20Abi, formatEther, parseEther } from 'viem';
 import { abi as erc20ABI } from '../../contracts/ERC20';
 import QuickSelect from './QuickSelect';
 import InputField from './InputField';
@@ -35,6 +35,8 @@ const TradeComponent = ({ token, bondingCurve }) => {
     const [open2, setOpen2] = useState(false);
     const onOpenModal2 = () => setOpen2(true);
     const onCloseModal2 = () => setOpen2(false);
+    const [userTokenBalance, setUserTokenBalance] = useState(0)
+    const { address: userAddress } = useAccount();
 
     const supply = useMemo(() => {
         return bondingCurve?.circulatingSupply || '0';
@@ -86,8 +88,6 @@ const TradeComponent = ({ token, bondingCurve }) => {
         return new BigNumber(estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight, sellAmountEth || '0')).toString();
     }, [supply, connectorBalance, connectorWeight, sellAmountEth]);
 
-    const { address } = useAccount();
-
     const {
         data: hash,
         error,
@@ -119,6 +119,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
             setValue('sellAmountToken', estimateTokenIn)
         }
     }, [ethTrade])
+    
 
     const onSubmit = async (values) => {
         try {
@@ -171,6 +172,74 @@ const TradeComponent = ({ token, bondingCurve }) => {
         }
     };
 
+    const onSubmitFillRemaining = async () => {
+        try {
+            const value = bondingCurve?.ethAmountToCompleteCurve
+            const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
+            const adjustedInputAmount = inputAmount.mul(1.01);
+            const valueToSend = adjustedInputAmount.toFixed(0);
+
+            await writeContractAsync({
+                abi: bondingCurveABI,
+                address: bondingCurve.id,
+                functionName: 'buy',
+                args: [],
+                value: valueToSend,
+            });
+        } catch (error) {
+            console.error('Error executing transaction:', error);
+        }
+    };
+
+    const onSubmitSellPortfolio = async () => {
+        try {
+            const inputAmount = new Decimal(decimalUserTokenBalance).mul(new Decimal(10).pow(18));
+            const adjustedInputAmount = inputAmount;
+
+            await writeContractAsync({
+                abi: erc20ABI,
+                address: token.id,
+                functionName: 'approve',
+                args: [bondingCurve.id, adjustedInputAmount.toFixed()],
+                value: '0',
+            });
+
+            await writeContractAsync({
+                abi: bondingCurveABI,
+                address: bondingCurve.id,
+                functionName: 'sell',
+                args: [adjustedInputAmount.toFixed()],
+                value: '0',
+            });
+        } catch (error) {
+            console.error('Error executing transaction:', error);
+        }
+    };
+
+    const { data: userTokenBalanceData, isLoading: isTokenBalanceLoading, isError: isError2, refetch } = useReadContract({
+        abi: erc20Abi,
+        address: token?.id,
+        functionName: 'balanceOf',
+        args: [userAddress],
+        watch: true
+    })
+
+    useEffect(() => {
+        setUserTokenBalance(userTokenBalanceData)
+    }, [userTokenBalanceData])
+
+    useEffect(() => {
+        refetch()
+    }, [isConfirmed, refetch])
+    console.log('userTokenBalance', userTokenBalance)
+
+    const decimalUserTokenBalance = useMemo(() => {
+        return userTokenBalance ? formatEther(userTokenBalance) : 0
+    }, [userTokenBalance]);
+
+    const formattedUserTokenBalance = useMemo(() => {
+        return formatNumber(decimalUserTokenBalance)
+    }, [decimalUserTokenBalance]);
 
     return (
         <div className='mt-3'>
@@ -255,6 +324,24 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 setValue={setValue}
                                                 name="buyAmountToken"
                                                 isToken={true}
+                                                tokenAmountsOptions={[
+                                                    {
+                                                        key: '25M',
+                                                        value: '25000000'
+                                                    },
+                                                    {
+                                                        key: '50M',
+                                                        value: '50000000'
+                                                    },
+                                                    {
+                                                        key: '75M',
+                                                        value: '75000000'
+                                                    },
+                                                    {
+                                                        key: '100M',
+                                                        value: '100000000'
+                                                    },
+                                                ]}
                                             />
                                             {
                                                 formErrors?.buyAmountToken ?
@@ -277,6 +364,13 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                     className="inline-flex mt-2 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
                                 >
                                     Place Trade
+                                </button>
+                                <button
+                                    type='button'
+                                    onClick={onSubmitFillRemaining}
+                                    className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                >
+                                    Fill up remaining curve
                                 </button>
                             </form>
                         </TabPanel>
@@ -349,6 +443,24 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 setValue={setValue}
                                                 name="sellAmountToken"
                                                 isToken={true}
+                                                tokenAmountsOptions={[
+                                                    {
+                                                        key: '25%',
+                                                        value: 0.25 * decimalUserTokenBalance
+                                                    },
+                                                    {
+                                                        key: '50%',
+                                                        value: 0.5 * decimalUserTokenBalance
+                                                    },
+                                                    {
+                                                        key: '75%',
+                                                        value: 0.75 * decimalUserTokenBalance
+                                                    },
+                                                    {
+                                                        key: '100%',
+                                                        value: decimalUserTokenBalance
+                                                    }
+                                                ]}
                                             />
                                             {
                                                 formErrors?.sellAmountToken ?
@@ -367,14 +479,27 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                         </>
                                     )}
                                 </div>
-                                <button
-                                    type='submit'
-                                    className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
-                                >
-                                    Place Trade
-                                </button>
+                                <div className="flex mt-3 flex-col">
+                                    <button
+                                        type='submit'
+                                        className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                    >
+                                        Place Trade
+                                    </button>
+                                    <button
+                                        type='button'
+                                        onClick={onSubmitSellPortfolio}
+                                        className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                    >
+                                        Sell whole portfolio
+                                    </button>
+                                </div>
                             </form>
+
                         </TabPanel>
+
+                        {/* your balance: {new BigNumber(userTokenBalance).div(new BigNumber(10 ** 18)).toFixed(18).toString()} */}
+                        your balance: {decimalUserTokenBalance} (~{formattedUserTokenBalance})
                     </Tabs>
                 </div>
             </div>

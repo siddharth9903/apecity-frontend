@@ -1,7 +1,26 @@
 import React from 'react';
 
-const QuickSelect = ({ setValue, name, isToken }) => {
-    const amounts = isToken ? ['25', '50', '75', '100'] : ['0.5', '1', '2.5', '5'];
+const QuickSelect = ({ setValue, name, isToken, tokenAmountsOptions }) => {
+    console.log('tokenAmountsOptions',tokenAmountsOptions)
+    const ethAmountsOptions = [
+        {
+            key: '0.2 ETH',
+            value: '0.2'
+        },
+        {
+            key: '0.5 ETH',
+            value: '0.5'
+        },
+        {
+            key: '1 ETH',
+            value: '1'
+        },
+        {
+            key: '1.4 ETH',
+            value: '1.4'
+        }
+    ]
+    const amounts = isToken ? tokenAmountsOptions : ethAmountsOptions;
 
     const handleSelect = (amount) => {
         setValue(name, amount);
@@ -18,12 +37,13 @@ const QuickSelect = ({ setValue, name, isToken }) => {
             </button>
             {amounts.map((amount) => (
                 <button
-                    key={amount}
+                    key={amount.key}
                     type='button'
-                    onClick={() => handleSelect(amount)}
+                    onClick={() => handleSelect(amount.value)}
                     className="text-xs py-1 px-2 rounded pfont-400 bg-gray-800 text-gray-300"
                 >
-                    {isToken ? `${amount}%` : `${amount} ETH`}
+                    {/* {isToken ? `${amount}%` : `${amount} ETH`} */}
+                    {amount?.key}
                 </button>
             ))}
         </div>
