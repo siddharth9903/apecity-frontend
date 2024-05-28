@@ -8,7 +8,7 @@ function getBarPeriod(resolution) {
         case '1H':
             return 60 * 60 * 1000; // 1 hour in milliseconds
         case '5':
-            return 5 * 60 * 1000; // 15 minutes in milliseconds
+            return 5 * 60 * 1000; // 5 minutes in milliseconds
         // Add more cases for other resolutions
         default:
             throw new Error(`Unknown resolution: ${resolution}`);
@@ -18,7 +18,7 @@ function getBarPeriod(resolution) {
 const configurationData = {
     // Represents the resolutions for bars supported by your datafeed
     // supported_resolutions: ['5', '1D', '1W', '1M'],
-    supported_resolutions: ['5'],
+    supported_resolutions: ['5','1D'],
     // The `exchanges` arguments are used for the `searchSymbols` method if a user selects the exchange
     exchanges: [
         { value: 'Apecity', name: 'Apecity', desc: 'Apecity' },
@@ -72,14 +72,14 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 timezone: 'Etc/UTC',
                 exchange: 'Apecity',
                 minmov: 1,
-                pricescale: 10000000000,
+                pricescale: 1000000000000000,
                 has_intraday: true,
                 // visible_plots_set: 'ohlcv',
                 visible_plots_set: 'ohlc',
                 // has_intraday: true,
                 // has_weekly_and_monthly: false,
                 // supported_resolutions: ['1', '15', '30', '60', '1D', '1W', '1M'],
-                supported_resolutions: ['5'],
+                supported_resolutions: ['5','1D'],
             };
             if (!symbolInfo) {
                 console.log('[resolveSymbol]: Cannot resolve symbol', symbol);
@@ -91,7 +91,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
         },
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-            const { from, to, firstDataRequest } = periodParams;
+            const { from, to, firstDataRequest, countBack } = periodParams;
 
             try {
                 const { data } = await client.query({
@@ -104,18 +104,12 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 });
 
                 if (!data.trades || data.trades.length === 0) {
-                    onHistoryCallback([], { noData: true });
+                    onHistoryCallback([], { noData: false });
                     return;
                 }
 
                 const bars = [];
-                let currentBar = {
-                    time: null,
-                    open: null,
-                    high: null,
-                    low: null,
-                    close: null,
-                };
+                let currentBar = null;
 
                 for (const trade of data.trades) {
                     const tradeTime = parseFloat(trade.timestamp * 1000); // Convert timestamp to milliseconds
@@ -123,43 +117,25 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                     const tradeClosePrice = parseFloat(trade.closePrice);
                     const tradeType = trade.type;
 
-                    if (!currentBar.time) {
+                    if (!currentBar || tradeTime >= currentBar.time + getBarPeriod(resolution)) {
                         // Start a new bar
-                        currentBar.time = tradeTime;
-                        currentBar.open = tradeOpenPrice.toFixed(18);
-                        currentBar.high = (tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18);
-                        currentBar.low = (tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18);
-                        currentBar.close = tradeClosePrice.toFixed(18);
+                        currentBar = {
+                            time: tradeTime,
+                            open: tradeOpenPrice.toFixed(18),
+                            high: tradeClosePrice.toFixed(18),
+                            low: tradeOpenPrice.toFixed(18),
+                            close: tradeClosePrice.toFixed(18),
+                        };
+                        bars.push(currentBar);
                     } else {
                         // Update the current bar
-                        currentBar.high = (Math.max(parseFloat(currentBar.high), tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice)).toFixed(18);
-                        currentBar.low = (Math.min(parseFloat(currentBar.low), tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice)).toFixed(18);
-                        currentBar.close = tradeClosePrice.toFixed(18);
-
-                        // Check if the trade time is beyond the current bar period
-                        const barPeriod = getBarPeriod(resolution);
-                        const nextBarTime = currentBar.time + barPeriod;
-
-                        if (tradeTime >= nextBarTime) {
-                            // Close the current bar and start a new one
-                            bars.push({ ...currentBar });
-                            currentBar = {
-                                time: tradeTime,
-                                open: tradeOpenPrice.toFixed(18),
-                                high: (tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18),
-                                low: (tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18),
-                                close: tradeClosePrice.toFixed(18),
-                            };
-                        }
+                        currentBar.high = Math.max(currentBar.high, tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18);
+                        currentBar.low = Math.min(currentBar.low, tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18);
+                        currentBar.close = tradeClosePrice;
                     }
                 }
 
-                // Push the last bar
-                if (currentBar.time) {
-                    bars.push(currentBar);
-                }
-
-                onHistoryCallback(bars, { noData: false });
+                onHistoryCallback(bars, { noData: true });
             } catch (error) {
                 console.log('[getBars]: Error', error);
                 onErrorCallback(error);
