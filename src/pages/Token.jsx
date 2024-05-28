@@ -266,7 +266,7 @@ const Token = () => {
                     </div>
                     <div className={`lg:w-[calc(100%-640px)] xxl:w-[calc(100%-800px)] ${tabIndex3 == 2 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-[320px] xxl:left-[400px] lg:top-0 bg-[#17171c] token-left`}>
 
-                        <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
+                        {/* <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
                             <div className='absolute z-[11] h-full left-0 top-0'>
                                 <button onClick={() => navigate('/')} className='h-full pl-2 bg-transparent'>
                                     <FaCircleArrowLeft className='text-white text-xl' />
@@ -391,7 +391,7 @@ const Token = () => {
                                     </Modal>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="w-full">
                             <div className=''>
                                 <div style={{ height: 'calc(100vh - 200px)' }}>
@@ -400,7 +400,7 @@ const Token = () => {
                                         tokenAddress={tokenAddress}
                                         bondingCurveAddress={bondingCurve?.id}
                                         width={'100%'}
-                                        height={'78%'}
+                                        height={'80%'}
                                     />
                                 </div>
                             </div>
@@ -419,7 +419,7 @@ const Token = () => {
                                                     <span className='pfont-500 text-sm ml-1.5'>Transactions</span>
                                                 </div>
                                             </Tab>
-                                            <Tab className='focus:border-none focus:outline-none'>
+                                            {/* <Tab className='focus:border-none focus:outline-none'>
                                                 <div className={`${tabIndex == 1 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'}  cursor-pointer py-2 hover:text-white flex items-center`}>
                                                     <span><BsChatSquare /></span>
                                                     <span className='pfont-500 text-sm ml-1.5'>Chats</span>
@@ -436,7 +436,7 @@ const Token = () => {
                                                     <span className='text-sm'><FaSketch /></span>
                                                     <span className='pfont-500 text-sm ml-1.5'>Holders(706)</span>
                                                 </div>
-                                            </Tab>
+                                            </Tab> */}
                                         </TabList>
                                     </div>
                                     <TabPanel>
