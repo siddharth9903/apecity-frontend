@@ -231,7 +231,6 @@ const TradeComponent = ({ token, bondingCurve }) => {
     useEffect(() => {
         refetch()
     }, [isConfirmed, refetch])
-    console.log('userTokenBalance', userTokenBalance)
 
     const decimalUserTokenBalance = useMemo(() => {
         return userTokenBalance ? formatEther(userTokenBalance) : 0

@@ -1,7 +1,6 @@
 import React from 'react';
 
 const QuickSelect = ({ setValue, name, isToken, tokenAmountsOptions }) => {
-    console.log('tokenAmountsOptions',tokenAmountsOptions)
     const ethAmountsOptions = [
         {
             key: '0.2 ETH',

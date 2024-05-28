@@ -389,6 +389,15 @@ const Token = () => {
                                 <div>
                                     <div className='flex gap-x-2 justify-center items-center'>
                                         <div className='flex gap-x-1 justify-center items-center'>
+                                            <span className='text-white text-[30px] space-600 text-[#ff9900] pfont-600'>Now traded on UNISWAP</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='bg-[#111116] py-1.5 flex justify-center'>
+                                <div>
+                                    <div className='flex gap-x-2 justify-center items-center'>
+                                        <div className='flex gap-x-1 justify-center items-center'>
                                             <span className='text-white text-[17px] space-600'>{token?.symbol}</span>
                                             <span className='text-[#A7A7AC]'><FaRegCopy /></span>
                                         </div>
@@ -415,16 +424,21 @@ const Token = () => {
                                 </div>
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
-                                <div className='flex mt-3 gap-x-2'>
-                                    <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
-                                        <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
-                                        <p className='text-white text-sm text-center pfont-600'>$0.0886777</p>
-                                    </div>
-                                    <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
-                                        <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
-                                        <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? Number(bondingCurve.currentPrice).toFixed(10) : null} WETH</p>
-                                    </div>
-                                </div>
+
+                                {
+                                    bondingCurve?.active && (
+
+                                        <div className='flex mt-3 gap-x-2'>
+                                            <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
+                                                <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
+                                                <p className='text-white text-sm text-center pfont-600'>$0.0886777</p>
+                                            </div>
+                                            <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
+                                                <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
+                                                <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? Number(bondingCurve.currentPrice).toFixed(14) : null} WETH</p>
+                                            </div>
+                                        </div>
+                                    )}
                                 <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
                                     <div className='flex items-center gap-x-2'>
                                         <p className='pfont-500 text-[#8e94a0] text-sm'>bonding curve progress: {formatNumber(bondingCurveProgess)}%</p>
@@ -446,14 +460,15 @@ const Token = () => {
                                     </div>
                                 </div>
 
-                                {
-                                    token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
+                                {bondingCurve?.active &&
+                                    (
+                                        token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
+                                    )
                                 }
-
                                 {
                                     token && trades && <TokenDetails token={token} trades={trades} />
                                 }
-                           </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -462,7 +477,7 @@ const Token = () => {
                         <span><FaInfoCircle /> </span>
                         <span className='pfont-400'>Info</span>
                     </button>
-                    
+
                     <button onClick={() => setTabIndex3(2)} className={`flex-1 max-xs:text-sm px-2 outline-none border-none h-[50px] gap-x-2 text-white flex justify-center items-center    ${tabIndex3 == 2 ? 'bg-[#475dc0]' : 'bg-[#060606]'}`}>
                         <span><FaChartSimple /></span>
                         <span className='pfont-400'>Chart+Txns</span>
