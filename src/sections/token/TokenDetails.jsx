@@ -6,7 +6,9 @@ import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
 import { formatNumber } from '../../utils/formats';
 
-const TokenDetails = ({ token, trades }) => {
+const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
+
+const TokenDetails = ({ token, trades, bondingCurve }) => {
     const [tabIndex1, setTabIndex1] = useState(0);
     const [tradeStats, setTradeStats] = useState({
         txns: 0,
@@ -182,10 +184,10 @@ const TokenDetails = ({ token, trades }) => {
                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
                         <p className="text-sm text-white pfont-400">Pair created</p>
                         <p className="text-sm text-white pfont-500">
-                            {new Date(token?.bondingCurve.createdAtTimestamp * 1000).toLocaleString()}
+                            {new Date(bondingCurve?.createdAtTimestamp * 1000).toLocaleString()}
                         </p>
                     </div>
-                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
+                    {/* <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
                         <p className="text-sm text-white pfont-400">Pooled {token?.name}</p>
                         <p className="text-sm flex items-center gap-x-3 text-white pfont-500">
                             <span>{formatNumber(token?.bondingCurve.tokenAmountToCompleteCurve)}</span>
@@ -197,14 +199,14 @@ const TokenDetails = ({ token, trades }) => {
                             <span>{formatNumber(token?.bondingCurve.ethAmountToCompleteCurve)}</span>
                             <span>${formatNumber(token?.bondingCurve.ethAmountToCompleteCurve * 1800)}</span>
                         </p>
-                    </div>
+                    </div> */}
                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">Pair</p>
+                        <p className="text-sm text-white pfont-400">BondingCurve</p>
                         <div className="flex items-center gap-x-3">
                             <div
                                 onClick={() => {
                                     enqueueSnackbar('copied', { autoHideDuration: 1000 });
-                                    copy(token?.bondingCurve.id);
+                                    copy(bondingCurve?.id);
                                 }}
                                 className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
                             >
@@ -212,23 +214,71 @@ const TokenDetails = ({ token, trades }) => {
                                     <FaRegCopy className="text-sm" />
                                 </span>
                                 <span className="pfont-400 text-sm">
-                                    {shortenText(token?.bondingCurve.id, 10)}
+                                    {shortenText(bondingCurve?.id, 10)}
                                 </span>
                             </div>
-                            <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                <span className="uppercase pfont-400 text-sm">LPs</span>
-                                <span>
-                                    <FaExternalLinkAlt className="text-xs" />
-                                </span>
-                            </div>
-                            <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                <span className="uppercase pfont-400 text-sm">exp</span>
-                                <span>
-                                    <FaExternalLinkAlt className="text-xs" />
-                                </span>
-                            </div>
+                            {/* <a href={`https://basescan.org/token/tokenholderchart/${token?.id}`} target='_blank'>
+                                <div className="flex gap-x-2 text-[#cccccc] items-center">
+                                    <span className="uppercase pfont-400 text-sm">LPs</span>
+                                    <span>
+                                        <FaExternalLinkAlt className="text-xs" />
+                                    </span>
+                                </div>
+                            </a> */}
+
+                            <a href={`https://basescan.org/address/${bondingCurve?.id}`} target='_blank'>
+                                <div className="flex gap-x-2 text-[#cccccc] items-center">
+                                    <span className="uppercase pfont-400 text-sm">exp</span>
+                                    <span>
+                                        <FaExternalLinkAlt className="text-xs" />
+                                    </span>
+                                </div>
+                            </a>
+
                         </div>
                     </div>
+                    {
+                        !bondingCurve?.active && (
+
+                            <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
+                                <p className="text-sm text-white pfont-400">Pair</p>
+                                <div className="flex items-center gap-x-3">
+                                    {console.log('bondingCurve?.uniswapLiquidityPool',bondingCurve?.uniswapLiquidityPool)}
+                                    {console.log('bondingCurve',bondingCurve)}
+                                    <div
+                                        onClick={() => {
+                                            enqueueSnackbar('copied', { autoHideDuration: 1000 });
+                                            copy(bondingCurve?.uniswapLiquidityPool);
+                                        }}
+                                        className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
+                                    >
+                                        <span>
+                                            <FaRegCopy className="text-sm" />
+                                        </span>
+                                        <span className="pfont-400 text-sm">
+                                            {shortenText(bondingCurve?.uniswapLiquidityPool, 10)}
+                                        </span>
+                                    </div>
+                                    <a href={`https://basescan.org/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <div className="flex gap-x-2 text-[#cccccc] items-center">
+                                            <span className="uppercase pfont-400 text-sm">LPs</span>
+                                            <span>
+                                                <FaExternalLinkAlt className="text-xs" />
+                                            </span>
+                                        </div>
+                                    </a>
+                                    <a href={`https://basescan.org/address/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <div className="flex gap-x-2 text-[#cccccc] items-center">
+                                            <span className="uppercase pfont-400 text-sm">EXP</span>
+                                            <span>
+                                                <FaExternalLinkAlt className="text-xs" />
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        )
+                    }
                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
                         <p className="text-sm text-white pfont-400">{token?.name}</p>
                         <div className="flex items-center gap-x-3">
@@ -244,18 +294,24 @@ const TokenDetails = ({ token, trades }) => {
                                 </span>
                                 <span className="pfont-400 text-sm">{shortenText(token?.id, 10)}</span>
                             </div>
+                            <a href={`https://basescan.org/token/tokenholderchart/${token?.id}`} target='_blank'>
                             <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                <span className="uppercase pfont-400 text-sm">LPs</span>
+                                <span className="uppercase pfont-400 text-sm">HLD</span>
                                 <span>
                                     <FaExternalLinkAlt className="text-xs" />
                                 </span>
                             </div>
+                            </a>
+
+                            <a href={`https://basescan.org/token/${token?.id}`} target='_blank'>
                             <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                <span className="uppercase pfont-400 text-sm">exp</span>
+                                <span className="uppercase pfont-400 text-sm">EXP</span>
                                 <span>
                                     <FaExternalLinkAlt className="text-xs" />
                                 </span>
                             </div>
+                            </a>
+
                         </div>
                     </div>
                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
@@ -264,7 +320,7 @@ const TokenDetails = ({ token, trades }) => {
                             <div
                                 onClick={() => {
                                     enqueueSnackbar('copied', { autoHideDuration: 1000 });
-                                    copy('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2');
+                                    copy(WETH_ADDRESS);
                                 }}
                                 className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
                             >
@@ -272,21 +328,26 @@ const TokenDetails = ({ token, trades }) => {
                                     <FaRegCopy className="text-sm" />
                                 </span>
                                 <span className="pfont-400 text-sm">
-                                    {shortenText('0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 10)}
+                                    {shortenText(WETH_ADDRESS, 10)}
                                 </span>
                             </div>
+                            <a href={`https://basescan.org/token/tokenholderchart/${WETH_ADDRESS}`} target='_blank'>
                             <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                <span className="uppercase pfont-400 text-sm">LPs</span>
+                                <span className="uppercase pfont-400 text-sm">HLD</span>
                                 <span>
                                     <FaExternalLinkAlt className="text-xs" />
                                 </span>
                             </div>
+                            </a>
+                            <a href={`https://basescan.org/token/${WETH_ADDRESS}`} target='_blank'>
                             <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                <span className="uppercase pfont-400 text-sm">exp</span>
+                                <span className="uppercase pfont-400 text-sm">EXP</span>
                                 <span>
                                     <FaExternalLinkAlt className="text-xs" />
                                 </span>
                             </div>
+                            </a>
+
                         </div>
                     </div>
                 </div>

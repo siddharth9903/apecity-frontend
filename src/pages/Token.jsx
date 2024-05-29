@@ -59,15 +59,18 @@ const Token = () => {
 
     const [provider, setProvider] = useState()
     const { connector } = useAccount()
-    useEffect(() => {
-        if (!connector || !connector?.getProvider()) {
-            return () => setProvider(undefined)
-        }
+    // useEffect(() => {
+    //     if (!connector) {
+    //         return () => setProvider(undefined)
+    //     }
 
-        connector?.getProvider().then((provider) => {
-            setProvider(new Web3Provider(provider))
-        })
-    }, [connector])
+    //     console.log('type', typeof(connector))
+
+    //     connector.getProvider().then((provider) => {
+    //         console.log('it si function sw')
+    //         setProvider(new Web3Provider(provider))
+    //     })
+    // }, [connector])
 
     useEffect(() => {
         window.Browser = {
@@ -100,10 +103,7 @@ const Token = () => {
     });
 
     const token = tokenData?.token;
-    // const bondingCurve = token?.bondingCurve;
-    // console.log('bondingCurveData', bondingCurveData)
     const bondingCurve = bondingCurveData?.bondingCurve
-
 
     const trades = tradesData?.trades;
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
@@ -161,7 +161,7 @@ const Token = () => {
                                 </div>
                             </div>
                             <div className='relative overflow-hidden '>
-                                <img className='hover:scale-105 w-full  transition-all duration-300' src={token?.metaData?.image} alt="" />
+                                <img className='hover:scale-105 w-full  transition-all duration-300' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex justify-center mt-5 gap-x-2'>
@@ -417,15 +417,17 @@ const Token = () => {
                     </div>
                     <div className={`lg:border-l  ${tabIndex3 == 1 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute  lg:right-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[320px] xxl:w-[400px] token-right`}>
                         <div className='pb-10'>
-                            <div className='bg-[#111116] py-1.5 flex justify-center'>
-                                <div>
-                                    <div className='flex gap-x-2 justify-center items-center'>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span className='text-white text-[30px] space-600 text-[#ff9900] pfont-600'>Now traded on UNISWAP</span>
+                            {!bondingCurve?.active && (
+                                <div className='bg-[#111116] py-1.5 flex justify-center'>
+                                    <div>
+                                        <div className='flex gap-x-2 justify-center items-center'>
+                                            <div className='flex gap-x-1 justify-center items-center'>
+                                                <span className='text-white text-[30px] space-600 text-[#ff9900] pfont-600'>Now traded on UNISWAP</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            ) }
                             <div className='bg-[#111116] py-1.5 flex justify-center'>
                                 <div>
                                     <div className='flex gap-x-2 justify-center items-center'>
@@ -515,7 +517,7 @@ const Token = () => {
                                     )
                                 }
                                 {
-                                    token && trades && <TokenDetails token={token} trades={trades} />
+                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve}/>
                                 }
                             </div>
                         </div>

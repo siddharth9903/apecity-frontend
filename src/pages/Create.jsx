@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-responsive-modal';
 import axios from 'axios';
-import { useTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useAccount, useTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { useSnackbar } from 'notistack';
 import { abi as apeFactoryABI, deployedContractAddress as apeFactoryContractAddress } from '../contracts/ApeFactory';
 import { formatNumber } from '../utils/formats';
@@ -20,6 +20,7 @@ import ipfsClient from '../ipfs/client';
 import { ethers } from 'ethers';
 import { parseEventLogs } from 'viem';
 import { PINATA_API_KEY, PINATA_SECRET_API_KEY } from '../ipfs/pinataClient';
+import LoadingSteps from '../components/LoadingSteps';
 
 const pinataApiKey = PINATA_API_KEY
 const pinataSecretApiKey = PINATA_SECRET_API_KEY
@@ -28,10 +29,12 @@ const pinataSecretApiKey = PINATA_SECRET_API_KEY
 const Create = () => {
     const [open1, setOpen1] = useState(false);
     const [open, setOpen] = useState(false);
-    const onOpenBuyModal = () => setOpen(true);
+    const [progress, setProgress] = useState(-1);
+
     const onCloseModal = () => setOpen(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const { isConnected } = useAccount()
 
     const [ethTrade, setEthTrade] = useState(true);
     const { enqueueSnackbar } = useSnackbar();
@@ -48,6 +51,13 @@ const Create = () => {
         setEthTrade(!ethTrade);
     };
 
+    const onOpenBuyModal = () => {
+        if (!isConnected) {
+            enqueueSnackbar('Please connect your wallet', { variant: 'warning' });
+            return
+        }
+        setOpen(true);
+    }
     const CreateCoinSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
         symbol: Yup.string().required('Ticker is required'),
@@ -106,18 +116,16 @@ const Create = () => {
             })
             if (eventLogs?.length > 0) {
                 let tokenAddress = eventLogs[0]?.args?.token
-                setIsLoading(true);
+                setProgress(4);
 
                 setTimeout(() => {
-                    setIsLoading(false);
+                    setProgress(5);
                     navigate(`/token/${tokenAddress.toLowerCase()}`);
                 }, 10000);
                 // navigate(`/token/${tokenAddress.toLowerCase()}?wait=10`)
             }
 
         } else if (error) {
-            // enqueueSnackbar('Error executing transaction: ' + error.message, { variant: 'error' });
-            console.log('error', error)
             enqueueSnackbar('Error executing token creation transaction: ' + error.details, { variant: 'error' });
         }
     }, [isConfirmed, error, enqueueSnackbar]);
@@ -220,16 +228,22 @@ const Create = () => {
 
     const executeTokenCreation = async () => {
         try {
-
+            if (!isConnected) {
+                enqueueSnackbar('Please connect your wallet', { variant: 'warning' });
+                return
+            }
             onCloseModal();
             const values = getValues()
+            setIsLoading(true)
 
             // Upload image to IPFS
             const imageFile = values.image[0];
             const imageAdded = await ipfsClient.add(imageFile);
             const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
 
+            setProgress(0)
             await ipfsClient.pin.add(imageAdded.path);
+            // await new Promise(resolve => setTimeout(resolve, 3000));
 
             // Create metadata with the image URI
             const metadata = {
@@ -245,9 +259,11 @@ const Create = () => {
             // Upload metadata to IPFS
             const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
             const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
-
+            
+            setProgress(1);
             // Pin the metadata
             await ipfsClient.pin.add(metadataAdded.path);
+
 
             // return
             const args = [values.name, values.symbol, tokenURI]
@@ -271,6 +287,7 @@ const Create = () => {
             const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
             const adjustedInputAmount = inputAmount.mul(1.01);
 
+            setProgress(2);
             await writeContractAsync({
                 abi: apeFactoryABI,
                 address: apeFactoryContractAddress,
@@ -278,17 +295,24 @@ const Create = () => {
                 args: args,
                 value: adjustedInputAmount.toFixed(),
             });
+            setProgress(3);
 
             return
         } catch (error) {
             console.error('Error executing transaction:', error);
         }
     };
-    
+
     console.log('errors', errors)
 
     if (isConfirming || isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <div className='container-fluid create-coin min-h-screen bg-fixed bg-center bg-no-repeat bg-cover pt-[70px]'>
+                <div className="bs-container relative">
+                    <LoadingSteps progress={progress} />
+                </div>
+            </div>
+        );
     }
 
     return (

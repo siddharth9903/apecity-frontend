@@ -1,4 +1,5 @@
 function shortenText(text, maxLength) {
+  if (!text) return '';
   if (text.length <= maxLength) {
     return text;
   } else {
