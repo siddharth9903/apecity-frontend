@@ -139,7 +139,6 @@ const Token = () => {
             "logoURI": convertIpfsUrl(token?.metaData?.image)
         }
     ]
-    console.log('outputTokenList',outputTokenList)
     if (tokenLoading || isLoading) {
         return <div>Loading...</div>;
     }
@@ -230,6 +229,7 @@ const Token = () => {
                         </div>
                     </div>
                     <div className={`lg:w-[calc(100%-640px)] xxl:w-[calc(100%-800px)] ${tabIndex3 == 2 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-[320px] xxl:left-[400px] lg:top-0 bg-[#17171c] token-left`}>
+
 
                         {/* <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
                             <div className='absolute z-[11] h-full left-0 top-0'>
@@ -358,7 +358,7 @@ const Token = () => {
                             </div>
                         </div> */}
                         <div className="w-full">
-                            <div className=''>
+                            
                                 <div style={{ height: 'calc(100vh - 200px)' }}>
                                     <TVChartContainer
                                         symbol={token?.symbol}
@@ -368,9 +368,13 @@ const Token = () => {
                                         height={'80%'}
                                     />
                                 </div>
-                            </div>
-                            {/* <div className='text-white font-italik pfont-500 text-sm p-2'>
-                                Charts are powered by <b><a href='https://in.tradingview.com/' target='_blank'>TradingView</a></b>
+                           
+                            {/* <div style={{ height: 'calc(100vh - 200px)' }}>
+                                    <iframe
+                                        width={'100%'}
+                                        height={'80%'}
+                                        src={`https://dexscreener.com/base/${token?.id}?embed=1&trades=0&info=0`}>
+                                    </iframe>
                             </div> */}
                         </div>
                         <div className='w-full  flex-1'>
