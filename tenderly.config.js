@@ -1,5 +1,9 @@
 import { defineChain } from 'viem'
 
+export const tenderlyBaseIdChainRpcUrl = 'https://virtual.base.rpc.tenderly.co/7817edf3-f43a-4498-9cf9-c44c0164e1ed'
+
+export const defaultRpcUrl = tenderlyBaseIdChainRpcUrl
+
 // Create a custom chain configuration for your Tenderly chain
 export const vTenderlyBaseChain = defineChain({
     id: 8453, // Replace with your Tenderly chain ID
@@ -12,13 +16,13 @@ export const vTenderlyBaseChain = defineChain({
     },
     rpcUrls: {
         default: {
-            http: ['https://virtual.base.rpc.tenderly.co/7817edf3-f43a-4498-9cf9-c44c0164e1ed'], // Replace with your Tenderly RPC URL
+            http: [tenderlyBaseIdChainRpcUrl], // Replace with your Tenderly RPC URL
         },
     },
     blockExplorers: {
         default: {
             name: 'Base Tenderly Explorer',
-            url: 'https://dashboard.tenderly.co/explorer/vnet/7817edf3-f43a-4498-9cf9-c44c0164e1ed', // Replace with your Tenderly explorer URL
+            url: tenderlyBaseIdChainRpcUrl, // Replace with your Tenderly explorer URL
         },
     },
     testnet: true,

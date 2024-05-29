@@ -29,12 +29,16 @@ import { convertIpfsUrl, formatNumber } from '../utils/formats';
 import { createChart } from 'lightweight-charts';
 import { MdOutlineShowChart } from "react-icons/md";
 import { TVChartContainer } from '../components/TVChartContainer';
+import { SwapWidget, darkTheme } from '@uniswap/widgets'
+import '@uniswap/widgets/fonts.css'
+// import '@uniswap/widgets/dist/fonts.css'
+import { tenderlyBaseIdChainRpcUrl, vTenderlyBaseChain } from '../../tenderly.config';
+import { useAccount } from 'wagmi'
+import { Web3Provider } from '@ethersproject/providers'
 
 const Token = () => {
-
     const navigate = useNavigate()
     let { tokenAddress } = useParams();
-
     const chartContainerRef = useRef(null);
 
     const [tabIndex, setTabIndex] = useState(0);
@@ -51,12 +55,25 @@ const Token = () => {
     const onOpenModal2 = () => setOpen2(true);
     const [eth, setETH] = useState(true)
     const onCloseModal2 = () => setOpen2(false);
-
     const [isLoading, setIsLoading] = useState(false);
 
-    const [aggregationInterval, setAggregationInterval] = useState(300)
+    const [provider, setProvider] = useState()
+    const { connector } = useAccount()
+    useEffect(() => {
+        if (!connector || !connector?.getProvider()) {
+            return () => setProvider(undefined)
+        }
 
-    const [realTimeData, setRealTimeData] = useState([]);
+        connector?.getProvider().then((provider) => {
+            setProvider(new Web3Provider(provider))
+        })
+    }, [connector])
+
+    useEffect(() => {
+        window.Browser = {
+            T: () => { }
+        }
+    }, [open])
 
     const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
         variables: { id: tokenAddress },
@@ -112,6 +129,17 @@ const Token = () => {
         return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
     }, [value])
 
+    const outputTokenList = [
+        {
+            "name": token?.name,
+            "address": token?.id,
+            "symbol": token?.symbol,
+            "decimals": 18,
+            "chainId": 8453,
+            "logoURI": convertIpfsUrl(token?.metaData?.image)
+        }
+    ]
+    console.log('outputTokenList',outputTokenList)
     if (tokenLoading || isLoading) {
         return <div>Loading...</div>;
     }
@@ -460,9 +488,26 @@ const Token = () => {
                                     </div>
                                 </div>
 
-                                {bondingCurve?.active &&
+                                {bondingCurve?.active ?
                                     (
                                         token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
+                                    ) :
+                                    (
+                                        <div className="Uniswap mt-2">
+                                            {/* <SwapWidget
+                                                // jsonRpcUrlMap={{ [vTenderlyBaseChain.id]: [tenderlyBaseIdChainRpcUrl] }}
+                                                jsonRpcUrlMap={{ [vTenderlyBaseChain.id]: [tenderlyBaseIdChainRpcUrl] }}
+                                                provider={provider} // Pass the connected provider from useEthersProvider
+                                                tokenList={outputTokenList}
+                                                hideConnectionUI={true}
+                                                onConnectWalletClick={true}
+                                                defaultInputAmount={2}
+                                                defaultInputTokenAddress={'NATIVE'}
+                                                defaultOutputTokenAddress={token?.id}
+                                                onError={(err) => console.log('cccccerror', err)}
+                                                theme={darkTheme}
+                                            /> */}
+                                        </div>
                                     )
                                 }
                                 {

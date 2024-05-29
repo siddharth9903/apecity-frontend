@@ -4,7 +4,7 @@ import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 import { WagmiProvider } from 'wagmi';
 import { defineChain, http } from 'viem';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { vLocalChain, vTenderlyBaseChain } from '../../tenderly.config';
+import { tenderlyBaseIdChainRpcUrl, vLocalChain, vTenderlyBaseChain } from '../../tenderly.config';
 // import { hardhat } from 'wagmi/chains';
 const queryClient = new QueryClient();
 const projectId = '50a795bb1959766590ff9de27a43d8bd';
@@ -33,7 +33,7 @@ const config = defaultWagmiConfig({
     projectId,
     metadata,
     transports: {
-        [vTenderlyBaseChain.id]: http('https://virtual.base.rpc.tenderly.co/7817edf3-f43a-4498-9cf9-c44c0164e1ed'),
+        [vTenderlyBaseChain.id]: http(tenderlyBaseIdChainRpcUrl),
     },
 });
 
