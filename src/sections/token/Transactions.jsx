@@ -34,12 +34,12 @@ const Transactions = ({ trades, tokenName }) => {
                                 <MdFilterAlt className="text-[#A6A6A6] text-sm" />
                             </div>
                         </th>
-                        <th className="px-4 py-2 border border-[#5e5e6b] bg-[#2e2e33]">
+                        {/* <th className="px-4 py-2 border border-[#5e5e6b] bg-[#2e2e33]">
                             <div className="flex items-center justify-start">
                                 <span className="uppercase text-white pfont-600 text-xs mr-1.5">Avg. Price</span>
                                 <MdFilterAlt className="text-[#A6A6A6] text-sm" />
                             </div>
-                        </th>
+                        </th> */}
                         <th className="px-4 py-2 border border-[#5e5e6b] bg-[#2e2e33]">
                             <div className="flex items-center justify-start">
                                 <span className="uppercase text-white pfont-600 text-xs mr-1.5">User</span>
@@ -72,9 +72,9 @@ const Transactions = ({ trades, tokenName }) => {
                                     {trade.type === "BUY" ? formatNumber(trade.outAmount) : formatNumber(trade.inAmount)}
                                 </span>
                             </td>
-                            <td className="border border-[#5e5e6b] px-4 py-2">
+                            {/* <td className="border border-[#5e5e6b] px-4 py-2">
                                 <span className="text-xs pfont-600">{formatNumber(trade.avgPrice)}</span>
-                            </td>
+                            </td> */}
                             <td className="border border-[#5e5e6b] px-4 py-2">
                                 <span className="text-xs pfont-600">{shortenText(trade.user.id, 6)}</span>
                             </td>

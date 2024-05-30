@@ -9,6 +9,7 @@ import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQue
 import { convertIpfsUrl, formatNumber } from '../../utils/formats';
 
 
+
 const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPrice }) => {
     console.log('wethPrice',wethPrice)
     const [tokens, setTokens] = useState([]);

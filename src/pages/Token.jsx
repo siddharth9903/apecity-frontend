@@ -465,7 +465,7 @@ const Token = () => {
                                         </TabList>
                                     </div>
                                     <TabPanel>
-                                        <Transactions trades={trades} />
+                                        <Transactions trades={trades} tokenName={token?.name} />
                                     </TabPanel>
                                 </Tabs>
                             </div>
@@ -543,8 +543,8 @@ const Token = () => {
                                             </a>
                                             <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
                                                 <div className='w-[330px]'>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches $63,375 all the liquidity from the bonding curve will be deposited into Raydium and burned. progression increases as the price goes up.</p>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve and there is 0.686 ETH in the bonding curve.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches 4.2 ETH (~{formatNumber(4.2 * wethPriceIntoUSD)})$ all the liquidity from the bonding curve will be deposited into Uniswap and burned. progression increases as the price goes up.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve.</p>
                                                 </div>
                                             </Tooltip>
                                         </div>
