@@ -137,6 +137,7 @@ export const BONDING_CURVE_QUERY = gql`
         totalTokenAmountToCompleteCurve
         uniswapRouter
         uniswapLiquidityPool
+        lpCreationTimestamp
         txCount
         createdAtTimestamp
         createdAtBlockNumber

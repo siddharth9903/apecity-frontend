@@ -59,6 +59,9 @@ const Token = () => {
     const [eth, setETH] = useState(true)
     const onCloseModal2 = () => setOpen2(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [token, setToken] = useState(null)
+    const [bondingCurve, setBondingCurve] = useState(null)
+    const [trades, setTrades] = useState(null)
 
     const [provider, setProvider] = useState()
     const { connector } = useAccount()
@@ -126,10 +129,25 @@ const Token = () => {
         pollInterval: 2000
     });
 
-    const token = tokenData?.token;
-    const bondingCurve = bondingCurveData?.bondingCurve
+    useEffect(()=>{
+        if (tokenData?.token){
+            setToken(tokenData?.token)
+        }
+    }, [tokenData?.token])
 
-    const trades = tradesData?.trades;
+
+    useEffect(() => {
+        if (tradesData) {
+            setTrades(tradesData?.trades)
+        }
+    }, [tradesData])
+
+    useEffect(() => {
+        if (bondingCurveData) {
+            setBondingCurve(bondingCurveData?.bondingCurve)
+        }
+    }, [bondingCurveData])
+
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
 
@@ -382,7 +400,21 @@ const Token = () => {
                             </div>
                         </div> */}
                         <div className="w-full">
-                            
+                            {
+                                token && bondingCurve && (
+                                    <div style={{ height: 'calc(100vh - 200px)' }}>
+                                        <TVChartContainer
+                                            symbol={token?.symbol}
+                                            tokenAddress={tokenAddress}
+                                            bondingCurveAddress={bondingCurve?.id}
+                                            width={'100%'}
+                                            height={'80%'}
+                                        />
+                                    </div>
+
+                                )
+                            }
+                            {/* {console.log('token?.symbol',token?.symbol)}
                                 <div style={{ height: 'calc(100vh - 200px)' }}>
                                     <TVChartContainer
                                         symbol={token?.symbol}
@@ -391,7 +423,7 @@ const Token = () => {
                                         width={'100%'}
                                         height={'80%'}
                                     />
-                                </div>
+                                </div> */}
                            
                             {/* <div style={{ height: 'calc(100vh - 200px)' }}>
                                     <iframe
@@ -439,6 +471,7 @@ const Token = () => {
                             </div>
                         </div>
                     </div>
+                    {console.log('bondingCurve',bondingCurve)}
                     <div className={`lg:border-l  ${tabIndex3 == 1 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute  lg:right-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[320px] xxl:w-[400px] token-right`}>
                         <div className='pb-10'>
                             {!bondingCurve?.active && (
@@ -540,6 +573,7 @@ const Token = () => {
                                         </div>
                                     )
                                 }
+                                {console.log('trades',trades)}
                                 {
                                     token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve}/>
                                 }
