@@ -58,17 +58,42 @@ const Create = () => {
         }
         setOpen(true);
     }
+
     const CreateCoinSchema = Yup.object().shape({
         name: Yup.string().required('Name is required'),
         symbol: Yup.string().required('Ticker is required'),
-        image: Yup.mixed().required('Logo is required'),
+        // image: Yup.mixed().required('Logo is required'),
+        image: Yup.mixed()
+            .test('required', 'Logo is required', (value) => value && value.length > 0)
+            .test('fileType', 'Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.', (value) => {
+                if (!value || !value.length) return true; // Allow empty value
+                return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
+            })
+            .test('fileSize', 'File size must be less than 2MB.', (value) => {
+                if (!value || !value.length) return true; // Allow empty value
+                return value[0].size <= 2 * 1024 * 1024;
+            })
+            .required('Logo is required'),
         description: Yup.string().required('Description is required'),
-        twitter: Yup.string(),
-        telegram: Yup.string(),
-        website: Yup.string(),
+        twitter: Yup.lazy((value) =>
+            value === null || value === undefined || value === ''
+                ? Yup.string().nullable()
+                : Yup.string().matches(
+                    /^https:\/\/twitter\.com\/([a-zA-Z0-9_]{1,15})\/?$/,
+                    'Must be a valid Twitter URL'
+                )
+        ),
+        telegram: Yup.lazy((value) =>
+            value === null || value === undefined || value === ''
+                ? Yup.string().nullable()
+                : Yup.string().matches(
+                    /^https:\/\/t\.me\/([a-zA-Z0-9_]+)\/?$/,
+                    'Must be a valid Telegram URL'
+                )
+        ),
+        website: Yup.string().url().nullable(true),
         buyAmountEth: Yup.string().matches(/^\d*\.?\d*$/, 'Must be a valid number').test('positive', 'Must be greater than or equal to 0', value => parseFloat(value) >= 0),
         buyAmountToken: Yup.string().matches(/^\d*\.?\d*$/, 'Must be a valid number').test('positive', 'Must be greater than or equal to 0', value => parseFloat(value) >= 0),
-
     });
 
     const { register, handleSubmit, watch, getValues, formState: { errors }, setValue } = useForm({
@@ -259,7 +284,7 @@ const Create = () => {
             // Upload metadata to IPFS
             const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
             const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
-            
+
             setProgress(1);
             // Pin the metadata
             await ipfsClient.pin.add(metadataAdded.path);
@@ -377,24 +402,30 @@ const Create = () => {
                                                     <input
                                                         className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none'
                                                         type="text"
+                                                        placeholder='https://twitter.com/apecity'
                                                         {...register('twitter')}
                                                     />
+                                                    {errors.twitter && <span className='text-red-500'>{errors.twitter.message}</span>}
                                                 </div>
                                                 <div>
                                                     <label className='roboto-400 tracking-[0.5px] text-white'>Telegram :</label>
                                                     <input
                                                         className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50] bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none'
                                                         type="text"
+                                                        placeholder='https://t.me/apecity'
                                                         {...register('telegram')}
                                                     />
+                                                    {errors.telegram && <span className='text-red-500'>{errors.telegram.message}</span>}
                                                 </div>
                                                 <div>
                                                     <label className='roboto-400 tracking-[0.5px] text-white'>Website :</label>
                                                     <input
                                                         className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none'
                                                         type="text"
+                                                        placeholder='https://apecity.fun'
                                                         {...register('website')}
                                                     />
+                                                    {errors.website && <span className='text-red-500'>{errors.website.message}</span>}
                                                 </div>
                                             </div>
                                         </Collapse>
