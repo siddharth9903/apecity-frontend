@@ -5,8 +5,35 @@ import { IoSearch } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { TOKENS_QUERY, TOKEN_SEARCH_QUERY, TOTAL_TOKENS_QUERY } from "../graphql/queries/tokenQueries";
+import { useReadContract } from "wagmi";
+import { getAddress, parseEther } from 'viem';
+import { abi as UNISWAP_ROUTER_ABI } from '../contracts/UniswapRouter02';
+// import { WETH_ADDRESS } from "../sections/token/TokenDetails";
+import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from "../contracts/constants";
+
 const Explore = () => {
     const navigate = useNavigate();
+    const [wethPriceIntoUSD, setWethPriceIntoUSD] = useState(0)
+
+    // const { wethPrice, isLoading: isWethPriceLoading } = useWETHPrice();
+    const { data: wethPrice, isLoading: isWethPriceLoading } = useReadContract({
+        address: UNISWAP_ROUTER_ADDRESS,
+        abi: UNISWAP_ROUTER_ABI,
+        functionName: 'getAmountsOut',
+        args: [
+            parseEther('1').toString(), // 1 WETH in Wei
+            [WETH_ADDRESS, USDC_ADDRESS] // Path from WETH to USDC
+        ],
+        watch: true
+    });
+
+    useEffect(()=>{
+        if(wethPrice){
+            const formattedPrice = wethPrice ? wethPrice[1].toString() / 1e6 : null;
+            setWethPriceIntoUSD(formattedPrice)
+        }
+    }, [wethPrice])
+
     const sortingOptions = [
         { value: '0', label: 'Bump Order' },
         // { value: '1', label: 'Last Reply' },
@@ -150,13 +177,14 @@ const Explore = () => {
                                 </div>
                             </div>
                         </div>
-
+                        {console.log('wethPriceIntoUSD',wethPriceIntoUSD)}
                         <div className="col-12  mb-3 mt-3">
                             <ExploreToken
                                 searchResults={searchResults}
                                 sortBy={sortBy}
                                 orderBy={orderBy}
                                 reorderInterval={reorderInterval}
+                                wethPrice={wethPriceIntoUSD}
                             />
                         </div>
 

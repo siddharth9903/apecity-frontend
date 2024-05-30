@@ -5,8 +5,7 @@ import { shortenText } from '../../utils/helper';
 import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
 import { formatNumber } from '../../utils/formats';
-
-const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
+import { WETH_ADDRESS } from '../../contracts/constants';
 
 const TokenDetails = ({ token, trades, bondingCurve }) => {
     const [tabIndex1, setTabIndex1] = useState(0);

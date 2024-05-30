@@ -6,9 +6,11 @@ import { useQuery } from '@apollo/client';
 import { useMotionValue } from 'framer-motion';
 import { useRaisedShadow } from '../../hooks/useRaisedShadow';
 import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQueries';
-import { convertIpfsUrl } from '../../utils/formats';
+import { convertIpfsUrl, formatNumber } from '../../utils/formats';
 
-const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
+
+const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPrice }) => {
+    console.log('wethPrice',wethPrice)
     const [tokens, setTokens] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -77,7 +79,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
                 <table className="md:w-full max-md:w-[720px] max-md:overflow-x-auto border-separate border-spacing-y-3">
                     <Reorder.Group as="tbody" axis="y" values={tokens}>
                         {tokens && tokens?.map((item) => (
-                            <Item key={item.id} item={item} />
+                            <Item key={item.id} item={item} wethPrice={wethPrice} />
                         ))}
                     </Reorder.Group>
                 </table>
@@ -109,8 +111,8 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
 
 export default ExploreToken;
 
-export const Item = ({ item }) => {
-    const { id, name, symbol, metaData } = item;
+export const Item = ({ item, wethPrice }) => {
+    const { id, name, symbol, metaData, bondingCurve } = item;
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
     const navigate = useNavigate();
@@ -136,28 +138,28 @@ export const Item = ({ item }) => {
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
-                    <span className="text-[#808080] text-sm pfont-400">1H</span>
-                    <span className="pfont-600 text-sm text-[#b0dc73]">23.3%</span>
+                    <span className="text-[#808080] text-sm pfont-400">MC</span>
+                    <span className="pfont-600 text-sm text-[#b0dc73]">{formatNumber(bondingCurve?.marketCap)} ETH (~{formatNumber(bondingCurve?.marketCap*wethPrice)} $)</span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
-                    <span className="text-[#808080] text-sm pfont-400">24H</span>
-                    <span className="pfont-600 text-sm text-[#f56565]">-80.3%</span>
+                    <span className="text-[#808080] text-sm pfont-400">VOL</span>
+                    <span className="pfont-600 text-sm text-[#f56565]">{formatNumber(bondingCurve?.volume)} ETH  (~{formatNumber(bondingCurve?.volume * wethPrice)} $)</span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
-                    <span className="text-[#808080] uppercase text-sm pfont-400">vol</span>
-                    <span className="text-sm text-white pfont-600">$12.2M</span>
+                    <span className="text-[#808080] uppercase text-sm pfont-400">tx count</span>
+                    <span className="text-sm text-white pfont-600">{formatNumber(bondingCurve?.txCount)}</span>
                 </div>
             </td>
-            <td className="px-4 py-4">
+            {/* <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] uppercase text-sm pfont-400">liq</span>
                     <span className="text-sm text-white pfont-600">$12.2M</span>
                 </div>
-            </td>
+            </td> */}
         </Reorder.Item>
     );
 };

@@ -48,7 +48,9 @@ export const TOKENS_QUERY = gql`
       }
       bondingCurve {
         marketCap
+        volume
         createdAtTimestamp
+        txCount
         trades(orderBy: timestamp, orderDirection: desc, first: 1) {
           timestamp
         }
@@ -75,6 +77,8 @@ export const TOKEN_SEARCH_QUERY = gql`
         }
         bondingCurve {
           marketCap
+          volume
+          txCount
           createdAtTimestamp
           trades(orderBy: timestamp, orderDirection: desc, first: 1) {
             timestamp

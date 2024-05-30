@@ -405,7 +405,7 @@ const Create = () => {
                                             type='submit'
                                             className="bg-gradient-to-br from-zinc-900 to-zinc-900   dark:bg-zinc-800  transition-all duration-300  hover:scale-105 text-center border-none w-full text-white flex justify-center items-center tracking-[1px] roboto-500 gap-x-2 px-4 py-2.5 rounded-md"
                                         >
-                                            Create Coin
+                                            Create
                                         </button>
                                         <p className='text-white mt-3.5 roboto-400'>Cost to deploy: ~0.02 ETH</p>
                                     </div>
@@ -426,7 +426,7 @@ const Create = () => {
                                         <div className="text-center">
                                             <h3 className="text-center tracking-[0.5px] roboto-400 text-white text-[17px]">Choose how many {tokenSymbol} you want to buy </h3>
                                             <p className='text-center tracking-[0.5px] mt-1 roboto-400 text-white text-[17px]'>(optional)</p>
-                                            <p className='text-center tracking-[0.5px] mt-3.5 mb-3 pfont-400 text-white text-sm'>Tip: its optional but buying a small amount of coins helps protect your coin from snipers</p>
+                                            <p className='text-center tracking-[0.5px] mt-3.5 mb-3 pfont-400 text-white text-sm'>Pro tip: Buying a small amount helps protect your token from snipers</p>
                                         </div>
                                     </div>
                                     <div className="flex mb-2 justify-end w-full gap-2">

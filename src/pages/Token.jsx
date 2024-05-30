@@ -33,8 +33,11 @@ import { SwapWidget, darkTheme } from '@uniswap/widgets'
 import '@uniswap/widgets/fonts.css'
 // import '@uniswap/widgets/dist/fonts.css'
 import { tenderlyBaseIdChainRpcUrl, vTenderlyBaseChain } from '../../tenderly.config';
-import { useAccount } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 import { Web3Provider } from '@ethersproject/providers'
+import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from '../contracts/constants';
+import { abi as UNISWAP_ROUTER_ABI } from '../contracts/UniswapRouter02';
+import { parseEther } from 'viem';
 
 const Token = () => {
     const navigate = useNavigate()
@@ -59,6 +62,27 @@ const Token = () => {
 
     const [provider, setProvider] = useState()
     const { connector } = useAccount()
+
+    const [wethPriceIntoUSD, setWethPriceIntoUSD] = useState(0)
+
+    const { data: wethPrice, isLoading: isWethPriceLoading } = useReadContract({
+        address: UNISWAP_ROUTER_ADDRESS,
+        abi: UNISWAP_ROUTER_ABI,
+        functionName: 'getAmountsOut',
+        args: [
+            parseEther('1').toString(), // 1 WETH in Wei
+            [WETH_ADDRESS, USDC_ADDRESS] // Path from WETH to USDC
+        ],
+        watch: true
+    });
+
+    useEffect(() => {
+        if (wethPrice) {
+            const formattedPrice = wethPrice ? wethPrice[1].toString() / 1e6 : null;
+            setWethPriceIntoUSD(formattedPrice)
+        }
+    }, [wethPrice])
+
     // useEffect(() => {
     //     if (!connector) {
     //         return () => setProvider(undefined)
@@ -465,7 +489,7 @@ const Token = () => {
                                         <div className='flex mt-3 gap-x-2'>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
-                                                <p className='text-white text-sm text-center pfont-600'>$0.0886777</p>
+                                                <p className='text-white text-sm text-center pfont-600'>${formatNumber(bondingCurve?.currentPrice*wethPriceIntoUSD)}</p>
                                             </div>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
