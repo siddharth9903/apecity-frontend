@@ -250,8 +250,6 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                 <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
                                     <p className="text-sm text-white pfont-400">Pair</p>
                                     <div className="flex items-center gap-x-3">
-                                        {console.log('bondingCurve?.uniswapLiquidityPool', bondingCurve?.uniswapLiquidityPool)}
-                                        {console.log('bondingCurve', bondingCurve)}
                                         <div
                                             onClick={() => {
                                                 enqueueSnackbar('copied', { autoHideDuration: 1000 });

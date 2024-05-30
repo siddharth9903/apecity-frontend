@@ -177,8 +177,7 @@ const Explore = () => {
                                 </div>
                             </div>
                         </div>
-                        {console.log('wethPriceIntoUSD',wethPriceIntoUSD)}
-                        <div className="col-12  mb-3 mt-3">
+                        <div className="col-12 mb-3 mt-3">
                             <ExploreToken
                                 searchResults={searchResults}
                                 sortBy={sortBy}

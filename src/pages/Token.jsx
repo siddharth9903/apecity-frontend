@@ -471,7 +471,6 @@ const Token = () => {
                             </div>
                         </div>
                     </div>
-                    {console.log('bondingCurve',bondingCurve)}
                     <div className={`lg:border-l  ${tabIndex3 == 1 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute  lg:right-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[320px] xxl:w-[400px] token-right`}>
                         <div className='pb-10'>
                             {!bondingCurve?.active && (
@@ -573,7 +572,6 @@ const Token = () => {
                                         </div>
                                     )
                                 }
-                                {console.log('trades',trades)}
                                 {
                                     token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve}/>
                                 }

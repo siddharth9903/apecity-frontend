@@ -11,7 +11,6 @@ import { convertIpfsUrl, formatNumber } from '../../utils/formats';
 
 
 const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPrice }) => {
-    console.log('wethPrice',wethPrice)
     const [tokens, setTokens] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -19,10 +18,14 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
     const navigate = useNavigate();
 
     const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY, {
-        pollInterval: 2000
+        pollInterval: reorderInterval ? reorderInterval : 2000,
+        fetchPolicy: 'no-cache',
+        onCompleted: (data) => {
+            console.log('Query completed successfully 1', data);
+        },
     });
     const totalTokens = totalTokensData?.factory?.tokenCount || 0;
-
+    console.log('reorderInterval',reorderInterval)
     const { data: tokensData, loading: tokensLoading, error: tokensError } = useQuery(TOKENS_QUERY, {
         variables: {
             first: pageSize,
@@ -30,7 +33,11 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
             orderBy: sortBy,
             orderDirection: orderBy,
         },
-        pollInterval: reorderInterval ? reorderInterval * 1000 : 2000,
+        fetchPolicy: 'no-cache',
+        pollInterval: reorderInterval ? reorderInterval : 2000,
+        onCompleted: (data) => {
+            console.log('Query completed successfully 2', data);
+        },
     });
 
     useEffect(() => {
