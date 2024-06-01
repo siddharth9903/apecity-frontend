@@ -1,3 +1,5 @@
+import { getConfig } from "../configs/getConfig";
+
 function formatNumber(number) {
     if (number === 0) {
         return '0';
@@ -37,7 +39,7 @@ function formatNumber(number) {
 }
 function convertIpfsUrl(originalUrl) {
     // Replace the beginning of the URL with the new domain
-    const newUrl = originalUrl?.replace('https://ipfs.io', import.meta.env.VITE_IPFS_ENDPOINT);
+    const newUrl = originalUrl?.replace('https://ipfs.io', getConfig().ipfsEndpoint);
     return newUrl;
 }
 

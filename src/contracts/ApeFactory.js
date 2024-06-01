@@ -1,9 +1,5 @@
-//for baseIdTenderly
-// export const deployedContractAddress = "0xb4FBc25204d26C4a937F4CBa67087F70B21bb6c5"; // Replace with the actual ApeFactory contract address
-
-//for base
-// export const deployedContractAddress = "0x7722B77e691ceA11047f030f1b128432A1a6FfCA"; // Replace with the actual ApeFactory contract address
-export const deployedContractAddress = import.meta.env.VITE_APE_FACTORY_ADDRESS
+import { getConfig } from "../configs/getConfig"
+export const deployedContractAddress = getConfig().apeFactoryAddress
 
 export const abi = [
     {

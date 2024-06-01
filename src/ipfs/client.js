@@ -1,7 +1,8 @@
 import { create } from 'ipfs-http-client';
+import { getConfig } from '../configs/getConfig';
 
 const client = create({ 
-    url: import.meta.env.VITE_IPFS_ENDPOINT, 
+    url: getConfig().ipfsEndpoint, 
 });
 
 export default client;

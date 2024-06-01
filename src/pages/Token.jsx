@@ -31,8 +31,6 @@ import { MdOutlineShowChart } from "react-icons/md";
 import { TVChartContainer } from '../components/TVChartContainer';
 import { SwapWidget, darkTheme } from '@uniswap/widgets'
 import '@uniswap/widgets/fonts.css'
-// import '@uniswap/widgets/dist/fonts.css'
-import { tenderlyBaseIdChainRpcUrl, vTenderlyBaseChain } from '../../tenderly.config';
 import { useAccount, useReadContract } from 'wagmi'
 import { Web3Provider } from '@ethersproject/providers'
 import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from '../contracts/constants';
