@@ -9,6 +9,8 @@ import { Web3ModalProvider } from './components/Web3ModalProvider';
 import ConnectButton from './components/ConnectButton';
 import { ApolloProvider } from '@apollo/client';
 import client from './graphql/client';
+import { Provider } from 'react-redux';
+import store from './redux/store.js';
 
 function App() {
   useEffect(() => {
@@ -19,12 +21,14 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
+      <Provider store={store}>
       <Web3ModalProvider>
         <SnackbarProvider>        
           <Router />
         </SnackbarProvider>
         {/* <Switcher /> */}
       </Web3ModalProvider>
+      </Provider>
     </ApolloProvider>
   );
 }

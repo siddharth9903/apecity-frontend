@@ -28,6 +28,7 @@ export const TVChartContainer = (props) => {
 	useEffect(() => {
 		const widgetOptions = {
 			symbol: defaultProps.symbol,
+			// debug: true,
 			// BEWARE: no trailing slash is expected in feed URL
 			// datafeed: new window.Datafeeds.UDFCompatibleDatafeed(defaultProps.datafeedUrl),
 			datafeed: defaultProps.datafeed,

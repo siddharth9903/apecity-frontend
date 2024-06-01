@@ -328,8 +328,6 @@ const Create = () => {
         }
     };
 
-    console.log('errors', errors)
-
     if (isConfirming || isLoading) {
         return (
             <div className='container-fluid create-coin min-h-screen bg-fixed bg-center bg-no-repeat bg-cover pt-[70px]'>

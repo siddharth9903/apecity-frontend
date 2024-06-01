@@ -1,5 +1,11 @@
 import client from './graphql/client';
 import { GET_BONDING_CURVE, GET_BONDING_CURVES, GET_BONDING_CURVE_TRADES } from './graphql/queries/chartQueries';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFetchedData } from './redux/chartDataSlice';
+import store from './redux/store';
+
+let count = 0
+
 
 function getBarPeriod(resolution) {
     switch (resolution) {
@@ -92,18 +98,36 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
             const { from, to, firstDataRequest, countBack } = periodParams;
+            const state = store.getState(); // Get the current state from the Redux store
+            const fetchedData = state.data[_bondingCurveAddress];
 
             try {
-                const { data } = await client.query({
-                    query: GET_BONDING_CURVE_TRADES,
-                    variables: {
-                        bondingCurveId: _bondingCurveAddress,
-                        from,
-                        to,
-                    },
+                if (!fetchedData || firstDataRequest) {
+                    // Fetch data from the API and store it in the state
+                    const { data } = await client.query({
+                        query: GET_BONDING_CURVE_TRADES,
+                        variables: {
+                            bondingCurveId: _bondingCurveAddress,
+                        },
+                    });
+                    console.log('Query succeeded'); // Log success message
+
+
+                    if (!data.trades || data.trades.length === 0) {
+                        onHistoryCallback([], { noData: false });
+                        return;
+                    }
+
+                    store.dispatch(setFetchedData({ bondingCurveAddress:_bondingCurveAddress, data: data.trades })); // Dispatch the action to update the Redux store
+                }
+
+
+                const filteredData = fetchedData?.filter((trade) => {
+                    const tradeTime = parseFloat(trade.timestamp * 1000);
+                    return tradeTime >= from * 1000 && tradeTime < to * 1000;
                 });
 
-                if (!data.trades || data.trades.length === 0) {
+                if (!filteredData || filteredData.length === 0) {
                     onHistoryCallback([], { noData: false });
                     return;
                 }
@@ -111,8 +135,8 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 const bars = [];
                 let currentBar = null;
 
-                for (const trade of data.trades) {
-                    const tradeTime = parseFloat(trade.timestamp * 1000); // Convert timestamp to milliseconds
+                for (const trade of filteredData) {
+                    const tradeTime = parseFloat(trade.timestamp * 1000);
                     const tradeOpenPrice = parseFloat(trade.openPrice);
                     const tradeClosePrice = parseFloat(trade.closePrice);
                     const tradeType = trade.type;
@@ -141,6 +165,58 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 onErrorCallback(error);
             }
         },
+
+        // getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
+        //     const { from, to, firstDataRequest, countBack } = periodParams;
+
+        //     try {
+        //         const { data } = await client.query({
+        //             query: GET_BONDING_CURVE_TRADES,
+        //             variables: {
+        //                 bondingCurveId: _bondingCurveAddress,
+        //             },
+        //         });
+        //         console.log('query happening'+count)
+        //         count++
+
+        //         if (!data.trades || data.trades.length === 0) {
+        //             onHistoryCallback([], { noData: false });
+        //             return;
+        //         }
+
+        //         const bars = [];
+        //         let currentBar = null;
+
+        //         for (const trade of data.trades) {
+        //             const tradeTime = parseFloat(trade.timestamp * 1000); // Convert timestamp to milliseconds
+        //             const tradeOpenPrice = parseFloat(trade.openPrice);
+        //             const tradeClosePrice = parseFloat(trade.closePrice);
+        //             const tradeType = trade.type;
+
+        //             if (!currentBar || tradeTime >= currentBar.time + getBarPeriod(resolution)) {
+        //                 // Start a new bar
+        //                 currentBar = {
+        //                     time: tradeTime,
+        //                     open: tradeOpenPrice.toFixed(18),
+        //                     high: tradeClosePrice.toFixed(18),
+        //                     low: tradeOpenPrice.toFixed(18),
+        //                     close: tradeClosePrice.toFixed(18),
+        //                 };
+        //                 bars.push(currentBar);
+        //             } else {
+        //                 // Update the current bar
+        //                 currentBar.high = Math.max(currentBar.high, tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18);
+        //                 currentBar.low = Math.min(currentBar.low, tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18);
+        //                 currentBar.close = tradeClosePrice;
+        //             }
+        //         }
+
+        //         onHistoryCallback(bars, { noData: true });
+        //     } catch (error) {
+        //         console.log('[getBars]: Error', error);
+        //         onErrorCallback(error);
+        //     }
+        // },
 
         subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) => {
             console.log('[subscribeBars]: Method call with subscriberUID:', subscriberUID);

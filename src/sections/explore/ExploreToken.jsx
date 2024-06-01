@@ -19,13 +19,9 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
 
     const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY, {
         pollInterval: reorderInterval ? reorderInterval : 2000,
-        fetchPolicy: 'no-cache',
-        onCompleted: (data) => {
-            console.log('Query completed successfully 1', data);
-        },
+        fetchPolicy: 'no-cache'
     });
     const totalTokens = totalTokensData?.factory?.tokenCount || 0;
-    console.log('reorderInterval',reorderInterval)
     const { data: tokensData, loading: tokensLoading, error: tokensError } = useQuery(TOKENS_QUERY, {
         variables: {
             first: pageSize,
@@ -34,10 +30,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
             orderDirection: orderBy,
         },
         fetchPolicy: 'no-cache',
-        pollInterval: reorderInterval ? reorderInterval : 2000,
-        onCompleted: (data) => {
-            console.log('Query completed successfully 2', data);
-        },
+        pollInterval: reorderInterval ? reorderInterval : 2000
     });
 
     useEffect(() => {

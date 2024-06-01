@@ -20,9 +20,9 @@ export const GET_BONDING_CURVES = gql`
 `;
 
 export const GET_BONDING_CURVE_TRADES = gql`
-  query GetBondingCurveTrades($bondingCurveId: ID!, $from: Int!, $to: Int!) {
+  query GetBondingCurveTrades($bondingCurveId: ID!) {
     trades(
-      where: { bondingCurve: $bondingCurveId, timestamp_gte: $from, timestamp_lte: $to }
+      where: { bondingCurve: $bondingCurveId }
       orderBy: timestamp
       orderDirection: asc
     ) {
