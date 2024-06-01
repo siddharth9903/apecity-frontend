@@ -99,7 +99,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
             const { from, to, firstDataRequest, countBack } = periodParams;
             const state = store.getState(); // Get the current state from the Redux store
-            const fetchedData = state.data[_bondingCurveAddress];
+            let fetchedData = state.data[_bondingCurveAddress];
 
             try {
                 if (!fetchedData || firstDataRequest) {
@@ -110,15 +110,14 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                             bondingCurveId: _bondingCurveAddress,
                         },
                     });
-                    console.log('Query succeeded'); // Log success message
-
 
                     if (!data.trades || data.trades.length === 0) {
-                        onHistoryCallback([], { noData: false });
+                        onHistoryCallback([], { noData: true });
                         return;
                     }
 
-                    store.dispatch(setFetchedData({ bondingCurveAddress:_bondingCurveAddress, data: data.trades })); // Dispatch the action to update the Redux store
+                    fetchedData = data.trades
+                    store.dispatch(setFetchedData({ bondingCurveAddress: _bondingCurveAddress, data: data.trades })); // Dispatch the action to update the Redux store
                 }
 
 
@@ -127,7 +126,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                     return tradeTime >= from * 1000 && tradeTime < to * 1000;
                 });
 
-                if (!filteredData || filteredData.length === 0) {
+                if (!filteredData) {
                     onHistoryCallback([], { noData: false });
                     return;
                 }
@@ -159,7 +158,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                     }
                 }
 
-                onHistoryCallback(bars, { noData: true });
+                onHistoryCallback(bars, { noData: false });
             } catch (error) {
                 console.log('[getBars]: Error', error);
                 onErrorCallback(error);
