@@ -67,7 +67,7 @@ const Create = () => {
             .test('required', 'Logo is required', (value) => value && value.length > 0)
             .test('fileType', 'Invalid file type. Only JPG, JPEG, PNG, and GIF files are allowed.', (value) => {
                 if (!value || !value.length) return true; // Allow empty value
-                return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
+                return ['image/jpg', 'image/jpeg', 'image/png', 'image/gif', 'image/svg'].includes(value[0].type);
             })
             .test('fileSize', 'File size must be less than 2MB.', (value) => {
                 if (!value || !value.length) return true; // Allow empty value

@@ -1,15 +1,9 @@
-//base-sepolia
-// export const deployedContractAddress = '0x7722b77e691cea11047f030f1b128432a1a6ffca'; // Replace with the actual ApeFactory contract address
-//hardhat
-// export const deployedContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Replace with the actual ApeFactory contract address
-//base and base-tenderly
-// export const deployedContractAddress = '0xDeca67A17195Db554BBa847AD8b5AcBb18e2C8a3'; // Replace with the actual ApeFactory contract address
-//localhost
-// export const deployedContractAddress = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'; // Replace with the actual ApeFactory contract address
-//base and baseIdTenderly
-// export const deployedContractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // Replace with the actual ApeFactory contract address
-// export const deployedContractAddress = '0x43bbaC1E810E19C1608a26626FCc04D45f5918f5'; // Replace with the actual ApeFactory contract address
-export const deployedContractAddress = "0xb4FBc25204d26C4a937F4CBa67087F70B21bb6c5"; // Replace with the actual ApeFactory contract address
+//for baseIdTenderly
+// export const deployedContractAddress = "0xb4FBc25204d26C4a937F4CBa67087F70B21bb6c5"; // Replace with the actual ApeFactory contract address
+
+//for base
+// export const deployedContractAddress = "0x7722B77e691ceA11047f030f1b128432A1a6FfCA"; // Replace with the actual ApeFactory contract address
+export const deployedContractAddress = import.meta.env.VITE_APE_FACTORY_ADDRESS
 
 export const abi = [
     {
