@@ -147,18 +147,22 @@ export const Item = ({ item, wethPrice }) => {
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">MC</span>
-                    <span className="pfont-600 text-sm text-[#b0dc73]">{formatNumber(bondingCurve?.marketCap)} ETH (~{formatNumber(bondingCurve?.marketCap*wethPrice)} $)</span>
+                    <span className="pfont-600 text-sm text-[#b0dc73]">{formatNumber(bondingCurve?.marketCap)} ETH 
+                    {/* (~{formatNumber(bondingCurve?.marketCap*wethPrice)} $) */}
+                    </span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">VOL</span>
-                    <span className="pfont-600 text-sm text-[#f56565]">{formatNumber(bondingCurve?.volume)} ETH  (~{formatNumber(bondingCurve?.volume * wethPrice)} $)</span>
+                    <span className="pfont-600 text-sm text-[#f56565]">{formatNumber(bondingCurve?.volume)} ETH  
+                    {/* (~{formatNumber(bondingCurve?.volume * wethPrice)} $) */}
+                    </span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
-                    <span className="text-[#808080] uppercase text-sm pfont-400">tx count</span>
+                    <span className="text-[#808080] uppercase text-sm pfont-400">txn count</span>
                     <span className="text-sm text-white pfont-600">{formatNumber(bondingCurve?.txCount)}</span>
                 </div>
             </td>

@@ -78,7 +78,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                 className={`${tabIndex1 === 0 ? 'pfont-600 text-white' : 'pfont-500 text-[#797979]'
                                     } text-center text-xs`}
                             >
-                                Bondingcurve lifetime
+                                Stats
                             </p>
                             {/* <p className="text-[#b0dc73] pfont-600 text-center text-sm">0.16%</p> */}
                         </Tab>
@@ -180,64 +180,9 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
             </Tabs>
             <div className="mt-4">
                 <div>
-                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">BondingCurve created</p>
-                        <p className="text-sm text-white pfont-500">
-                            {new Date(bondingCurve?.createdAtTimestamp * 1000).toLocaleString()}
-                        </p>
-                    </div>
-                    {/* <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">Pooled {token?.name}</p>
-                        <p className="text-sm flex items-center gap-x-3 text-white pfont-500">
-                            <span>{formatNumber(token?.bondingCurve.tokenAmountToCompleteCurve)}</span>
-                        </p>
-                    </div>
-                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">Pooled ETH</p>
-                        <p className="text-sm flex items-center gap-x-3 text-white pfont-500">
-                            <span>{formatNumber(token?.bondingCurve.ethAmountToCompleteCurve)}</span>
-                            <span>${formatNumber(token?.bondingCurve.ethAmountToCompleteCurve * 1800)}</span>
-                        </p>
-                    </div> */}
-                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">BondingCurve</p>
-                        <div className="flex items-center gap-x-3">
-                            <div
-                                onClick={() => {
-                                    enqueueSnackbar('copied', { autoHideDuration: 1000 });
-                                    copy(bondingCurve?.id);
-                                }}
-                                className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
-                            >
-                                <span>
-                                    <FaRegCopy className="text-sm" />
-                                </span>
-                                <span className="pfont-400 text-sm">
-                                    {shortenText(bondingCurve?.id, 10)}
-                                </span>
-                            </div>
-                            {/* <a href={`https://basescan.org/token/tokenholderchart/${token?.id}`} target='_blank'>
-                                <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                    <span className="uppercase pfont-400 text-sm">LPs</span>
-                                    <span>
-                                        <FaExternalLinkAlt className="text-xs" />
-                                    </span>
-                                </div>
-                            </a> */}
 
-                            <a href={`https://basescan.org/address/${bondingCurve?.id}`} target='_blank'>
-                                <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                    <span className="uppercase pfont-400 text-sm">exp</span>
-                                    <span>
-                                        <FaExternalLinkAlt className="text-xs" />
-                                    </span>
-                                </div>
-                            </a>
-
-                        </div>
-                    </div>
                     {
-                        !bondingCurve?.active && (
+                        !bondingCurve?.active ? (
 
                             <>
 
@@ -283,7 +228,46 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                     </div>
                                 </div>
                             </>
-                        )
+                        ) :
+                            (
+                                <>
+                                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
+                                        <p className="text-sm text-white pfont-400">BC created</p>
+                                        <p className="text-sm text-white pfont-500">
+                                            {new Date(bondingCurve?.createdAtTimestamp * 1000).toLocaleString()}
+                                        </p>
+                                    </div>
+                                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
+                                        <p className="text-sm text-white pfont-400">BC</p>
+                                        <div className="flex items-center gap-x-3">
+                                            <div
+                                                onClick={() => {
+                                                    enqueueSnackbar('copied', { autoHideDuration: 1000 });
+                                                    copy(bondingCurve?.id);
+                                                }}
+                                                className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
+                                            >
+                                                <span>
+                                                    <FaRegCopy className="text-sm" />
+                                                </span>
+                                                <span className="pfont-400 text-sm">
+                                                    {shortenText(bondingCurve?.id, 10)}
+                                                </span>
+                                            </div>
+
+                                            <a href={`https://basescan.org/address/${bondingCurve?.id}`} target='_blank'>
+                                                <div className="flex gap-x-2 text-[#cccccc] items-center">
+                                                    <span className="uppercase pfont-400 text-sm">exp</span>
+                                                    <span>
+                                                        <FaExternalLinkAlt className="text-xs" />
+                                                    </span>
+                                                </div>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </>
+                            )
                     }
                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
                         <p className="text-sm text-white pfont-400">{token?.name}</p>

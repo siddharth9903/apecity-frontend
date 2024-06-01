@@ -369,7 +369,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                     onClick={onSubmitFillRemaining}
                                     className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
                                 >
-                                    Fill up remaining curve
+                                    Ape remaining curve
                                 </button>
                             </form>
                         </TabPanel>
@@ -490,7 +490,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                         onClick={onSubmitSellPortfolio}
                                         className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
                                     >
-                                        Sell whole portfolio
+                                        Eject
                                     </button>
                                 </div>
                             </form>

@@ -517,7 +517,6 @@ const Token = () => {
 
                                 {
                                     bondingCurve?.active && (
-
                                         <div className='flex mt-3 gap-x-2'>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
