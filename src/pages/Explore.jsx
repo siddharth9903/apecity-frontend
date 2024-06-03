@@ -114,7 +114,7 @@ const Explore = () => {
                     <div className="row">
                         <div className="col-12 pt-10">
                             <div className="flex justify-center">
-                                <button onClick={() => navigate('/create')} className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 px-6 py-2 rounded-md">
+                                <button onClick={() => navigate('/create')} className="bg-[#AF47D2] hover:bg-[#850F8D] transition-all duration-300  hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 px-6 py-2 rounded-md">
                                     Create Your Coin
                                 </button>
                             </div>
@@ -132,7 +132,7 @@ const Explore = () => {
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />
                                         <button
-                                            className="bg-[#475dc0] text-white px-4 py-2 rounded-md"
+                                            className="bg-[#AF47D2] text-white px-4 py-2 rounded-md"
                                             onClick={handleSearch}
                                             disabled={searchLoading}
                                         >

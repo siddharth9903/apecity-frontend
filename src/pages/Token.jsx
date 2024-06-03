@@ -127,8 +127,8 @@ const Token = () => {
         pollInterval: 2000
     });
 
-    useEffect(()=>{
-        if (tokenData?.token){
+    useEffect(() => {
+        if (tokenData?.token) {
             setToken(tokenData?.token)
         }
     }, [tokenData?.token])
@@ -185,7 +185,7 @@ const Token = () => {
 
     return (
         <>
-            <div className="container-fluid pt-[69px] bg-black">
+            <div className="container-fluid pt-[76px] bg-black">
                 <div className='lg:relative lg:h-screen lg:flex lg:justify-between'>
                     <div className={`${tabIndex3 == 0 ? '' : 'max-lg:hidden'} lg:border-r lg:h-screen lg:overflow-y-auto lg:absolute  lg:left-0 lg:top-0 lg:border-[#5e5e6b] bg-[#17171c] lg:w-[320px] xxl:w-[400px] token-info`}>
                         <div className='pb-10'>
@@ -205,10 +205,9 @@ const Token = () => {
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex justify-center mt-5 gap-x-2'>
-                                    <div className='px-3 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
-                                        <BsTwitterX className='text-white  text-sm' />
-                                        <p className='text-white text-sm text-center pfont-500'>Search on Twitter</p>
-                                    </div>
+                                    <button className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 px-6 py-2 rounded-md">
+                                        Shill
+                                    </button>
                                 </div>
                                 <div ref={targetDivRef} className=' mt-5'>
                                     <div className='gradient-1 py-5 sm:px-5 shadow-1 rounded-2xl'>
@@ -254,13 +253,15 @@ const Token = () => {
                                             </div>
                                             <div className='mt-4 px-3'>
                                                 <p className='text-white pfont-400 text-center'>
-                                                    {token?.metaData?.description}
+                                                    {token?.metaData?.description ? <>{'About'} <br /> {token?.metaData?.description}</> : null}
                                                 </p>
                                             </div>
                                             <div className='flex mt-4 justify-center'>
-                                                <button className="bg-[#475dc0] transition-all duration-300 hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center tracking-[1px] roboto-500 gap-x-2 px-6 py-2 rounded-md">
-                                                    Shill
-                                                </button>
+
+                                                <div className='px-3 py-1.5 flex items-center justify-center gap-x-1.5 rounded border border-[#5e5e6b]'>
+                                                    <BsTwitterX className='text-white  text-sm' />
+                                                    <p className='text-white text-sm text-center pfont-500'>Search on Twitter</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -422,7 +423,7 @@ const Token = () => {
                                         height={'80%'}
                                     />
                                 </div> */}
-                           
+
                             {/* <div style={{ height: 'calc(100vh - 200px)' }}>
                                     <iframe
                                         width={'100%'}
@@ -481,9 +482,9 @@ const Token = () => {
                                         </div>
                                     </div>
                                 </div>
-                            ) }
+                            )}
                             <div className='bg-[#111116] py-1.5 flex justify-center'>
-                                <div>
+                                {/* <div>
                                     <div className='flex gap-x-2 justify-center items-center'>
                                         <div className='flex gap-x-1 justify-center items-center'>
                                             <span className='text-white text-[17px] space-600'>{token?.symbol}</span>
@@ -509,7 +510,7 @@ const Token = () => {
                                             <span className='text-[#A7A7AC] pfont-400 text-sm'>Uniswap</span>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
 
@@ -518,7 +519,7 @@ const Token = () => {
                                         <div className='flex mt-3 gap-x-2'>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
-                                                <p className='text-white text-sm text-center pfont-600'>${formatNumber(bondingCurve?.currentPrice*wethPriceIntoUSD)}</p>
+                                                <p className='text-white text-sm text-center pfont-600'>${formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)}</p>
                                             </div>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
@@ -570,7 +571,7 @@ const Token = () => {
                                     )
                                 }
                                 {
-                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve}/>
+                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve} />
                                 }
                             </div>
                         </div>

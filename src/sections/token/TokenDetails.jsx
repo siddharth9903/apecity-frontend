@@ -96,7 +96,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                 <p className="pfont-500 text-white text-sm">{formatNumber(tradeStats.volumeEth)} ETH</p>
                             </div>
                             <div>
-                                <p className="pfont-500 text-[#797979] uppercase text-xs">makers</p>
+                                <p className="pfont-500 text-[#797979] uppercase text-xs">unique traders</p>
                                 <p className="pfont-500 text-white text-sm">{tradeStats.makers}</p>
                             </div>
                         </div>

@@ -7,7 +7,7 @@ import { useMotionValue } from 'framer-motion';
 import { useRaisedShadow } from '../../hooks/useRaisedShadow';
 import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQueries';
 import { convertIpfsUrl, formatNumber } from '../../utils/formats';
-
+import { FaCircleInfo } from "react-icons/fa6";
 
 
 const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPrice }) => {
@@ -88,7 +88,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
             <div className="my-4">
                 <div className="flex gap-x-5 items-center justify-center">
                     <div
-                        className="h-9 w-9 rounded-full bg-[#475dc0] hover:bg-blue-500 cursor-pointer shadow-gray-700 flex justify-center items-center"
+                        className="h-9 w-9 rounded-full bg-[#AF47D2] hover:bg-[#850F8D]  cursor-pointer shadow-gray-700 flex justify-center items-center"
                         onClick={handlePreviousPage}
                     >
                         <MdKeyboardArrowLeft className="group:hover: text-white text-xl" />
@@ -99,7 +99,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
                         <span>{totalPages}</span>
                     </div>
                     <div
-                        className="h-9 w-9 rounded-full bg-[#475dc0] hover:bg-blue-500 cursor-pointer shadow-gray-700 flex justify-center items-center"
+                        className="h-9 w-9 rounded-full bg-[#AF47D2] hover:bg-[#850F8D]  cursor-pointer shadow-gray-700 flex justify-center items-center"
                         onClick={handleNextPage}
                     >
                         <MdKeyboardArrowRight className="group:hover: text-white text-xl" />
@@ -149,8 +149,10 @@ export const Item = ({ item, wethPrice }) => {
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">VOL</span>
                     <span className="pfont-600 text-sm text-[#f56565]">{formatNumber(bondingCurve?.volume)} ETH  
+                   
                     {/* (~{formatNumber(bondingCurve?.volume * wethPrice)} $) */}
                     </span>
+                    <span className='text-white '><FaCircleInfo  /></span>
                 </div>
             </td>
             <td className="px-4 py-4">

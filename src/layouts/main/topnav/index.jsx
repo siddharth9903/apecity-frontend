@@ -113,7 +113,7 @@ export default function Topnav({ setToggle, toggle }) {
                         <div className="col-lg-4 col-sm-1  col-4">
                             <div className="flex items-center space-x-1">
                                 <Link to="/" className="flex items-center">
-                                    <img src={'/images/logo/logo1.png'} className="w-12" alt="" />
+                                    <img src={'/logo.svg'} className="w-16 rounded-full" alt="" />
                                     {/* <span className="text-white lilita-400 tracking-[2px] text-2xl">Ape city</span> */}
                                     {/* <span className="md:block hidden">
                             <img src={'/images/logo/logo-dark.png'} className="inline-block dark:hidden" alt="" />
