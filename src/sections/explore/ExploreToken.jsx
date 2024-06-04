@@ -88,7 +88,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
             <div className="my-4">
                 <div className="flex gap-x-5 items-center justify-center">
                     <div
-                        className="h-9 w-9 rounded-full bg-[#AF47D2] hover:bg-[#850F8D]  cursor-pointer shadow-gray-700 flex justify-center items-center"
+                        className="h-9 w-9 rounded-full bg-[#475dc0] hover:bg-[#850F8D]  cursor-pointer shadow-gray-700 flex justify-center items-center"
                         onClick={handlePreviousPage}
                     >
                         <MdKeyboardArrowLeft className="group:hover: text-white text-xl" />
@@ -99,7 +99,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
                         <span>{totalPages}</span>
                     </div>
                     <div
-                        className="h-9 w-9 rounded-full bg-[#AF47D2] hover:bg-[#850F8D]  cursor-pointer shadow-gray-700 flex justify-center items-center"
+                        className="h-9 w-9 rounded-full bg-[#475dc0] hover:bg-[#850F8D]  cursor-pointer shadow-gray-700 flex justify-center items-center"
                         onClick={handleNextPage}
                     >
                         <MdKeyboardArrowRight className="group:hover: text-white text-xl" />
