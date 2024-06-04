@@ -152,7 +152,7 @@ export const Item = ({ item, wethPrice }) => {
                    
                     {/* (~{formatNumber(bondingCurve?.volume * wethPrice)} $) */}
                     </span>
-                    <span className='text-white '><FaCircleInfo  /></span>
+                    {/* <span className='text-white '><FaCircleInfo  /></span> */}
                 </div>
             </td>
             <td className="px-4 py-4">
