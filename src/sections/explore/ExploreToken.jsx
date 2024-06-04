@@ -148,7 +148,7 @@ export const Item = ({ item, wethPrice }) => {
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">VOL</span>
-                    <span className="pfont-600 text-sm text-[#f56565]">{formatNumber(bondingCurve?.volume)} ETH  
+                    <span className="pfont-600 text-sm text-[#b0dc73]">{formatNumber(bondingCurve?.volume)} ETH  
                    
                     {/* (~{formatNumber(bondingCurve?.volume * wethPrice)} $) */}
                     </span>
