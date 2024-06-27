@@ -3,8 +3,13 @@ import { GET_BONDING_CURVE, GET_BONDING_CURVES, GET_BONDING_CURVE_TRADES } from 
 import { useSelector, useDispatch } from 'react-redux';
 import { setFetchedData } from './redux/chartDataSlice';
 import store from './redux/store';
+import { BONDING_CURVE_TRADE_SUBSCRIPTION } from './graphql/subscriptions/chartSubscriptions';
+import { gql } from '@apollo/client';
 
 let count = 0
+
+
+const channelToSubscription = new Map();
 
 
 function getBarPeriod(resolution) {
@@ -36,7 +41,40 @@ const configurationData = {
     ]
 };
 
+function processNewTradesToBar(newTrades, resolution, existingTrades) {
+    const allTrades = [...existingTrades, ...newTrades];
+    let updatedBar = null;
+
+    for (const trade of allTrades) {
+        const tradeTime = parseFloat(trade.timestamp * 1000);
+        const tradeOpenPrice = parseFloat(trade.openPrice);
+        const tradeClosePrice = parseFloat(trade.closePrice);
+        const tradeType = trade.type;
+
+        if (!updatedBar || tradeTime >= updatedBar.time + getBarPeriod(resolution)) {
+            // Start a new bar
+            updatedBar = {
+                time: tradeTime,
+                open: tradeOpenPrice.toFixed(18),
+                high: tradeClosePrice.toFixed(18),
+                low: tradeOpenPrice.toFixed(18),
+                close: tradeClosePrice.toFixed(18),
+            };
+        } else {
+            // Update the current bar
+            updatedBar.high = Math.max(updatedBar.high, tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18);
+            updatedBar.low = Math.min(updatedBar.low, tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18);
+            updatedBar.close = tradeClosePrice;
+        }
+    }
+
+    return updatedBar;
+}
+
+
 function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
+    let subscriptionObserver = null;
+    const subscriptionObservers = new Map();
 
     const modifiedDataFeed = {
         onReady: (callback) => {
@@ -97,6 +135,8 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
         },
 
         getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
+            // console.log('[getBars]: Method call with :');
+
             const { from, to, firstDataRequest, countBack } = periodParams;
             const state = store.getState(); // Get the current state from the Redux store
             let fetchedData = state.data[_bondingCurveAddress];
@@ -165,65 +205,100 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
             }
         },
 
-        // getBars: async (symbolInfo, resolution, periodParams, onHistoryCallback, onErrorCallback) => {
-        //     const { from, to, firstDataRequest, countBack } = periodParams;
-
-        //     try {
-        //         const { data } = await client.query({
-        //             query: GET_BONDING_CURVE_TRADES,
-        //             variables: {
-        //                 bondingCurveId: _bondingCurveAddress,
-        //             },
-        //         });
-        //         console.log('query happening'+count)
-        //         count++
-
-        //         if (!data.trades || data.trades.length === 0) {
-        //             onHistoryCallback([], { noData: false });
-        //             return;
-        //         }
-
-        //         const bars = [];
-        //         let currentBar = null;
-
-        //         for (const trade of data.trades) {
-        //             const tradeTime = parseFloat(trade.timestamp * 1000); // Convert timestamp to milliseconds
-        //             const tradeOpenPrice = parseFloat(trade.openPrice);
-        //             const tradeClosePrice = parseFloat(trade.closePrice);
-        //             const tradeType = trade.type;
-
-        //             if (!currentBar || tradeTime >= currentBar.time + getBarPeriod(resolution)) {
-        //                 // Start a new bar
-        //                 currentBar = {
-        //                     time: tradeTime,
-        //                     open: tradeOpenPrice.toFixed(18),
-        //                     high: tradeClosePrice.toFixed(18),
-        //                     low: tradeOpenPrice.toFixed(18),
-        //                     close: tradeClosePrice.toFixed(18),
-        //                 };
-        //                 bars.push(currentBar);
-        //             } else {
-        //                 // Update the current bar
-        //                 currentBar.high = Math.max(currentBar.high, tradeType === 'BUY' ? tradeClosePrice : tradeOpenPrice).toFixed(18);
-        //                 currentBar.low = Math.min(currentBar.low, tradeType === 'BUY' ? tradeOpenPrice : tradeClosePrice).toFixed(18);
-        //                 currentBar.close = tradeClosePrice;
-        //             }
-        //         }
-
-        //         onHistoryCallback(bars, { noData: true });
-        //     } catch (error) {
-        //         console.log('[getBars]: Error', error);
-        //         onErrorCallback(error);
-        //     }
-        // },
-
         subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) => {
-            console.log('[subscribeBars]: Method call with subscriberUID:', subscriberUID);
+            // console.log('[subscribeBars]: Method call with subscriberUID:', subscriberUID);
+
+            // Get the last trade timestamp from the Redux store
+            const state = store.getState();
+            const fetchedData = state.data[_bondingCurveAddress];
+            const lastTradeTimestamp = fetchedData ? fetchedData[fetchedData.length - 1].timestamp : 0;
+
+            const observableSubscription = client.subscribe({
+                query: BONDING_CURVE_TRADE_SUBSCRIPTION,
+                variables: { bondingCurveId: _bondingCurveAddress, afterTimestamp: lastTradeTimestamp },
+            });
+
+            const subscription = observableSubscription.subscribe({
+                next: ({ data }) => {
+                    const newTrades = data.newTrades;
+
+                    if (newTrades.length == 0) {
+                        return;
+                    }
+
+                    // Process the new trades and get the updated bar
+                    const updatedBar = processNewTradesToBar(newTrades, resolution, fetchedData);
+                    console.log('_bondingCurveAddress', _bondingCurveAddress);
+
+                    // Update the Redux store with the new trades
+                    store.dispatch(setFetchedData({ bondingCurveAddress: _bondingCurveAddress, data: [...fetchedData, ...newTrades] }));
+
+                    // Call the onRealtimeCallback with the updated bar
+                    onRealtimeCallback(updatedBar);
+                },
+                error: (error) => {
+                    console.error('Subscription error:', error);
+                },
+            });
+
+            // Store the subscription observer
+            subscriptionObservers.set(subscriberUID, subscription);
         },
 
         unsubscribeBars: (subscriberUID) => {
-            console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
+            const subscription = subscriptionObservers.get(subscriberUID);
+            if (subscription) {
+                // Unsubscribe from the subscription
+                subscription.unsubscribe();
+
+                // Remove the subscription observer from the map
+                subscriptionObservers.delete(subscriberUID);
+            }
         },
+
+        // subscribeBars: (symbolInfo, resolution, onRealtimeCallback, subscriberUID, onResetCacheNeededCallback) => {
+        //     // console.log('[subscribeBars]: Method call with subscriberUID:', subscriberUID);
+
+        //     // Get the last trade timestamp from the Redux store
+        //     const state = store.getState();
+        //     const fetchedData = state.data[_bondingCurveAddress];
+        //     const lastTradeTimestamp = fetchedData ? fetchedData[fetchedData.length - 1].timestamp : 0;
+
+        //     const observableSubscription = client.subscribe({
+        //         query: BONDING_CURVE_TRADE_SUBSCRIPTION,
+        //         variables: { bondingCurveId: _bondingCurveAddress, afterTimestamp: lastTradeTimestamp},
+        //     });
+
+        //     const subscription = observableSubscription.subscribe({
+        //         next: ({ data }) => {
+        //             const newTrades = data.newTrades;
+
+        //             if (newTrades.length == 0) {
+        //                 return;
+        //             }
+
+        //             // Process the new trades and get the updated bar
+        //             const updatedBar = processNewTradesToBar(newTrades, resolution, fetchedData);
+        //             console.log('updatedBar',updatedBar)
+        //             // Update the Redux store with the new trades
+        //             store.dispatch(setFetchedData({ bondingCurveAddress: _bondingCurveAddress, data: [...fetchedData, ...newTrades] }));
+
+        //             // Call the onRealtimeCallback with the updated bar
+        //             onRealtimeCallback(updatedBar);
+        //         },
+        //         error: (error) => {
+        //             console.error('Subscription error:', error);
+        //         },
+        //     });
+            
+
+        //     // No need to store the subscription observer
+        //     // Apollo Client will handle the subscription lifecycle automatically
+        // },
+
+        // unsubscribeBars: (subscriberUID) => {
+        //     // console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
+        // },
     }
     return modifiedDataFeed
 }

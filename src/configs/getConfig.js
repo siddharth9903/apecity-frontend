@@ -28,7 +28,7 @@ const baseIdTenderlyConfig = {
     chains: baseIdTenderlyConfigChains,
     config: baseIdTenderlyProviderConfig,
     defaultChain: baseIdTenderlyDefaultChain,
-    graphqlEndpoint: 'https://gjo3ezxk0b.execute-api.us-east-1.amazonaws.com/subgraphs/name/APE',
+    graphqlEndpoint: 'https://e7jijlguod.execute-api.us-east-1.amazonaws.com/subgraphs/name/APE',
     ipfsEndpoint: 'https://ipfs.apecity.fun',
     authToken: 'secretToken',
     apeFactoryAddress: '0x7722B77e691ceA11047f030f1b128432A1a6FfCA'
@@ -59,9 +59,7 @@ export const getConfig = () => {
             ...defaultConfig,
             graphqlEndpoint: import.meta.env.VITE_GRAPHQL_ENDPOINT,
             ipfsEndpoint: import.meta.env.VITE_IPFS_ENDPOINT,
-            authToken: defaultConfig?.authToken?.includes('localhost') ?
-                defaultConfig?.authToken :
-                undefined
+            authToken: import.meta.env.VITE_AUTH_TOKEN
         }
     }
 

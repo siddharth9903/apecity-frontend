@@ -63,7 +63,7 @@ export const TVChartContainer = (props) => {
 		return () => {
 			tvWidget.remove();
 		};
-	});
+	}, [props?.symbol]);
 
 	return (
 		<div

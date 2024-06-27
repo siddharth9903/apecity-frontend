@@ -171,3 +171,47 @@ export const TOKEN_TRADES_QUERY = gql`
     }
   }
 `;
+export const BONDING_CURVE_SUBSCRIPTION = gql`
+  subscription BondingCurveUpdated($id: ID!) {
+    bondingCurveUpdated: bondingCurve(id: $id) {
+      id
+      reserveRatio
+      poolBalance
+      circulatingSupply
+      active
+      currentPrice
+      marketCap
+      ethAmountToCompleteCurve
+      tokenAmountToCompleteCurve
+      totalEthAmountToCompleteCurve
+      totalTokenAmountToCompleteCurve
+      uniswapRouter
+      uniswapLiquidityPool
+      lpCreationTimestamp
+      txCount
+      createdAtTimestamp
+      createdAtBlockNumber
+    }
+  }
+`;
+
+// export const TOKEN_TRADES_SUBSCRIPTION = gql`
+//   subscription TradeCreated($bondingCurveId: ID!) {
+//     tradeCreated: trades(bondingCurveId: $bondingCurveId) {
+//       id
+//       transaction {
+//         id
+//       }
+//       timestamp
+//       type
+//       inAmount
+//       outAmount
+//       avgPrice
+//       openPrice
+//       closePrice
+//       user {
+//         id
+//       }
+//     }
+//   }
+// `;

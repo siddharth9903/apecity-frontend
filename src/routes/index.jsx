@@ -3,6 +3,8 @@ import Main from "../layouts/main";
 import Token from "../pages/Token";
 import Explore from "../pages/Explore";
 import Create from "../pages/Create";
+// import BondingCurveSubscription from "../components/BondingCurveSubscription";
+
 const Router = () => {
   return useRoutes([
     {
@@ -20,7 +22,12 @@ const Router = () => {
             {
               path:'create',
               element:<Create />
-          }
+            },
+
+    // {
+    //   path: 'temp',
+    //   element: <BondingCurveSubscription />
+    // }
         ]
     }
   ])

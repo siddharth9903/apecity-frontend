@@ -5,7 +5,6 @@ import Transactions from '../sections/token/Transactions';
 import { shortenText, timestampToDate } from '../utils/helper';
 import { Tooltip } from 'react-tooltip';
 import Holders from '../sections/token/Holders';
-import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
@@ -21,8 +20,8 @@ import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
 import { FaChartSimple } from "react-icons/fa6";
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { BONDING_CURVE_QUERY, TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
+import { useQuery, useSubscription } from '@apollo/client';
+import { BONDING_CURVE_QUERY, BONDING_CURVE_SUBSCRIPTION, TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
 import TokenDetails from '../sections/token/TokenDetails';
 import TradeComponent from '../sections/token/TradeComponent';
 import { convertIpfsUrl, formatNumber } from '../utils/formats';
@@ -36,6 +35,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from '../contracts/constants';
 import { abi as UNISWAP_ROUTER_ABI } from '../contracts/UniswapRouter02';
 import { parseEther } from 'viem';
+import { GET_BONDING_CURVE_TRADES_SUBSCRIPTION } from '../graphql/queries/chartQueries';
 
 const Token = () => {
     const navigate = useNavigate()
@@ -103,71 +103,52 @@ const Token = () => {
         }
     }, [open])
 
-    const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
-        variables: { id: tokenAddress },
-    });
 
     const [tradesPage, setTradesPage] = useState(1);
     const tradesPageSize = 10;
 
-    const { data: tradesData, loading: tradesLoading, error: tradesError } = useQuery(TOKEN_TRADES_QUERY, {
-        variables: {
-            bondingCurveId: tokenData?.token?.bondingCurve?.id,
-            first: tradesPageSize,
-            skip: (tradesPage - 1) * tradesPageSize,
+    const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
+        variables: { id: tokenAddress },
+        onCompleted: (data) => {
+            if (data?.token) {
+                setToken(data?.token)
+            }
         },
-        skip: !tokenData?.token?.bondingCurve?.id,
-        pollInterval: 2000
     });
 
-    const { data: bondingCurveData, loading: bondingCurveLoading, error: bondingCurveError } = useQuery(BONDING_CURVE_QUERY, {
-        variables: {
-            id: tokenData?.token?.bondingCurve?.id
+    const { data: bondingCurveData, loading: bondingCurveLoading, error: bondingCurveError } = useSubscription(
+        BONDING_CURVE_SUBSCRIPTION,
+        {
+            skip: !token?.bondingCurve?.id,
+            variables: { id: token?.bondingCurve?.id },
         },
-        pollInterval: 2000
-    });
+    );
+
+    const { data: tradesData, loading: tradesLoading, error: tradesError } = useSubscription(
+        GET_BONDING_CURVE_TRADES_SUBSCRIPTION,
+        {
+            skip: !token?.bondingCurve?.id,
+            variables: { bondingCurveId: token?.bondingCurve?.id },
+        }
+    );
 
     useEffect(() => {
-        if (tokenData?.token) {
-            setToken(tokenData?.token)
+        if (bondingCurveData?.bondingCurveUpdated) {
+            setBondingCurve(bondingCurveData.bondingCurveUpdated);
         }
-    }, [tokenData?.token])
-
-
-    useEffect(() => {
-        if (tradesData) {
-            setTrades(tradesData?.trades)
-        }
-    }, [tradesData])
+    }, [bondingCurveData]);
 
     useEffect(() => {
-        if (bondingCurveData) {
-            setBondingCurve(bondingCurveData?.bondingCurve)
+        if (tradesData?.trades) {
+            setTrades(tradesData.trades);
         }
-    }, [bondingCurveData])
+    }, [tradesData]);
+
 
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100)
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
 
     const targetDivRef = useRef(null);
-    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
-        // resolver: yupResolver(TradeSchema)
-    })
-
-    const value = useWatch({
-        name: 'value',
-        control
-    });
-    const handleClick = () => {
-        if (targetDivRef.current) {
-            targetDivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            console.error("Target div with ref 'targetDivRef' not found.");
-        }
-    };
-    const price = useMemo(() => {
-        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
-    }, [value])
 
     const outputTokenList = [
         {
@@ -413,17 +394,6 @@ const Token = () => {
 
                                 )
                             }
-                            {/* {console.log('token?.symbol',token?.symbol)}
-                                <div style={{ height: 'calc(100vh - 200px)' }}>
-                                    <TVChartContainer
-                                        symbol={token?.symbol}
-                                        tokenAddress={tokenAddress}
-                                        bondingCurveAddress={bondingCurve?.id}
-                                        width={'100%'}
-                                        height={'80%'}
-                                    />
-                                </div> */}
-
                             {/* <div style={{ height: 'calc(100vh - 200px)' }}>
                                     <iframe
                                         width={'100%'}
