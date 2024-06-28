@@ -141,7 +141,7 @@ const Explore = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-xs-6 max-xs:mt-4 px-2">
-                                    <h3 className="text-white roboto-400 ">Sort By :</h3>
+                                    <h3 className="text-white roboto-400 ">Sort By:</h3>
                                     <div className="mt-1.5">
                                         <Select 
                                             placeholder='Sort By' 
@@ -152,7 +152,7 @@ const Explore = () => {
                                     </div>
                                 </div>
                                 <div className="col-lg-2 max-lg:mt-4 col-6 px-2">
-                                    <h3 className="text-white roboto-400 ">Order By :</h3>
+                                    <h3 className="text-white roboto-400 ">Order By:</h3>
                                     <div className="mt-1.5">
                                         <Select 
                                             placeholder='Order By' 
@@ -164,7 +164,7 @@ const Explore = () => {
                                 </div>
                                 <div className="col-lg-3 max-lg:mt-4 col-6 px-2">
                                     <div>
-                                        <h3 className="text-white roboto-400 ">Reorder :</h3>
+                                        <h3 className="text-white roboto-400 ">Reorder:</h3>
                                         <div className="mt-1.5">
                                             <Select 
                                                 placeholder='Select' 

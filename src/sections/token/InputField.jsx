@@ -1,7 +1,8 @@
 // InputField.js
 import React from 'react';
+import { convertIpfsUrl } from '../../utils/formats';
 
-const InputField = ({ register, name, symbol, tokenSymbol, isToken }) => {
+const InputField = ({ register, name, symbol, tokenSymbol, isToken, tokenImage }) => {
     return (
         <div className="flex items-center rounded-md relative">
             <input
@@ -15,7 +16,8 @@ const InputField = ({ register, name, symbol, tokenSymbol, isToken }) => {
                 <span className="text-white pfont-400 mr-2">{isToken ? tokenSymbol : symbol}</span>
                 <img
                     className="w-7 h-7 rounded-full"
-                    src={isToken ? "/images/token/legit.jpeg" : "/images/logo/eth.svg"}
+                    // src={isToken ? "/images/token/legit.jpeg" : "/images/logo/eth.svg"}
+                    src={isToken ? convertIpfsUrl(tokenImage) : "/images/logo/eth.svg"}
                     alt={isToken ? tokenSymbol : symbol}
                 />
             </div>

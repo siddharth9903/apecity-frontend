@@ -80,7 +80,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                             >
                                 Stats
                             </p>
-                            {/* <p className="text-[#b0dc73] pfont-600 text-center text-sm">0.16%</p> */}
+                            {/* <p className="text-[#48bb78] pfont-600 text-center text-sm">0.16%</p> */}
                         </Tab>
                     </div>
                 </TabList>
@@ -116,11 +116,11 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                     <div className="flex mt-1 gap-x-1">
                                         <div
                                             style={{ width: `${(tradeStats.buys / tradeStats.txns) * 100}%` }}
-                                            className="rounded-full bg-[#b0dc73] h-1.5"
+                                            className="rounded-full bg-[#48bb78] h-1.5"
                                         ></div>
                                         <div
                                             style={{ width: `${(tradeStats.sells / tradeStats.txns) * 100}%` }}
-                                            className="rounded-full bg-[#d0332a] h-1.5"
+                                            className="rounded-full bg-[#FF5252] h-1.5"
                                         ></div>
                                     </div>
                                 </div>
@@ -142,11 +142,11 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                     <div className="flex mt-1 gap-x-1">
                                         <div
                                             style={{ width: `${(tradeStats.buyVolEth / tradeStats.volumeEth) * 100}%` }}
-                                            className="rounded-full bg-[#b0dc73] h-1.5"
+                                            className="rounded-full bg-[#48bb78] h-1.5"
                                         ></div>
                                         <div
                                             style={{ width: `${(tradeStats.sellVolEth / tradeStats.volumeEth) * 100}%` }}
-                                            className="rounded-full bg-[#d0332a] h-1.5"
+                                            className="rounded-full bg-[#FF5252] h-1.5"
                                         ></div>
                                     </div>
                                 </div>
@@ -164,11 +164,11 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                     <div className="flex mt-1 gap-x-1">
                                         <div
                                             style={{ width: `${(tradeStats.buyers / tradeStats.makers) * 100}%` }}
-                                            className="rounded-full bg-[#b0dc73] h-1.5"
+                                            className="rounded-full bg-[#48bb78] h-1.5"
                                         ></div>
                                         <div
                                             style={{ width: `${(tradeStats.sellers / tradeStats.makers) * 100}%` }}
-                                            className="rounded-full bg-[#d0332a] h-1.5"
+                                            className="rounded-full bg-[#FF5252] h-1.5"
                                         ></div>
                                     </div>
                                 </div>

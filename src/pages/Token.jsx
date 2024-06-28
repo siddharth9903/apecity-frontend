@@ -36,6 +36,7 @@ import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from '../contracts
 import { abi as UNISWAP_ROUTER_ABI } from '../contracts/UniswapRouter02';
 import { parseEther } from 'viem';
 import { GET_BONDING_CURVE_TRADES_SUBSCRIPTION } from '../graphql/queries/chartQueries';
+import SmallNumberDisplay from '../components/utils/SmallNumberDisplay';
 
 const Token = () => {
     const navigate = useNavigate()
@@ -234,7 +235,7 @@ const Token = () => {
                                             </div>
                                             <div className='mt-4 px-3'>
                                                 <p className='text-white pfont-400 text-center'>
-                                                    {token?.metaData?.description ? <>{'About'} <br /> {token?.metaData?.description}</> : null}
+                                                    {token?.metaData?.description ? <><br /> {token?.metaData?.description}</> : null}
                                                 </p>
                                             </div>
                                             <div className='flex mt-4 justify-center'>
@@ -305,7 +306,7 @@ const Token = () => {
                                             <span className='text-sm text-[#A7A7AC]'>#1</span>
                                             <img className='w-5' src="/images/icons/svg/blerf.webp" alt="" />
                                             <span className='text-white pfont-600 uppercase'>blerf</span>
-                                            <span className='pfont-500 text-sm text-[#d0332a]'>-31.67%</span>
+                                            <span className='pfont-500 text-sm text-[#FF5252]'>-31.67%</span>
                                         </button>
                                     </SwiperSlide>
                                     {
@@ -315,7 +316,7 @@ const Token = () => {
                                                     <span className='text-sm text-[#A7A7AC]'>#{index + 2}</span>
                                                     <img className='w-5' src="/images/icons/svg/blerf.webp" alt="" />
                                                     <span className='text-white pfont-600 uppercase'>blerf</span>
-                                                    <span className='pfont-500 text-sm text-[#d0332a]'>-31.67%</span>
+                                                    <span className='pfont-500 text-sm text-[#FF5252]'>-31.67%</span>
                                                 </button>
                                             </SwiperSlide>
                                         ))
@@ -489,11 +490,20 @@ const Token = () => {
                                         <div className='flex mt-3 gap-x-2'>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
-                                                <p className='text-white text-sm text-center pfont-600'>${formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)}</p>
+                                                {/* <p className='text-white text-sm text-center pfont-600'>${formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)}</p> */}
+                                                <p className='text-white text-sm text-center pfont-600'>
+                                                $<SmallNumberDisplay value={formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)} />
+                                                </p>
                                             </div>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
-                                                <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? Number(bondingCurve.currentPrice).toFixed(14) : null} WETH</p>
+                                                {/* <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? Number(bondingCurve.currentPrice).toFixed(14) : null} WETH</p> */}
+                                             <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? 
+                                                (
+                                                    <SmallNumberDisplay value={bondingCurve.currentPrice} />
+                                                )
+                                                 : 
+                                                 null} WETH</p>
                                             </div>
                                         </div>
                                     )}

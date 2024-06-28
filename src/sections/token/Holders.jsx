@@ -22,7 +22,7 @@ const Holders = () => {
                     </thead>
                     <tbody>
                         {Array.from({ length: 40 }).map((item, index) => (
-                            <tr key={index} className="bg-[#1d1d22] odd:text-[#f56565] even:text-[#48bb78]">
+                            <tr key={index} className="bg-[#1d1d22] odd:text-[#FF5252] even:text-[#48bb78]">
 
                                 <td className="border border-[#5e5e6b] px-4 py-2">
                                     <div className="flex items-center justify-center">

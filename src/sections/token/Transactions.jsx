@@ -54,7 +54,7 @@ const Transactions = ({ trades, tokenName }) => {
                 </thead>
                 <tbody>
                     {trades?.map((trade) => (
-                        <tr key={trade.id} className={trade?.type === 'BUY' ? "bg-[#1d1d22] text-[#48bb78]" : "bg-[#1d1d22] text-[#f56565]"}>
+                        <tr key={trade.id} className={trade?.type === 'BUY' ? "bg-[#1d1d22] text-[#48bb78]" : "bg-[#1d1d22] text-[#FF5252]"}>
 
                             <td className="text-[#848489] border border-[#5e5e6b] px-4 py-2">
                                 <span className="text-xs pfont-400">{formatDistanceToNow(new Date(trade.timestamp * 1000), { addSuffix: true })}</span>

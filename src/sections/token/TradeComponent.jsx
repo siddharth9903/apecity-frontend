@@ -246,11 +246,11 @@ const TradeComponent = ({ token, bondingCurve }) => {
                 <div className="border border-[#343439] px-4 py-3 rounded-lg text-gray-400 grid gap-4">
                     <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                         <TabList>
-                            <div className="grid grid-cols-2 gap-2 mb-3">
+                            <div className="grid grid-cols-2 gap-2 mb-3"> 
                                 <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex == TradeType.BUY ? 'bg-[#48bb78] text-white' : 'bg-gray-800 text-grey-600'}`}>
                                     Buy
                                 </Tab>
-                                <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex == TradeType.SELL ? 'bg-[#ee042b] text-white' : 'bg-gray-800 text-grey-600'}`}>
+                                <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex == TradeType.SELL ? 'bg-[#FF5252] text-white' : 'bg-gray-800 text-grey-600'}`}>
                                     Sell
                                 </Tab>
                             </div>
@@ -318,6 +318,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 name="buyAmountToken"
                                                 tokenSymbol={token?.symbol}
                                                 isToken={true}
+                                                tokenImage={token?.metaData?.image}
                                             />
                                             <QuickSelect
                                                 setValue={setValue}
@@ -360,14 +361,14 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                 </div>
                                 <button
                                     type='submit'
-                                    className="inline-flex mt-2 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                    className="inline-flex mt-2 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#48bb78] hover:text-black"
                                 >
                                     Place Trade
                                 </button>
                                 <button
                                     type='button'
                                     onClick={onSubmitFillRemaining}
-                                    className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                    className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#48bb78] hover:text-black"
                                 >
                                     Ape remaining curve
                                 </button>
@@ -437,6 +438,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 name="sellAmountToken"
                                                 tokenSymbol={token?.symbol}
                                                 isToken={true}
+                                                tokenImage={token?.metaData?.image}
                                             />
                                             <QuickSelect
                                                 setValue={setValue}
@@ -481,14 +483,14 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                 <div className="flex mt-3 flex-col">
                                     <button
                                         type='submit'
-                                        className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                        className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#48bb78] hover:text-black"
                                     >
                                         Place Trade
                                     </button>
                                     <button
                                         type='button'
                                         onClick={onSubmitSellPortfolio}
-                                        className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#b0dc73] hover:text-black"
+                                        className="inline-flex mt-3 pfont-400 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-slate-950 dark:focus-visible:ring-slate-300 dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-50/90 h-10 px-4 bg-[#48bb78] pfont-500 text-white w-full py-3 rounded-md hover:bg-[#48bb78] hover:text-black"
                                     >
                                         Eject
                                     </button>
@@ -498,7 +500,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                         </TabPanel>
 
                         {/* your balance: {new BigNumber(userTokenBalance).div(new BigNumber(10 ** 18)).toFixed(18).toString()} */}
-                        your balance: {decimalUserTokenBalance} (~{formattedUserTokenBalance})
+                        Your balance: {decimalUserTokenBalance} (~{formattedUserTokenBalance})
                     </Tabs>
                 </div>
             </div>

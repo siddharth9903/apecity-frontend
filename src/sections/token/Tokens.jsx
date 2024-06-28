@@ -16,13 +16,13 @@ const Tokens = () => {
                             <td className="px-4 py-3">
                                 <div className="flex gap-x-2 items-center">
                                     <span className="text-[#808080] text-sm pfont-400">1H</span>
-                                    <span className="pfont-600 text-sm text-[#b0dc73]">23.3%</span>
+                                    <span className="pfont-600 text-sm text-[#48bb78]">23.3%</span>
                                 </div>
                             </td>
                             <td className="px-4 py-3">
                                 <div className="flex gap-x-2 items-center">
                                     <span className="text-[#808080] text-sm pfont-400">24H</span>
-                                    <span className="pfont-600 text-sm text-[#f56565]">-80.3%</span>
+                                    <span className="pfont-600 text-sm text-[#FF5252]">-80.3%</span>
                                 </div>
                             </td>
                             <td className="px-4 py-3">

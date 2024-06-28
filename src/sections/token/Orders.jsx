@@ -22,19 +22,19 @@ const Orders = () => {
                 </thead>
                 <tbody>
                     {Array.from({ length: 40 }).map((item, index) => (
-                        <tr key={index} className="bg-[#1d1d22] odd:text-[#f56565] even:text-[#48bb78]">
+                        <tr key={index} className="bg-[#1d1d22] odd:text-[#FF5252] even:text-[#48bb78]">
                             <td className="text-[#848489] text-center border border-[#5e5e6b] px-4 py-2">
                                 <span className="text-sm pfont-400">#{index + 1}</span>
                             </td>
                             <td className="border border-[#5e5e6b] px-4 py-2">
                                 <div className="flex items-center gap-x-2 justify-center">
                                     <span><img src="/images/icons/svg/maker.svg" /></span>
-                                    <span className="text-[#b0dc73] text-sm pfont-500">0xd24E...d0A7</span>
+                                    <span className="text-[#48bb78] text-sm pfont-500">0xd24E...d0A7</span>
                                 </div>
                             </td>
                             <td className="border border-[#5e5e6b] px-4 py-2">
                                 <div className="flex  flex-col items-end">
-                                    <span className="pfont-500 text-sm text-[#f56565] text-right">$16.5k</span>
+                                    <span className="pfont-500 text-sm text-[#FF5252] text-right">$16.5k</span>
                                     <div>
                                         <span className="text-[#848489] text-xs pfont-500">5.9B/365</span>
                                         <span className="text-[#848489] text-xs pfont-400"> txns</span>
@@ -43,7 +43,7 @@ const Orders = () => {
                             </td>
                             <td className="border border-[#5e5e6b] px-4 py-2">
                                 <div className="flex  flex-col items-end">
-                                    <span className="pfont-500 text-sm text-[#b0dc73] text-right">$16.5k</span>
+                                    <span className="pfont-500 text-sm text-[#48bb78] text-right">$16.5k</span>
                                     <div>
                                         <span className="text-[#848489] text-xs pfont-500">5.9B/365</span>
                                         <span className="text-[#848489] text-xs pfont-400"> txns</span>
@@ -51,7 +51,7 @@ const Orders = () => {
                                 </div>
                             </td>
                             <td className="border border-[#5e5e6b] text-center px-4 py-2">
-                                <span className="text-[15px] text-[#b0dc73] pfont-600">$4373773</span>
+                                <span className="text-[15px] text-[#48bb78] pfont-600">$4373773</span>
                             </td>
                             <td className="border border-[#5e5e6b] text-center px-4 py-2">
                                 <span className="text-[15px] text-white pfont-600">$437K</span>
