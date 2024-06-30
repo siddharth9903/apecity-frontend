@@ -35,8 +35,15 @@ import { Web3Provider } from '@ethersproject/providers'
 import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from '../contracts/constants';
 import { abi as UNISWAP_ROUTER_ABI } from '../contracts/UniswapRouter02';
 import { parseEther } from 'viem';
+<<<<<<< Updated upstream
 import { GET_BONDING_CURVE_TRADES_SUBSCRIPTION } from '../graphql/queries/chartQueries';
 import SmallNumberDisplay from '../components/utils/SmallNumberDisplay';
+=======
+//import Comments from '../sections/token/chat setup/Chats';
+import PostList from '../sections/token/nested-comments/client/src/components/PostLists';
+import Post from '../sections/token/nested-comments/client/src/components/Post'; // Only if you need to use this component
+import { PostProvider } from '../sections/token/nested-comments/client/src/contexts/PostContext';
+>>>>>>> Stashed changes
 
 const Token = () => {
     const navigate = useNavigate()
@@ -64,7 +71,6 @@ const Token = () => {
 
     const [provider, setProvider] = useState()
     const { connector } = useAccount()
-
     const [wethPriceIntoUSD, setWethPriceIntoUSD] = useState(0)
 
     const { data: wethPrice, isLoading: isWethPriceLoading } = useReadContract({
@@ -84,19 +90,6 @@ const Token = () => {
             setWethPriceIntoUSD(formattedPrice)
         }
     }, [wethPrice])
-
-    // useEffect(() => {
-    //     if (!connector) {
-    //         return () => setProvider(undefined)
-    //     }
-
-    //     console.log('type', typeof(connector))
-
-    //     connector.getProvider().then((provider) => {
-    //         console.log('it si function sw')
-    //         setProvider(new Web3Provider(provider))
-    //     })
-    // }, [connector])
 
     useEffect(() => {
         window.Browser = {
@@ -150,6 +143,26 @@ const Token = () => {
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve
 
     const targetDivRef = useRef(null);
+<<<<<<< Updated upstream
+=======
+    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
+    })
+
+    const value = useWatch({
+        name: 'value',
+        control
+    });
+    const handleClick = () => {
+        if (targetDivRef.current) {
+            targetDivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            console.error("Target div with ref 'targetDivRef' not found.");
+        }
+    };
+    const price = useMemo(() => {
+        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
+    }, [value])
+>>>>>>> Stashed changes
 
     const outputTokenList = [
         {
@@ -177,9 +190,7 @@ const Token = () => {
                                         <img className='w-7' src={token?.metaData?.image} alt="" />
                                         <p className='space-500 text-[17px] text-white'>{token?.name}</p>
                                     </div>
-                                    {/* <div className='border cursor-pointer hover:bg-[#ffffff14] py-1.5 px-1.5 flex justify-center items-center border-[#ffffff29] rounded'>
-                                        <BsThreeDotsVertical className='text-white' />
-                                    </div> */}
+            
                                 </div>
                             </div>
                             <div className='relative overflow-hidden '>
@@ -254,6 +265,7 @@ const Token = () => {
                     <div className={`lg:w-[calc(100%-640px)] xxl:w-[calc(100%-800px)] ${tabIndex3 == 2 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-[320px] xxl:left-[400px] lg:top-0 bg-[#17171c] token-left`}>
 
 
+<<<<<<< Updated upstream
                         {/* <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
                             <div className='absolute z-[11] h-full left-0 top-0'>
                                 <button onClick={() => navigate('/')} className='h-full pl-2 bg-transparent'>
@@ -380,6 +392,9 @@ const Token = () => {
                                 </div>
                             </div>
                         </div> */}
+=======
+                       
+>>>>>>> Stashed changes
                         <div className="w-full">
                             {
                                 token && bondingCurve && (
@@ -395,6 +410,7 @@ const Token = () => {
 
                                 )
                             }
+<<<<<<< Updated upstream
                             {/* <div style={{ height: 'calc(100vh - 200px)' }}>
                                     <iframe
                                         width={'100%'}
@@ -402,10 +418,14 @@ const Token = () => {
                                         src={`https://dexscreener.com/base/${token?.id}?embed=1&trades=0&info=0`}>
                                     </iframe>
                             </div> */}
+=======
+                           
+>>>>>>> Stashed changes
                         </div>
                         <div className='w-full  flex-1'>
                             <div>
-                                <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+                                 
+                                 <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                                     <div className='bg-[#17171c]  px-2  flex items-center'>
                                         <TabList className='flex gap-x-4 items-center'>
                                             <Tab className='focus:border-none focus:outline-none'>
@@ -414,28 +434,12 @@ const Token = () => {
                                                     <span className='pfont-500 text-sm ml-1.5'>Transactions</span>
                                                 </div>
                                             </Tab>
-                                            {/* <Tab className='focus:border-none focus:outline-none'>
-                                                <div className={`${tabIndex == 1 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'}  cursor-pointer py-2 hover:text-white flex items-center`}>
-                                                    <span><BsChatSquare /></span>
-                                                    <span className='pfont-500 text-sm ml-1.5'>Chats</span>
-                                                </div>
-                                            </Tab>
-                                            <Tab className='focus:border-none focus:outline-none'>
-                                                <div className={`${tabIndex == 2 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
-                                                    <span className='text-sm'><FaMedal /></span>
-                                                    <span className='pfont-500 text-sm ml-1.5'>Description</span>
-                                                </div>
-                                            </Tab>
-                                            <Tab className='focus:border-none focus:outline-none'>
-                                                <div className={`${tabIndex == 3 ? 'text-white border-white border-b-2' : 'text-[#A6A6A6]'} cursor-pointer py-2 hover:text-white flex items-center`}>
-                                                    <span className='text-sm'><FaSketch /></span>
-                                                    <span className='pfont-500 text-sm ml-1.5'>Holders(706)</span>
-                                                </div>
-                                            </Tab> */}
+                                           
                                         </TabList>
                                     </div>
                                     <TabPanel>
                                         <Transactions trades={trades} tokenName={token?.name} />
+                                        
                                     </TabPanel>
                                 </Tabs>
                             </div>
@@ -455,33 +459,7 @@ const Token = () => {
                                 </div>
                             )}
                             <div className='bg-[#111116] py-1.5 flex justify-center'>
-                                {/* <div>
-                                    <div className='flex gap-x-2 justify-center items-center'>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span className='text-white text-[17px] space-600'>{token?.symbol}</span>
-                                            <span className='text-[#A7A7AC]'><FaRegCopy /></span>
-                                        </div>
-                                        <span className='text-white'>/</span>
-                                        <span className='uppercase text-white text-[17px] space-600'>weth</span>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span><img src="/images/icons/svg/rank.svg" alt="" /></span>
-                                            <span className='text-[#ff9900] pfont-600'>#2</span>
-                                        </div>
-                                    </div>
-                                    <div className='flex gap-x-2 mt-1 justify-center items-center'>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span><img className='w-4' src="/images/icons/svg/base.svg" alt="" /></span>
-                                            <span className='text-[#A7A7AC] pfont-400 text-sm'>Base</span>
-                                        </div>
-                                        <div>
-                                            <span className='text-[#A7A7AC] text-sm'><FaChevronRight /></span>
-                                        </div>
-                                        <div className='flex gap-x-1 justify-center items-center'>
-                                            <span><img className='w-4' src="/images/icons/svg/uniswap.webp" alt="" /></span>
-                                            <span className='text-[#A7A7AC] pfont-400 text-sm'>Uniswap</span>
-                                        </div>
-                                    </div>
-                                </div> */}
+                        
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
 
@@ -534,19 +512,7 @@ const Token = () => {
                                     ) :
                                     (
                                         <div className="Uniswap mt-2">
-                                            {/* <SwapWidget
-                                                // jsonRpcUrlMap={{ [vTenderlyBaseChain.id]: [tenderlyBaseIdChainRpcUrl] }}
-                                                jsonRpcUrlMap={{ [vTenderlyBaseChain.id]: [tenderlyBaseIdChainRpcUrl] }}
-                                                provider={provider} // Pass the connected provider from useEthersProvider
-                                                tokenList={outputTokenList}
-                                                hideConnectionUI={true}
-                                                onConnectWalletClick={true}
-                                                defaultInputAmount={2}
-                                                defaultInputTokenAddress={'NATIVE'}
-                                                defaultOutputTokenAddress={token?.id}
-                                                onError={(err) => console.log('cccccerror', err)}
-                                                theme={darkTheme}
-                                            /> */}
+                                           
                                         </div>
                                     )
                                 }
