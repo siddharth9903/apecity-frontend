@@ -32,7 +32,7 @@ const configurationData = {
     supported_resolutions: ['5','1D'],
     // The `exchanges` arguments are used for the `searchSymbols` method if a user selects the exchange
     exchanges: [
-        { value: 'Apecity', name: 'Apecity', desc: 'Apecity' },
+        { value: 'Apecity', name: 'Ape City', desc: 'Ape City' },
         // { value: 'Kraken', name: 'Kraken', desc: 'Kraken bitcoin exchange' },
     ],
     // The `symbols_types` arguments are used for the `searchSymbols` method if a user selects this symbol type
@@ -89,7 +89,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 symbol: curve.token.symbol,
                 full_name: curve.token.name,
                 description: curve.token.metaData?.description,
-                exchange: 'Apecity',
+                exchange: 'Ape City',
                 has_intraday: true,
                 type: 'Coin',
                 tokenAddress: curve.token.id,
@@ -114,7 +114,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                 type: 'Coin',
                 session: '24x7',
                 timezone: 'Etc/UTC',
-                exchange: 'Apecity',
+                exchange: 'Ape City',
                 minmov: 1,
                 pricescale: 1000000000000000,
                 has_intraday: true,
