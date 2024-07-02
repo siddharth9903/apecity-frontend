@@ -18,7 +18,7 @@ import {
 //     config: baseProviderConfig,
 //     defaultChain: baseDefaultChain,
 //     graphqlEndpoint: 'https://ffd04q3km9.execute-api.us-east-2.amazonaws.com/subgraphs/name/APE',
-//     ipfsEndpoint: 'https://ipfs.apecity.fun',
+//     ipfsEndpoint: 'https://ipfs.apecity.xyz',
 //     authToken: 'secretToken',
 //     apeFactoryAddress: '0xb4FBc25204d26C4a937F4CBa67087F70B21bb6c5'
 // }
@@ -30,7 +30,7 @@ const baseIdTenderlyConfig = {
     defaultChain: baseIdTenderlyDefaultChain,
     graphqlEndpoint: 'https://tend.apecity.xyz/subgraphs/name/APE',
     wsEndpoint: 'wss://tend.apecity.xyz/subgraphs/name/APE?type=ws',
-    ipfsEndpoint: 'https://ipfs.apecity.fun',
+    ipfsEndpoint: 'https://ipfs.apecity.xyz',
     authToken: 'secretToken',
     apeFactoryAddress: '0x7722B77e691ceA11047f030f1b128432A1a6FfCA'
 }

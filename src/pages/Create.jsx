@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useAccount, useTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { useSnackbar } from 'notistack';
 import { abi as apeFactoryABI, deployedContractAddress as apeFactoryContractAddress } from '../contracts/ApeFactory';
-import { formatNumber } from '../utils/formats';
+import { convertIpfsUrl, formatNumber } from '../utils/formats';
 import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants } from '../utils/apeFormula';
 import BigNumber from 'bignumber.js';
 import Decimal from 'decimal.js';
@@ -265,6 +265,7 @@ const Create = () => {
             const imageFile = values.image[0];
             const imageAdded = await ipfsClient.add(imageFile);
             const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
+            console.log("imageURI",convertIpfsUrl(imageURI))
 
             setProgress(0)
             await ipfsClient.pin.add(imageAdded.path);
