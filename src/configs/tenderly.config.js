@@ -3,7 +3,7 @@ import { createPublicClient, defineChain, http } from 'viem'
 import { injected } from '@wagmi/connectors'
 import { metadata, projectId } from './walletConnect.config';
 
-export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/7817edf3-f43a-4498-9cf9-c44c0164e1ed'
+export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/c070adf9-120d-4186-95f8-ca0978df9c08'
 
 // Create a custom chain configuration for your Tenderly chain
 export const vTenderlyBaseChain = defineChain({

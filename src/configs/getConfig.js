@@ -32,7 +32,7 @@ const baseIdTenderlyConfig = {
     wsEndpoint: 'wss://tend.apecity.xyz/subgraphs/name/APE?type=ws',
     ipfsEndpoint: 'https://ipfs.apecity.xyz',
     authToken: 'secretToken',
-    apeFactoryAddress: '0x7722B77e691ceA11047f030f1b128432A1a6FfCA'
+    apeFactoryAddress: '0x89de37f99a0ea5a6594eda4ee567d97e1b8111d9'
 }
 
 const baseConfig = baseIdTenderlyConfig
