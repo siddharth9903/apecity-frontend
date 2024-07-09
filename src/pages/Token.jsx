@@ -383,16 +383,27 @@ const Token = () => {
                         <div className="w-full">
                             {
                                 token && bondingCurve && (
-                                    <div style={{ height: 'calc(100vh - 200px)' }}>
-                                        <TVChartContainer
-                                            symbol={token?.symbol}
-                                            tokenAddress={tokenAddress}
-                                            bondingCurveAddress={bondingCurve?.id}
-                                            width={'100%'}
-                                            height={'80%'}
-                                        />
-                                    </div>
-
+                                    <>
+                                        <div style={{ height: 'calc(100vh - 200px)' }}>
+                                            <TVChartContainer
+                                                symbol={token?.symbol}
+                                                tokenAddress={tokenAddress}
+                                                bondingCurveAddress={bondingCurve?.id}
+                                                width={'100%'}
+                                                height={'80%'}
+                                            />
+                                        </div>
+                                        <p className="text-white px-1">
+                                            <em>
+                                                {`Charts are powered by `}
+                                                <a href="https://www.tradingview.com/" target='_blank'>
+                                                    <b>
+                                                        TradingView
+                                                    </b>
+                                                </a>
+                                            </em>
+                                        </p>
+                                    </>
                                 )
                             }
                             {/* <div style={{ height: 'calc(100vh - 200px)' }}>
@@ -492,18 +503,18 @@ const Token = () => {
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
                                                 {/* <p className='text-white text-sm text-center pfont-600'>${formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)}</p> */}
                                                 <p className='text-white text-sm text-center pfont-600'>
-                                                $<SmallNumberDisplay value={formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)} />
+                                                    $<SmallNumberDisplay value={formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)} />
                                                 </p>
                                             </div>
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
                                                 {/* <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? Number(bondingCurve.currentPrice).toFixed(14) : null} WETH</p> */}
-                                             <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ? 
-                                                (
-                                                    <SmallNumberDisplay value={bondingCurve.currentPrice} />
-                                                )
-                                                 : 
-                                                 null} WETH</p>
+                                                <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ?
+                                                    (
+                                                        <SmallNumberDisplay value={bondingCurve.currentPrice} />
+                                                    )
+                                                    :
+                                                    null} WETH</p>
                                             </div>
                                         </div>
                                     )}
