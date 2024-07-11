@@ -62,7 +62,7 @@ const Token = () => {
     const [token, setToken] = useState(null);
     const [bondingCurve, setBondingCurve] = useState(null);
     const [trades, setTrades] = useState(null);
-    const [comments, setComments] = useState([]); // Initialize as an empty array
+    const [comments, setComments] = useState([]); 
     const [newComment, setNewComment] = useState('');
     const { address, isConnected } = useAccount();
     const [provider, setProvider] = useState();
@@ -216,6 +216,24 @@ const Token = () => {
 
     const targetDivRef = useRef(null);
 
+    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
+    })
+
+    const value = useWatch({
+        name: 'value',
+        control
+    });
+    const handleClick = () => {
+        if (targetDivRef.current) {
+            targetDivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            console.error("Target div with ref 'targetDivRef' not found.");
+        }
+    };
+    const price = useMemo(() => {
+        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
+    }, [value])
+
     const outputTokenList = [
         {
             "name": token?.name,
@@ -314,7 +332,136 @@ const Token = () => {
                             </div>
                         </div>
                     </div>
-                    <div className={`lg:w-[calc(100%-640px)] xxl:w-[calc(100%-800px)] ${tabIndex3 === 2 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-[320px] xxl:left-[400px] lg:top-0 bg-[#17171c] token-left`}>
+                    <div className={`lg:w-[calc(100%-640px)] xxl:w-[calc(100%-800px)] ${tabIndex3 == 2 ? '' : 'max-lg:hidden'} lg:h-screen lg:overflow-y-auto lg:absolute lg:left-[320px] xxl:left-[400px] lg:top-0 bg-[#17171c] token-left`}>
+
+
+                        {/* <div className='w-full  relative px-3 py-3 bg-[#17171c]'>
+                            <div className='absolute z-[11] h-full left-0 top-0'>
+                                <button onClick={() => navigate('/')} className='h-full pl-2 bg-transparent'>
+                                    <FaCircleArrowLeft className='text-white text-xl' />
+                                </button>
+                            </div>
+                            <div className='pl-7'>
+                                <Swiper
+                                    freeMode={true}
+                                    slidesPerView={'auto'}
+                                    spaceBetween={12}
+                                    modules={[FreeMode]}
+                                // breakpoints={{
+                                //     1600: {
+                                //         slidesPerView: 6,
+                                //         spaceBetween: 10
+                                //     },
+                                //     1400: {
+                                //         slidesPerView: 5,
+                                //         spaceBetween: 10
+                                //     },
+                                //     1200: {
+                                //         slidesPerView: 4,
+                                //         spaceBetween: 10
+                                //     },
+                                //     992: {
+                                //         slidesPerView: 3,
+                                //         spaceBetween: 10
+                                //     },
+                                //     768: {
+                                //         slidesPerView: 4,
+                                //         spaceBetween: 10
+                                //     },
+                                //     576: {
+                                //         slidesPerView: 3,
+                                //         spaceBetween: 10
+                                //     },
+                                //     400: {
+                                //         slidesPerView: 2,
+                                //         spaceBetween: 10
+                                //     },
+                                //     0: {
+                                //         slidesPerView: 1,
+                                //         spaceBetween: 10
+                                //     }
+                                // }}
+                                >
+                                    <SwiperSlide style={{ width: '174px' }}>
+                                        <button className='flex items-center w-full gap-x-2 py-1 bg-[#2e2e33] px-2 rounded-md'>
+                                            <span className='text-sm text-[#A7A7AC]'>#1</span>
+                                            <img className='w-5' src="/images/icons/svg/blerf.webp" alt="" />
+                                            <span className='text-white pfont-600 uppercase'>blerf</span>
+                                            <span className='pfont-500 text-sm text-[#FF5252]'>-31.67%</span>
+                                        </button>
+                                    </SwiperSlide>
+                                    {
+                                        Array.from({ length: 7 })?.map((_, index) => (
+                                            <SwiperSlide style={{ width: '174px' }} key={index}>
+                                                <button className='flex w-[174px] h-[32px] items-center gap-x-2 py-1  px-2 rounded-md'>
+                                                    <span className='text-sm text-[#A7A7AC]'>#{index + 2}</span>
+                                                    <img className='w-5' src="/images/icons/svg/blerf.webp" alt="" />
+                                                    <span className='text-white pfont-600 uppercase'>blerf</span>
+                                                    <span className='pfont-500 text-sm text-[#FF5252]'>-31.67%</span>
+                                                </button>
+                                            </SwiperSlide>
+                                        ))
+                                    }
+                                </Swiper>
+
+
+                            </div>
+                            <div className='absolute z-[11] h-full right-0 top-0'>
+                                <div className='py-2 h-full'>
+                                    <button onClick={onOpenModal} className='flex rounded-s-lg h-full gap-x-1 px-2 bg-[#ff6600] items-center'>
+                                        <FaFireAlt className='text-white text-lg' />
+                                        <FaChevronRight className='text-white text-sm' />
+                                    </button>
+                                    <Modal styles={{
+                                        padding: 0
+                                    }} open={open} showCloseIcon={false} blockScroll={false} onClose={onCloseModal} center>
+                                        <div className='lg:w-[800px] flex gap-y-2 flex-col bg-[#1d1d22] h-[70vh]'>
+                                            <div className='bg-[#28282d]  w-full  py-2 px-3 flex items-center justify-between'>
+                                                <div>
+
+                                                    <div className='flex'>
+                                                        <button className={`px-3 py-2 rounded-s cursor-pointer bg-[#343439] border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>5M</p>
+                                                        </button>
+                                                        <button className={`px-3 py-2 cursor-pointer bg-transparent border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>1H</p>
+                                                        </button >
+                                                        <button className={`px-3 py-2  cursor-pointer  bg-transparent border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>6H</p>
+                                                        </button >
+                                                        <button className={`px-3 py-2 cursor-pointer rounded-e bg-transparent border border-[#ffffff29]`}>
+                                                            <p className={`pfont-600 text-white text-center text-sm `}>24H</p>
+                                                        </button >
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button onClick={onCloseModal} className="bg-transparent rounded p-1 border border-[#ffffff29]">
+                                                        <RxCross2 className='text-white text-xl' />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className='flex-1 px-3 tokens-table-wrapper overflow-x-auto overflow-y-auto'>
+                                                <Tokens />
+                                            </div>
+                                            <div className='bg-[#28282d]  w-full  py-3 px-3'>
+                                                <div className='flex gap-x-4 w-full items-center justify-center'>
+                                                    <button className="rounded-md flex gap-x-2 px-3 py-2 items-center border-none bg-[#475dc0]">
+                                                        <span><FaFire className='text-white text-sm' /></span>
+                                                        <span className='text-white pfont-600 text-sm'>All Trending Tokens on Ethereum</span>
+                                                        <span><FaChevronRight className='text-white text-[13px]' /></span>
+                                                    </button>
+                                                    <button className='flex items-center gap-x-1.5 bg-transparent'>
+                                                        <FaInfoCircle className='text-[#cccccc]' />
+                                                        <span className='text-[#cccccc] pfont-500'>About</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Modal>
+                                </div>
+                            </div>
+                        </div> */}
+
                         <div className="w-full">
                             {
                                 token && bondingCurve && (
@@ -344,7 +491,8 @@ const Token = () => {
                         </div>
                         <div className='w-full  flex-1'>
                             <div>
-                                <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+                                 
+                                 <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                                     <div className='bg-[#17171c]  px-2  flex items-center'>
                                         <TabList className='flex gap-x-4 items-center'>
                                             <Tab className='focus:border-none focus:outline-none'>
@@ -363,6 +511,40 @@ const Token = () => {
                                     </div>
                                     <TabPanel>
                                         <Transactions trades={trades} tokenName={token?.name} />
+                                        
+                                    </TabPanel>
+                                    <TabPanel>
+                                        <div className='comments-section' style = {{padding: '1.5vw', overflowY: 'scroll', maxHeight: '50%'}}>
+                                            {comments.length > 0 ? (
+                                                comments.map(comment => (
+                                                    <div key={comment.id} className='comment'>
+                                                        <p className='text-white'>{comment.message}</p>
+                                                        {comment.user && (
+                                                            <small className='text-gray-500'>By: {shortenText(comment.user.id)} on {new Date(comment.createdAt).toLocaleString()}</small>
+                                                        )}
+                                                        <div>Likes: {comment.likes ? comment.likes.length : 0}</div>
+                                                         <button
+                                                            onClick={() => handleLike(comment.id)}
+                                                            className='bg-[#475dc0] text-white px-4 py-2 mt-2 rounded'
+                                                        >
+                                                            Like
+                                                        </button>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p className='text-white'>No comments yet. Be the first to start a conversation!!</p>
+                                            )}
+                                            <form onSubmit={handleCommentSubmit} className='comment-form'>
+                                                <textarea
+                                                    value={newComment}
+                                                    onChange={(e) => setNewComment(e.target.value)}
+                                                    placeholder="Enter your comment"
+                                                    className='comment-input'
+                                                    required
+                                                />
+                                                <button type='submit' className='bg-[#475dc0] text-white px-4 py-2 mt-2 rounded'>Submit</button>
+                                            </form>
+                                        </div>
                                     </TabPanel>
                                     <TabPanel>
                                         <div className='comments-section' style = {{padding: '1.5vw', overflowY: 'scroll', maxHeight: '50%'}}>
@@ -464,6 +646,7 @@ const Token = () => {
                                     ) :
                                     (
                                         <div className="Uniswap mt-2">
+                                           
                                         </div>
                                     )
                                 }
