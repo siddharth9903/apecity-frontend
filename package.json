@@ -32,12 +32,8 @@
     "helia": "^4.2.1",
     "ipfs-http-client": "^60.0.1",
     "lightweight-charts": "^4.1.4",
-<<<<<<< Updated upstream
-    "lodash": "^4.17.21",
-=======
     "mongodb": "^6.7.0",
     "mongoose": "^8.4.1",
->>>>>>> Stashed changes
     "notistack": "^3.0.1",
     "path": "^0.12.7",
     "react": "^18.2.0",

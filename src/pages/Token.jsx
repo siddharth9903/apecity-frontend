@@ -38,6 +38,7 @@ import { parseEther } from 'viem';
 import { GET_BONDING_CURVE_TRADES_SUBSCRIPTION } from '../graphql/queries/chartQueries';
 import SmallNumberDisplay from '../components/utils/SmallNumberDisplay';
 import axios from 'axios';
+import './CommentsSection.css';
 
 const Token = () => {
     const navigate = useNavigate();
