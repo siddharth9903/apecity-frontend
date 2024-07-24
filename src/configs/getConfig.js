@@ -5,10 +5,10 @@ import {
     defaultChain as baseDefaultChain
 } from "./base.config"
 import {
-    chains as baseIdTenderlyConfigChains,
-    rpcUrl as baseIdTenderlyRpcUrl,
-    config as baseIdTenderlyProviderConfig,
-    defaultChain as baseIdTenderlyDefaultChain
+    chains as tenderlyConfigChains,
+    rpcUrl as tenderlyRpcUrl,
+    config as tenderlyProviderConfig,
+    defaultChain as tenderlyDefaultChain
 } from "./tenderly.config"
 
 
@@ -24,11 +24,11 @@ import {
 //     apeFactoryAddress: '0xb4FBc25204d26C4a937F4CBa67087F70B21bb6c5'
 // }
 
-const baseIdTenderlyConfig = {
-    rpcUrl: baseIdTenderlyRpcUrl,
-    chains: baseIdTenderlyConfigChains,
-    config: baseIdTenderlyProviderConfig,
-    defaultChain: baseIdTenderlyDefaultChain,
+const tenderlyConfig = {
+    rpcUrl: tenderlyRpcUrl,
+    chains: tenderlyConfigChains,
+    config: tenderlyProviderConfig,
+    defaultChain: tenderlyDefaultChain,
     graphqlEndpoint: 'https://tend.apecity.xyz/subgraphs/name/APE',
     wsEndpoint: 'wss://tend.apecity.xyz/subgraphs/name/APE?type=ws',
     ipfsEndpoint: 'https://ipfs.apecity.xyz',
@@ -36,7 +36,7 @@ const baseIdTenderlyConfig = {
     apeFactoryAddress: '0x0fDc7bf21a167A20C49FcA41CCbc3ABa354AcfbD'
 }
 
-const baseConfig = baseIdTenderlyConfig
+const baseConfig = tenderlyConfig
 
 
 export const getConfig = () => {
@@ -49,12 +49,12 @@ export const getConfig = () => {
             defaultConfig = baseConfig
             break;
         }
-        case 'BASEIDTENDERLY': {
-            defaultConfig = baseIdTenderlyConfig
+        case 'TENDERLY': {
+            defaultConfig = tenderlyConfig
             break;
         }
         default: {
-            defaultConfig = baseIdTenderlyConfig
+            defaultConfig = tenderlyConfig
             break;
         }
     }

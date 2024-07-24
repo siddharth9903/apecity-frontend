@@ -241,7 +241,7 @@ const Token = () => {
             "address": token?.id,
             "symbol": token?.symbol,
             "decimals": 18,
-            "chainId": 8453,
+            "chainId": 8454,
             "logoURI": convertIpfsUrl(token?.metaData?.image)
         }
     ];

@@ -18,7 +18,7 @@ import InputField from '../sections/token/InputField';
 import QuickSelect from '../sections/token/QuickSelect';
 import ipfsClient from '../ipfs/client';
 import { ethers } from 'ethers';
-import { parseEventLogs } from 'viem';
+import { getAddress, parseEventLogs } from 'viem';
 import { PINATA_API_KEY, PINATA_SECRET_API_KEY } from '../ipfs/pinataClient';
 import LoadingSteps from '../components/LoadingSteps';
 
@@ -29,7 +29,7 @@ const pinataSecretApiKey = PINATA_SECRET_API_KEY
 const Create = () => {
     const [open1, setOpen1] = useState(false);
     const [open, setOpen] = useState(false);
-    const [progress, setProgress] = useState(-1);
+    const [progress, setProgress] = useState(0);
 
     const onCloseModal = () => setOpen(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -141,16 +141,17 @@ const Create = () => {
             })
             if (eventLogs?.length > 0) {
                 let tokenAddress = eventLogs[0]?.args?.token
-                setProgress(4);
+                setProgress(3);
 
                 setTimeout(() => {
-                    setProgress(5);
+                    setProgress(4);
                     navigate(`/token/${tokenAddress.toLowerCase()}`);
                 }, 10000);
                 // navigate(`/token/${tokenAddress.toLowerCase()}?wait=10`)
             }
 
         } else if (error) {
+            console.log('errorrrr',error)
             enqueueSnackbar('Error executing token creation transaction: ' + error.details, { variant: 'error' });
         }
     }, [isConfirmed, error, enqueueSnackbar]);
@@ -267,7 +268,6 @@ const Create = () => {
             const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
             console.log("imageURI",convertIpfsUrl(imageURI))
 
-            setProgress(0)
             await ipfsClient.pin.add(imageAdded.path);
             // await new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -286,9 +286,15 @@ const Create = () => {
             const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
             const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
 
-            setProgress(1);
+            console.log("tokenURI",convertIpfsUrl(tokenURI))
             // Pin the metadata
             await ipfsClient.pin.add(metadataAdded.path);
+
+            console.log('setProgress(1)')
+            setTimeout(() => {
+                setProgress(1)
+            }, 3);
+
 
 
             // return
@@ -313,14 +319,27 @@ const Create = () => {
             const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
             const adjustedInputAmount = inputAmount.mul(1.01);
 
-            setProgress(2);
+
+            console.log('setProgress(2)')
+            setTimeout(() => {
+                setProgress(2);
+            }, 3);
+
+            console.log('before write contract')
+            console.log({
+                address:  getAddress(apeFactoryContractAddress),
+                functionName: 'createToken',
+                args: args,
+                value: adjustedInputAmount.toFixed(),
+            })
             await writeContractAsync({
                 abi: apeFactoryABI,
-                address: apeFactoryContractAddress,
+                address: getAddress(apeFactoryContractAddress),
                 functionName: 'createToken',
                 args: args,
                 value: adjustedInputAmount.toFixed(),
             });
+            console.log('after write contract')
             setProgress(3);
 
             return

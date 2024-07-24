@@ -3,14 +3,13 @@ import { createPublicClient, defineChain, http } from 'viem'
 import { injected } from '@wagmi/connectors'
 import { metadata, projectId } from './walletConnect.config';
 
-// export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/c070adf9-120d-4186-95f8-ca0978df9c08'
-export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/b67fff04-bd69-4b14-907a-3912e44f3f1d'
+export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/3f03ea4a-aebd-445c-94ca-22dee8209cb8'
 
 // Create a custom chain configuration for your Tenderly chain
-export const vTenderlyBaseChain = defineChain({
-    id: 8454, // Replace with your Tenderly chain ID
-    name: 'BaseTenderly Chain',
-    network: 'base-tenderly',
+export const tenderlyChain = defineChain({
+    id: 8455, // Replace with your Tenderly chain ID
+    name: 'tenderly Chain',
+    network: 'tenderly',
     nativeCurrency: {
         decimals: 18,
         name: 'vEther',
@@ -23,26 +22,26 @@ export const vTenderlyBaseChain = defineChain({
     },
     blockExplorers: {
         default: {
-            name: 'Base Tenderly Explorer',
+            name: 'Tenderly Explorer',
             url: rpcUrl, // Replace with your Tenderly explorer URL
         },
     },
     testnet: true,
 });
 
-export const chains = [vTenderlyBaseChain]
-export const defaultChain = vTenderlyBaseChain
+export const chains = [tenderlyChain]
+export const defaultChain = tenderlyChain
 
 export const config = defaultWagmiConfig({
     autoConnect: true,
-    publicClient: () => createPublicClient({ chain: vTenderlyBaseChain }),
-    webSocketPublicClient: () => createPublicClient({ chain: vTenderlyBaseChain, transport: WebSocketTransport() }),
+    publicClient: () => createPublicClient({ chain: tenderlyChain }),
+    webSocketPublicClient: () => createPublicClient({ chain: tenderlyChain, transport: WebSocketTransport() }),
     connectors: [new injected()],
     chains,
     projectId,
     metadata,
     transports: {
-        [vTenderlyBaseChain.id]: http(rpcUrl),
+        [tenderlyChain.id]: http(rpcUrl),
     },
 });
 
