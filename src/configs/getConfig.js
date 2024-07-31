@@ -10,6 +10,12 @@ import {
     config as tenderlyProviderConfig,
     defaultChain as tenderlyDefaultChain
 } from "./tenderly.config"
+import {
+    chains as merlinTestnetConfigChains,
+    rpcUrl as merlinTestnetRpcUrl,
+    config as merlinTestnetProviderConfig,
+    defaultChain as merlinTestnetDefaultChain
+} from "./merlintestnet.config"
 
 
 // const baseConfig = {
@@ -36,7 +42,20 @@ const tenderlyConfig = {
     apeFactoryAddress: '0x0fDc7bf21a167A20C49FcA41CCbc3ABa354AcfbD'
 }
 
-const baseConfig = tenderlyConfig
+
+const merlinTestnetConfig = {
+    rpcUrl: merlinTestnetRpcUrl,
+    chains: merlinTestnetConfigChains,
+    config: merlinTestnetProviderConfig,
+    defaultChain: merlinTestnetDefaultChain,
+    graphqlEndpoint: 'https://test.apecity.xyz/subgraphs/name/APE',
+    wsEndpoint: 'wss://test.apecity.xyz/subgraphs/name/APE?type=ws',
+    ipfsEndpoint: 'https://ipfs.apecity.xyz',
+    authToken: 'secretToken',
+    apeFactoryAddress: '0x7722B77e691ceA11047f030f1b128432A1a6FfCA'
+}
+
+const baseConfig = merlinTestnetConfig
 
 
 export const getConfig = () => {
@@ -51,6 +70,10 @@ export const getConfig = () => {
         }
         case 'TENDERLY': {
             defaultConfig = tenderlyConfig
+            break;
+        }
+        case 'MERLINTESTNET': {
+            defaultConfig = merlinTestnetConfig
             break;
         }
         default: {
