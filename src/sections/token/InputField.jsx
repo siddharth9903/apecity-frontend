@@ -16,8 +16,8 @@ const InputField = ({ register, name, symbol, tokenSymbol, isToken, tokenImage }
                 <span className="text-white pfont-400 mr-2">{isToken ? tokenSymbol : symbol}</span>
                 <img
                     className="w-7 h-7 rounded-full"
-                    // src={isToken ? "/images/token/legit.jpeg" : "/images/logo/eth.svg"}
-                    src={isToken ? convertIpfsUrl(tokenImage) : "/images/logo/eth.svg"}
+                    // src={isToken ? convertIpfsUrl(tokenImage) : "/images/logo/eth.svg"}
+                    src={isToken ? convertIpfsUrl(tokenImage) : "/images/logo/bitcoin.png"}
                     alt={isToken ? tokenSymbol : symbol}
                 />
             </div>

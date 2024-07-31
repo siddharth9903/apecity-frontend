@@ -456,7 +456,7 @@ const Create = () => {
                                         >
                                             Create
                                         </button>
-                                        <p className='text-white mt-3.5 roboto-400'>Cost to deploy: ~0.02 ETH</p>
+                                        <p className='text-white mt-3.5 roboto-400'>Cost to deploy: ~0.00002 BTC</p>
                                     </div>
                                 </div>
                             </form>
@@ -484,7 +484,7 @@ const Create = () => {
                                             type="button"
                                             onClick={handleSwitchCurrency}
                                         >
-                                            Switch to {ethTrade ? tokenSymbol : 'ETH'}
+                                            Switch to {ethTrade ? tokenSymbol : 'BTC'}
                                         </button>
                                     </div>
                                     <div>
@@ -500,11 +500,12 @@ const Create = () => {
                                                             {...register('buyAmountEth')}
                                                         />
                                                         <div className="flex items-center ml-2 absolute right-2">
-                                                            <span className="text-white pfont-400 mr-2">ETH</span>
+                                                            <span className="text-white pfont-400 mr-2">BTC</span>
                                                             <img
                                                                 className="w-7 h-7 rounded-full"
-                                                                src="/images/logo/eth.svg"
-                                                                alt="ETH"
+                                                                // src="/images/logo/eth.svg"
+                                                                src="/images/logo/bitcoin.png"
+                                                                alt="BTC"
                                                             />
                                                         </div>
                                                     </div>
@@ -550,7 +551,7 @@ const Create = () => {
                                                                     ) :
                                                                     (
                                                                         <div className='mt-1'>
-                                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) ETH`}
+                                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) BTC`}
                                                                         </div>
                                                                     )}
                                                         </p>

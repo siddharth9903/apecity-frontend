@@ -232,7 +232,7 @@ const Token = () => {
         }
     };
     const price = useMemo(() => {
-        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} ETH`;
+        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} BTC`;
     }, [value])
 
     const outputTokenList = [
@@ -616,7 +616,7 @@ const Token = () => {
                                                         <SmallNumberDisplay value={bondingCurve.currentPrice} />
                                                     )
                                                     :
-                                                    null} WETH</p>
+                                                    null} BTC</p>
                                             </div>
                                         </div>
                                     )}
@@ -633,7 +633,7 @@ const Token = () => {
                                             </a>
                                             <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
                                                 <div className='w-[330px]'>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches 4.2 ETH (~{formatNumber(4.2 * wethPriceIntoUSD)})$ all the liquidity from the bonding curve will be deposited into Uniswap and burned. progression increases as the price goes up.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches 4.2 BTC (~{formatNumber(4.2 * wethPriceIntoUSD)})$ all the liquidity from the bonding curve will be deposited into Uniswap and burned. progression increases as the price goes up.</p>
                                                     <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve.</p>
                                                 </div>
                                             </Tooltip>

@@ -272,7 +272,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             onClick={() => setEthTrade(true)}
                                             className="text-xs py-1 px-2 pfont-400 rounded bg-gray-800 text-gray-300"
                                         >
-                                            Switch to ETH
+                                            Switch to BTC
                                         </button>
                                     )}
                                     {/* <button
@@ -289,7 +289,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             <InputField
                                                 register={register}
                                                 name="buyAmountEth"
-                                                symbol="ETH"
+                                                symbol="BTC"
                                                 isToken={false}
                                             />
                                             <QuickSelect
@@ -352,7 +352,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                     ) :
                                                     (
                                                         <div className='mt-1'>
-                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) ETH`}
+                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) BTC`}
                                                         </div>
                                                     )
                                             }
@@ -391,7 +391,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             onClick={() => setEthTrade(true)}
                                             className="text-xs py-1 px-2 pfont-400 rounded bg-gray-800 text-gray-300"
                                         >
-                                            Switch to ETH
+                                            Switch to BTC
                                         </button>
                                     )}
                                     {/* <button
@@ -408,7 +408,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             <InputField
                                                 register={register}
                                                 name="sellAmountEth"
-                                                symbol="ETH"
+                                                symbol="BTC"
                                                 isToken={false}
                                             />
                                             <QuickSelect
@@ -472,7 +472,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                     ) :
                                                     (
                                                         <div className='mt-1'>
-                                                            {`You are about to receive ${saleReturn} (~${formatNumber(saleReturn)}) ETH`}
+                                                            {`You are about to receive ${saleReturn} (~${formatNumber(saleReturn)}) BTC`}
                                                         </div>
                                                     )
                                             }

@@ -93,7 +93,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                             </div>
                             <div>
                                 <p className="pfont-500 text-[#797979] uppercase text-xs">volume</p>
-                                <p className="pfont-500 text-white text-sm">{formatNumber(tradeStats.volumeEth)} ETH</p>
+                                <p className="pfont-500 text-white text-sm">{formatNumber(tradeStats.volumeEth)} BTC</p>
                             </div>
                             <div>
                                 <p className="pfont-500 text-[#797979] uppercase text-xs">unique traders</p>
@@ -129,13 +129,13 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                         <div>
                                             <p className="pfont-500 text-[#797979] uppercase text-xs">buy vol</p>
                                             <p className="pfont-400 text-white text-sm">
-                                                {formatNumber(tradeStats.buyVolEth)} ETH
+                                                {formatNumber(tradeStats.buyVolEth)} BTC
                                             </p>
                                         </div>
                                         <div>
                                             <p className="pfont-500 text-[#797979] uppercase text-xs">sell vol</p>
                                             <p className="pfont-400 text-white text-sm">
-                                                {formatNumber(tradeStats.sellVolEth)} ETH
+                                                {formatNumber(tradeStats.sellVolEth)} BTC
                                             </p>
                                         </div>
                                     </div>
@@ -304,8 +304,8 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
 
                         </div>
                     </div>
-                    <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">WETH</p>
+                    {/* <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
+                        <p className="text-sm text-white pfont-400">BTC</p>
                         <div className="flex items-center gap-x-3">
                             <div
                                 onClick={() => {
@@ -339,7 +339,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                             </a>
 
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

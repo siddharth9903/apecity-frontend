@@ -24,7 +24,7 @@ const Transactions = ({ trades, tokenName }) => {
                         </th>
                         <th className="px-4 border border-[#5e5e6b] py-2 bg-[#2e2e33]">
                             <div className="flex items-center justify-start">
-                                <span className="uppercase text-white pfont-600 text-xs mr-1.5">ETH</span>
+                                <span className="uppercase text-white pfont-600 text-xs mr-1.5">BTC</span>
                                 <MdFilterAlt className="text-[#A6A6A6] text-sm" />
                             </div>
                         </th>
