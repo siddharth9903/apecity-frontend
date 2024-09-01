@@ -52,7 +52,7 @@ const merlinTestnetConfig = {
     wsEndpoint: 'wss://test.apecity.xyz/subgraphs/name/APE?type=ws',
     ipfsEndpoint: 'https://ipfs.apecity.xyz',
     authToken: 'secretToken',
-    apeFactoryAddress: '0x7722B77e691ceA11047f030f1b128432A1a6FfCA'
+    apeFactoryAddress: '0x89de37F99A0eA5A6594Eda4eE567d97e1b8111D9'
 }
 
 const baseConfig = merlinTestnetConfig
