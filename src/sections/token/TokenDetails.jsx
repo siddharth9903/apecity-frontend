@@ -209,7 +209,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                                 {shortenText(bondingCurve?.uniswapLiquidityPool, 10)}
                                             </span>
                                         </div>
-                                        <a href={`https://basescan.org/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <a href={`https://testnet-scan.merlinchain.io/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
                                             <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                 <span className="uppercase pfont-400 text-sm">LPs</span>
                                                 <span>
@@ -217,7 +217,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                                 </span>
                                             </div>
                                         </a>
-                                        <a href={`https://basescan.org/address/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <a href={`https://testnet-scan.merlinchain.io/address/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
                                             <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                 <span className="uppercase pfont-400 text-sm">EXP</span>
                                                 <span>
@@ -255,7 +255,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                                 </span>
                                             </div>
 
-                                            <a href={`https://basescan.org/address/${bondingCurve?.id}`} target='_blank'>
+                                            <a href={`https://testnet-scan.merlinchain.io/address/${bondingCurve?.id}`} target='_blank'>
                                                 <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                     <span className="uppercase pfont-400 text-sm">exp</span>
                                                     <span>
@@ -284,7 +284,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                 </span>
                                 <span className="pfont-400 text-sm">{shortenText(token?.id, 10)}</span>
                             </div>
-                            <a href={`https://basescan.org/token/tokenholderchart/${token?.id}`} target='_blank'>
+                            <a href={`https://testnet-scan.merlinchain.io/token/tokenholderchart/${token?.id}`} target='_blank'>
                                 <div className="flex gap-x-2 text-[#cccccc] items-center">
                                     <span className="uppercase pfont-400 text-sm">HLD</span>
                                     <span>
@@ -293,7 +293,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                 </div>
                             </a>
 
-                            <a href={`https://basescan.org/token/${token?.id}`} target='_blank'>
+                            <a href={`https://testnet-scan.merlinchain.io/token/${token?.id}`} target='_blank'>
                                 <div className="flex gap-x-2 text-[#cccccc] items-center">
                                     <span className="uppercase pfont-400 text-sm">EXP</span>
                                     <span>

@@ -79,7 +79,7 @@ const Transactions = ({ trades, tokenName }) => {
                                 <span className="text-xs pfont-600">{shortenText(trade.user.id, 6)}</span>
                             </td>
                             <td className="text-center border border-[#5e5e6b]">
-                                <a href={`https://etherscan.io/tx/${trade.transaction.id}`} target="_blank" rel="noopener noreferrer" className="text-[#A6A6A6] flex items-center justify-center">
+                                <a href={`https://testnet-scan.merlinchain.io/tx/${trade.transaction.id}`} target="_blank" rel="noopener noreferrer" className="text-[#A6A6A6] flex items-center justify-center">
                                     <FaExternalLinkAlt className="text-sm" />
                                 </a>
                             </td>
