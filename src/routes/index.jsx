@@ -23,11 +23,6 @@ const Router = () => {
               path:'create',
               element:<Create />
             },
-
-    // {
-    //   path: 'temp',
-    //   element: <BondingCurveSubscription />
-    // }
         ]
     }
   ])

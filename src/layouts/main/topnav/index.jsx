@@ -10,6 +10,8 @@ import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, 
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import ConnectButton from "../../../components/ConnectButton.jsx";
+import ChainSelector from "../../../components/ChainSelector.jsx";
+
 export default function Topnav({ setToggle, toggle }) {
     const [open, setOpen] = useState(false);
     const onOpenModal = () => setOpen(true);
@@ -155,7 +157,7 @@ export default function Topnav({ setToggle, toggle }) {
                                                 </div>
                                                 <div>
                                                     <p className="pfont-400 max-sm:text-sm tracking-[0.5px] text-white text-center">
-                                                    Ape City is a fair-launch platform ensuring secure and equitable on-chain trading. Each token launched through our platform is anti-rug, with no presales or team allocations. This enhances transparency and a level playing field for all users.
+                                                        Ape City is a fair-launch platform ensuring secure and equitable on-chain trading. Each token launched through our platform is anti-rug, with no presales or team allocations. This enhances transparency and a level playing field for all users.
 
 
                                                     </p>
@@ -273,7 +275,9 @@ export default function Topnav({ setToggle, toggle }) {
                                 </div>
                                 <div className="">
                                     <ConnectButton />
-                                    {/* <Link to="#" ref={ref} {...anchorProps} className="md:bg-[#475dc0] transition-all duration-300 md:hover:bg-blue-500 hover:scale-105 border-none text-white flex items-center md:gap-x-2 md:px-4 md:py-2 rounded-md text-sm"><span className="pfont-500 max-md:hidden">Connect Wallet</span><FaWallet className="text-lg md:hidden" /><BiWallet className="text-lg max-md:hidden" /></Link> */}
+                                </div>
+                                <div className="">
+                                    <ChainSelector />
                                 </div>
                                 <div className="dropdown inline-block cursor-pointer relative">
                                     <button data-dropdown-toggle="dropdown" className="dropdown-toggle  cursor-pointer mt-1 items-center" type="button">
