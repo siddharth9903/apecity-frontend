@@ -2,11 +2,9 @@ import { useEffect } from 'react';
 import './assets/css/grid.css';
 import './assets/css/tailwind.css';
 import './assets/scss/style.scss';
-import Switcher from './components/switcher';
 import Router from './routes/index.jsx';
 import { SnackbarProvider } from 'notistack';
-import { Web3ModalProvider } from './components/Web3ModalProvider';
-import ConnectButton from './components/ConnectButton';
+import { Web3ModalProvider } from './components/web3Components/Web3ModalProvider.jsx';
 import { ApolloProvider } from '@apollo/client';
 import client from './graphql/client';
 import { Provider } from 'react-redux';
@@ -26,7 +24,6 @@ function App() {
         <SnackbarProvider>        
           <Router />
         </SnackbarProvider>
-        {/* <Switcher /> */}
       </Web3ModalProvider>
       </Provider>
     </ApolloProvider>

@@ -9,8 +9,8 @@ import { Menu, Bell, ShoppingCart, DollarSign, Truck } from 'feather-icons-react
 import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2, FaUserCircle, FaWallet, SiBlueprint, AiOutlineDisconnect } from "./../../../assets/icons/vander.jsx"
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import ConnectButton from "../../../components/ConnectButton.jsx";
-import ChainSelector from "../../../components/ChainSelector.jsx";
+import ConnectButton from "../../../components/web3Components/ConnectButton.jsx";
+import ChainSelector from "../../../components/web3Components/ChainSelector.jsx";
 
 export default function Topnav({ setToggle, toggle }) {
     const [open, setOpen] = useState(false);
