@@ -213,7 +213,7 @@ const Create = () => {
     //         const metaDataIpfsHash = metadataUploadResponse.data.IpfsHash
     //         const metadataURI = `https://ipfs.io/ipfs/${metaDataIpfsHash}`;
     //         console.log('metadataURI', metadataURI)
-    //         // await ipfsClient.pin.add(metaDataIpfsHash);
+    //         // await ipfsClient.pin.add(metaataIpfsHash);
 
     //         const tokenURI = metadataURI
 

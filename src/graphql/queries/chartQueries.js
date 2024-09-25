@@ -8,7 +8,7 @@ export const GET_BONDING_CURVES = gql`
         id
         symbol
         name
-        metaData {
+        metadata {
           description
         }
       }
@@ -71,7 +71,7 @@ export const GET_BONDING_CURVE = gql`
           id
           symbol
           name
-          metaData {
+          metadata {
             description
           }
         }

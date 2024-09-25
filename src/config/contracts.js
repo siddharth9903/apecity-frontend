@@ -1,7 +1,7 @@
 import { supportedChains } from "./chains"
 
 export const contractAddresses = {
-    [mainnet.id]: {
+    [supportedChains.tende]: {
       memeToken: '0x...',
       memeTrading: '0x...',
     },

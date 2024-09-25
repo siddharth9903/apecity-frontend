@@ -318,7 +318,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 name="buyAmountToken"
                                                 tokenSymbol={token?.symbol}
                                                 isToken={true}
-                                                tokenImage={token?.metaData?.image}
+                                                tokenImage={token?.metadata?.image}
                                             />
                                             <QuickSelect
                                                 setValue={setValue}
@@ -438,7 +438,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 name="sellAmountToken"
                                                 tokenSymbol={token?.symbol}
                                                 isToken={true}
-                                                tokenImage={token?.metaData?.image}
+                                                tokenImage={token?.metadata?.image}
                                             />
                                             <QuickSelect
                                                 setValue={setValue}

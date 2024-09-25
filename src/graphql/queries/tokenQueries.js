@@ -1,98 +1,45 @@
 import { gql } from '@apollo/client';
 import { deployedContractAddress as apeFactoryAddress } from '../../contracts/ApeFactory';
 
-// export const TOKENS_QUERY = gql`
-//   query GetTokens($first: Int!, $skip: Int!) {
-//     # tokens(first: $first, skip: $skip, orderBy: createdAtTimestamp, orderDirection: desc) {
-//     tokens(first: $first, skip: $skip, orderDirection: desc) {
-//       id
-//       name
-//       symbol
-//       metaData {
-//         description
-//         id
-//         image
-//         telegram
-//         twitter
-//         website
-//       }
-//     }
-//   }
-// `;
-
-// where: { name_contains: $searchTerm, symbol_contains: $searchTerm }
-
 export const TOKENS_QUERY = gql`
   query GetTokens(
     $first: Int!
     $skip: Int!
-    $orderBy: String!
-    $orderDirection: String!
+    $orderBy: [Token_order_by!]
   ) {
-    tokens(
-      first: $first
-      skip: $skip
-      orderBy: $orderBy
-      orderDirection: $orderDirection
-    ) {
-      id
-      name
-      symbol
-      metaData {
-        description
-        id
-        image
-        telegram
-        twitter
-        website
-      }
-      bondingCurve {
-        marketCap
-        volume
-        createdAtTimestamp
-        txCount
-        trades(orderBy: timestamp, orderDirection: desc, first: 1) {
-          timestamp
-        }
-      }
-    }
-  }
-`;
-
-export const TOKEN_SEARCH_QUERY = gql`
-  query TokenSearch($searchTerm: String) {
-    tokenMetaDataSearch(text: $searchTerm) {
-      id
-      token {
+    Token (
+        limit: $first
+        offset: $skip
+        order_by: $orderBy
+    ){
         id
         name
         symbol
-        metaData {
-          description
+        metadata {
           id
+          description
           image
+          name
+          symbol
           telegram
           twitter
           website
         }
         bondingCurve {
+          active
           marketCap
           volume
           txCount
-          createdAtTimestamp
-          trades(orderBy: timestamp, orderDirection: desc, first: 1) {
-            timestamp
-          }
         }
-      }
     }
   }
 `;
 
+// Updated query
 export const TOTAL_TOKENS_QUERY = gql`
   query GetTotalTokens {
-    factory(id: "${apeFactoryAddress}") {
-      tokenCount
+    Factory {
+        tokenCount
     }
   }
 `;
@@ -105,7 +52,7 @@ export const TOKEN_QUERY = gql`
       symbol
       decimals
       totalSupply
-      metaData {
+      metadata {
         description
         id
         image
@@ -194,24 +141,3 @@ export const BONDING_CURVE_SUBSCRIPTION = gql`
     }
   }
 `;
-
-// export const TOKEN_TRADES_SUBSCRIPTION = gql`
-//   subscription TradeCreated($bondingCurveId: ID!) {
-//     tradeCreated: trades(bondingCurveId: $bondingCurveId) {
-//       id
-//       transaction {
-//         id
-//       }
-//       timestamp
-//       type
-//       inAmount
-//       outAmount
-//       avgPrice
-//       openPrice
-//       closePrice
-//       user {
-//         id
-//       }
-//     }
-//   }
-// `;

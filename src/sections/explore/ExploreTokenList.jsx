@@ -10,27 +10,27 @@ import { convertIpfsUrl, formatNumber } from '../../utils/formats';
 import { FaCircleInfo } from "react-icons/fa6";
 
 
-const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPrice }) => {
+const ExploreTokenList = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
     const [tokens, setTokens] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
-    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY, {
-        pollInterval: reorderInterval ? reorderInterval : 2000,
+    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError }  = useQuery(TOTAL_TOKENS_QUERY, {
+        pollInterval: 1000,
         fetchPolicy: 'no-cache'
     });
-    const totalTokens = totalTokensData?.factory?.tokenCount || 0;
+    const totalTokens = totalTokensData?.Factory?.reduce((acc, curr) => acc + (curr.tokenCount || 0), 0) || 0;
+
     const { data: tokensData, loading: tokensLoading, error: tokensError } = useQuery(TOKENS_QUERY, {
         variables: {
             first: pageSize,
             skip: (currentPage - 1) * pageSize,
-            orderBy: sortBy,
-            orderDirection: orderBy,
+            orderBy: [orderBy],
         },
         fetchPolicy: 'no-cache',
-        pollInterval: reorderInterval ? reorderInterval : 2000
+        pollInterval: reorderInterval ? reorderInterval : 5000
     });
 
     useEffect(() => {
@@ -41,7 +41,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
 
     useEffect(() => {
         if (tokensData) {
-            setTokens(tokensData.tokens);
+            setTokens(tokensData?.Token);
         }
     }, [tokensData]);
 
@@ -80,7 +80,7 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
                 <table className="md:w-full max-md:w-[720px] max-md:overflow-x-auto border-separate border-spacing-y-3">
                     <Reorder.Group as="tbody" axis="y" values={tokens}>
                         {tokens && tokens?.map((item) => (
-                            <Item key={item.id} item={item} wethPrice={wethPrice} />
+                            <Item key={item.id} item={item} />
                         ))}
                     </Reorder.Group>
                 </table>
@@ -110,10 +110,11 @@ const ExploreToken = ({ searchResults, sortBy, orderBy, reorderInterval, wethPri
     );
 };
 
-export default ExploreToken;
+export default ExploreTokenList;
 
-export const Item = ({ item, wethPrice }) => {
-    const { id, name, symbol, metaData, bondingCurve } = item;
+export const Item = ({ item }) => {
+    console.log('item', item)
+    const { id, name, symbol, metadata, bondingCurve } = item;
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
     const navigate = useNavigate();
@@ -133,26 +134,22 @@ export const Item = ({ item, wethPrice }) => {
                     <span className="pfont-600 text-sm uppercase text-white">{symbol}</span>
                     <span className="text-sm text-[#cccccc] pfont-400">{name}</span>
                     <span>
-                        <img className="w-5" src={convertIpfsUrl(metaData?.image)} alt="" />
+                        <img className="w-5" src={convertIpfsUrl(metadata?.image)} alt="" />
                     </span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">MC</span>
-                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.marketCap)} BTC 
-                    {/* (~{formatNumber(bondingCurve?.marketCap*wethPrice)} $) */}
+                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.marketCap)} BTC
                     </span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">VOL</span>
-                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.volume)} BTC  
-                   
-                    {/* (~{formatNumber(bondingCurve?.volume * wethPrice)} $) */}
+                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.volume)} BTC
                     </span>
-                    {/* <span className='text-white '><FaCircleInfo  /></span> */}
                 </div>
             </td>
             <td className="px-4 py-4">

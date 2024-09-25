@@ -242,7 +242,7 @@ const Token = () => {
             "symbol": token?.symbol,
             "decimals": 18,
             "chainId": 8454,
-            "logoURI": convertIpfsUrl(token?.metaData?.image)
+            "logoURI": convertIpfsUrl(token?.metadata?.image)
         }
     ];
 
@@ -259,13 +259,13 @@ const Token = () => {
                             <div className='bg-[#222227] px-3 py-2'>
                                 <div className='flex items-center justify-between'>
                                     <div className='flex items-center gap-x-2'>
-                                        <img className='w-7' src={token?.metaData?.image} alt="" />
+                                        <img className='w-7' src={token?.metadata?.image} alt="" />
                                         <p className='space-500 text-[17px] text-white'>{token?.name}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className='relative overflow-hidden '>
-                                <img className='hover:scale-105 w-full  transition-all duration-300' src={convertIpfsUrl(token?.metaData?.image)} alt="" />
+                                <img className='hover:scale-105 w-full  transition-all duration-300' src={convertIpfsUrl(token?.metadata?.image)} alt="" />
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex justify-center mt-5 gap-x-2'>
@@ -278,8 +278,8 @@ const Token = () => {
                                         <div className=''>
                                             <div className='flex flex-wrap justify-center mt-4 gap-3'>
                                                 {
-                                                    token?.metaData?.website && (
-                                                        <a href={token?.metaData?.website} target='_blank'>
+                                                    token?.metadata?.website && (
+                                                        <a href={token?.metadata?.website} target='_blank'>
                                                             <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
                                                                 <img className='w-4' src="/images/icons/svg/web.svg" alt="" />
                                                                 <span className='pfont-600 ml-2 text-sm'>
@@ -290,8 +290,8 @@ const Token = () => {
                                                     )
                                                 }
                                                 {
-                                                    token?.metaData?.twitter && (
-                                                        <a href={token?.metaData?.twitter} target='_blank'>
+                                                    token?.metadata?.twitter && (
+                                                        <a href={token?.metadata?.twitter} target='_blank'>
                                                             <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
                                                                 <BsTwitterX className='text-sm' />
                                                                 <span className='pfont-600 ml-2 text-sm'>
@@ -302,8 +302,8 @@ const Token = () => {
                                                     )
                                                 }
                                                 {
-                                                    token?.metaData?.telegram && (
-                                                        <a href={token?.metaData?.telegram} target='_blank'>
+                                                    token?.metadata?.telegram && (
+                                                        <a href={token?.metadata?.telegram} target='_blank'>
                                                             <button className='bg-[#4b4b50]  rounded  flex justify-center items-center px-4 py-2  text-[#FFFFFFFB]'>
                                                                 <FaTelegramPlane className='' />
                                                                 <span className='pfont-600 ml-2 text-sm'>
@@ -317,7 +317,7 @@ const Token = () => {
                                             </div>
                                             <div className='mt-4 px-3'>
                                                 <p className='text-white pfont-400 text-center'>
-                                                    {token?.metaData?.description ? <><br /> {token?.metaData?.description}</> : null}
+                                                    {token?.metadata?.description ? <><br /> {token?.metadata?.description}</> : null}
                                                 </p>
                                             </div>
                                             <div className='flex mt-4 justify-center'>

@@ -88,7 +88,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
             const symbols = data.bondingCurves.map((curve) => ({
                 symbol: curve.token.symbol,
                 full_name: curve.token.name,
-                description: curve.token.metaData?.description,
+                description: curve.token.metadata?.description,
                 exchange: 'Ape City',
                 has_intraday: true,
                 type: 'Coin',
@@ -110,7 +110,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
             const symbolInfo = {
                 symbol: token.symbol,
                 name: token.name,
-                // description: token.metaData?.description,
+                // description: token.metadata?.description,
                 type: 'Coin',
                 session: '24x7',
                 timezone: 'Etc/UTC',
