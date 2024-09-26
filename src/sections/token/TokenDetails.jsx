@@ -6,8 +6,9 @@ import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
 import { formatNumber } from '../../utils/formats';
 import { WETH_ADDRESS } from '../../contracts/constants';
+import { chainNativeExplorer } from '../../utils/native';
 
-const TokenDetails = ({ token, trades, bondingCurve }) => {
+const TokenDetails = ({ token, trades, bondingCurve, nativeCurrency }) => {
     const [tabIndex1, setTabIndex1] = useState(0);
     const [tradeStats, setTradeStats] = useState({
         txns: 0,
@@ -93,7 +94,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                             </div>
                             <div>
                                 <p className="pfont-500 text-[#797979] uppercase text-xs">volume</p>
-                                <p className="pfont-500 text-white text-sm">{formatNumber(tradeStats.volumeEth)} BTC</p>
+                                <p className="pfont-500 text-white text-sm">{formatNumber(tradeStats.volumeEth)} {nativeCurrency.symbol}</p>
                             </div>
                             <div>
                                 <p className="pfont-500 text-[#797979] uppercase text-xs">unique traders</p>
@@ -129,13 +130,13 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                         <div>
                                             <p className="pfont-500 text-[#797979] uppercase text-xs">buy vol</p>
                                             <p className="pfont-400 text-white text-sm">
-                                                {formatNumber(tradeStats.buyVolEth)} BTC
+                                                {formatNumber(tradeStats.buyVolEth)} {nativeCurrency.symbol}
                                             </p>
                                         </div>
                                         <div>
                                             <p className="pfont-500 text-[#797979] uppercase text-xs">sell vol</p>
                                             <p className="pfont-400 text-white text-sm">
-                                                {formatNumber(tradeStats.sellVolEth)} BTC
+                                                {formatNumber(tradeStats.sellVolEth)} {nativeCurrency.symbol}
                                             </p>
                                         </div>
                                     </div>
@@ -209,7 +210,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                                 {shortenText(bondingCurve?.uniswapLiquidityPool, 10)}
                                             </span>
                                         </div>
-                                        <a href={`https://testnet-scan.merlinchain.io/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <a href={`${expl}/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
                                             <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                 <span className="uppercase pfont-400 text-sm">LPs</span>
                                                 <span>
@@ -217,7 +218,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                                 </span>
                                             </div>
                                         </a>
-                                        <a href={`https://testnet-scan.merlinchain.io/address/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <a href={`${chainNativeExplorer(nativeCurrency.chainId)}/address/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
                                             <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                 <span className="uppercase pfont-400 text-sm">EXP</span>
                                                 <span>
@@ -234,7 +235,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
                                         <p className="text-sm text-white pfont-400">BC created</p>
                                         <p className="text-sm text-white pfont-500">
-                                            {new Date(bondingCurve?.createdAtTimestamp * 1000).toLocaleString()}
+                                            {new Date(bondingCurve?.timestamp * 1000).toLocaleString()}
                                         </p>
                                     </div>
                                     <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
@@ -243,7 +244,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                             <div
                                                 onClick={() => {
                                                     enqueueSnackbar('copied', { autoHideDuration: 1000 });
-                                                    copy(bondingCurve?.id);
+                                                    copy(bondingCurve?.address);
                                                 }}
                                                 className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
                                             >
@@ -251,11 +252,11 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                                     <FaRegCopy className="text-sm" />
                                                 </span>
                                                 <span className="pfont-400 text-sm">
-                                                    {shortenText(bondingCurve?.id, 10)}
+                                                    {shortenText(bondingCurve?.address, 10)}
                                                 </span>
                                             </div>
 
-                                            <a href={`https://testnet-scan.merlinchain.io/address/${bondingCurve?.id}`} target='_blank'>
+                                            <a href={`${chainNativeExplorer(nativeCurrency.chainId)}/address/${bondingCurve?.address}`} target='_blank'>
                                                 <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                     <span className="uppercase pfont-400 text-sm">exp</span>
                                                     <span>
@@ -275,16 +276,16 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                             <div
                                 onClick={() => {
                                     enqueueSnackbar('copied', { autoHideDuration: 1000 });
-                                    copy(token?.id);
+                                    copy(token?.address);
                                 }}
                                 className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
                             >
                                 <span>
                                     <FaRegCopy className="text-sm" />
                                 </span>
-                                <span className="pfont-400 text-sm">{shortenText(token?.id, 10)}</span>
+                                <span className="pfont-400 text-sm">{shortenText(token?.address, 10)}</span>
                             </div>
-                            <a href={`https://testnet-scan.merlinchain.io/token/tokenholderchart/${token?.id}`} target='_blank'>
+                            <a href={`${chainNativeExplorer(nativeCurrency.chainId)}/token/tokenholderchart/${token?.address}`} target='_blank'>
                                 <div className="flex gap-x-2 text-[#cccccc] items-center">
                                     <span className="uppercase pfont-400 text-sm">HLD</span>
                                     <span>
@@ -293,7 +294,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
                                 </div>
                             </a>
 
-                            <a href={`https://testnet-scan.merlinchain.io/token/${token?.id}`} target='_blank'>
+                            <a href={`${chainNativeExplorer(nativeCurrency.chainId)}/token/${token?.address}`} target='_blank'>
                                 <div className="flex gap-x-2 text-[#cccccc] items-center">
                                     <span className="uppercase pfont-400 text-sm">EXP</span>
                                     <span>
@@ -304,42 +305,6 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
 
                         </div>
                     </div>
-                    {/* <div className="flex border-b pt-3 pb-2 border-b-[#343439] justify-between items-center">
-                        <p className="text-sm text-white pfont-400">BTC</p>
-                        <div className="flex items-center gap-x-3">
-                            <div
-                                onClick={() => {
-                                    enqueueSnackbar('copied', { autoHideDuration: 1000 });
-                                    copy(WETH_ADDRESS);
-                                }}
-                                className="flex gap-x-1 px-2 py-1 cursor-pointer rounded-md text-[#ffffffeb] hover:bg-[#ffffff29] bg-[#ffffff14] items-center"
-                            >
-                                <span>
-                                    <FaRegCopy className="text-sm" />
-                                </span>
-                                <span className="pfont-400 text-sm">
-                                    {shortenText(WETH_ADDRESS, 10)}
-                                </span>
-                            </div>
-                            <a href={`https://basescan.org/token/tokenholderchart/${WETH_ADDRESS}`} target='_blank'>
-                                <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                    <span className="uppercase pfont-400 text-sm">HLD</span>
-                                    <span>
-                                        <FaExternalLinkAlt className="text-xs" />
-                                    </span>
-                                </div>
-                            </a>
-                            <a href={`https://basescan.org/token/${WETH_ADDRESS}`} target='_blank'>
-                                <div className="flex gap-x-2 text-[#cccccc] items-center">
-                                    <span className="uppercase pfont-400 text-sm">EXP</span>
-                                    <span>
-                                        <FaExternalLinkAlt className="text-xs" />
-                                    </span>
-                                </div>
-                            </a>
-
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </div>

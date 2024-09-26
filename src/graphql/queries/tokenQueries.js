@@ -64,6 +64,7 @@ export const TOKEN_QUERY = gql`
       }
       bondingCurve {
         id
+        address
         timestamp
       }
     }

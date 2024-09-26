@@ -19,6 +19,7 @@ import SmallNumberDisplay from '../components/utils/SmallNumberDisplay';
 import { generateTokenId } from '../utils/generatePrimaryKeys';
 import { BONDING_CURVE_QUERY, GET_BONDING_CURVE_TRADES_QUERY } from '../graphql/queries/bondingCurveQueries';
 import { nativeCurrencyDetails } from '../utils/native';
+import TokenDetails from '../sections/token/TokenDetails';
 
 const Token = () => {
     const navigate = useNavigate();
@@ -337,9 +338,8 @@ const Token = () => {
                                     <>
                                         <div style={{ height: 'calc(100vh - 200px)' }}>
                                             <TVChartContainer
-                                                symbol={token?.symbol}
-                                                tokenAddress={tokenAddress}
-                                                bondingCurveAddress={bondingCurve?.id}
+                                                token={token}
+                                                // bondingCurve={bondingCurve}
                                                 width={'100%'}
                                                 height={'80%'}
                                             />
@@ -518,9 +518,9 @@ const Token = () => {
                                         </div>
                                     )
                                 } */}
-                                {/* {
-                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve} />
-                                } */}
+                                {
+                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency}/>
+                                }
                             </div>
                         </div>
                     </div>

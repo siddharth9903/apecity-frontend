@@ -12,13 +12,15 @@ function getLanguageFromURL() {
 export const TVChartContainer = (props) => {
 	const chartContainerRef = useRef();
 
+    const {token} = props
+
 	const defaultProps = {
-		symbol: props?.symbol,
+		symbol: token?.symbol,
 		interval: '1',
 		has_intraday: true,
 		libraryPath: '/charting_library/',
 		visible_plots_set:true,
-		datafeed: createDataFeed(props?.symbol, props?.tokenAddress, props?.bondingCurveAddress),
+		datafeed: createDataFeed(token),
 		theme: 'Dark',
 		fullscreen: false,
 		height: props.height, // Add the height prop

@@ -34,7 +34,6 @@ export const GET_BONDING_CURVE_TRADES_QUERY = gql`
     Trade(
         where: {bondingCurve: {id: {_eq: $bondingCurveId}}}
         order_by: {timestamp: desc}
-        
     ){
       id
       transaction {
