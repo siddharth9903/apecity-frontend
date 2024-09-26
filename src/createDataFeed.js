@@ -49,7 +49,7 @@ function processNewTradesToBar(newTrades, resolution, existingTrades) {
         const tradeTime = parseFloat(trade.timestamp * 1000);
         const tradeOpenPrice = parseFloat(trade.openPrice);
         const tradeClosePrice = parseFloat(trade.closePrice);
-        const tradeType = trade.type;
+        const tradeType = trade.tradeType;
 
         if (!updatedBar || tradeTime >= updatedBar.time + getBarPeriod(resolution)) {
             // Start a new bar
@@ -178,7 +178,7 @@ function createDataFeed(_symbol, _tokenAddress, _bondingCurveAddress) {
                     const tradeTime = parseFloat(trade.timestamp * 1000);
                     const tradeOpenPrice = parseFloat(trade.openPrice);
                     const tradeClosePrice = parseFloat(trade.closePrice);
-                    const tradeType = trade.type;
+                    const tradeType = trade.tradeType;
 
                     if (!currentBar || tradeTime >= currentBar.time + getBarPeriod(resolution)) {
                         // Start a new bar

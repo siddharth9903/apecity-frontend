@@ -1,48 +1,29 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { BsChatSquare, BsThreeDotsVertical, BsTwitterX, CgLayoutGrid, CgMenuRightAlt, FaChevronRight, FaExternalLinkAlt, FaFire, FaFireAlt, FaInfoCircle, FaRegCopy, FaSearch, FaSketch, FaTelegramPlane, FiChevronDown, RxCross2 } from './../assets/icons/vander';
 import Transactions from '../sections/token/Transactions';
-import { shortenText, timestampToDate } from '../utils/helper';
 import { Tooltip } from 'react-tooltip';
-import Holders from '../sections/token/Holders';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
-import { FreeMode } from 'swiper/modules';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
-import Tokens from '../sections/token/Tokens';
-import { FaCircleArrowLeft, FaMedal } from "react-icons/fa6";
-import { useForm, useWatch } from 'react-hook-form';
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { enqueueSnackbar } from 'notistack';
-import copy from 'copy-to-clipboard';
 import { FaChartSimple } from "react-icons/fa6";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useSubscription } from '@apollo/client';
-import { BONDING_CURVE_QUERY, BONDING_CURVE_SUBSCRIPTION, TOKEN_QUERY, TOKEN_TRADES_QUERY } from '../graphql/queries/tokenQueries';
-import TokenDetails from '../sections/token/TokenDetails';
-import TradeComponent from '../sections/token/TradeComponent';
-import { convertIpfsUrl, formatNumber } from '../utils/formats';
-import { createChart } from 'lightweight-charts';
+import { TOKEN_QUERY } from '../graphql/queries/tokenQueries';
+import { createIpfsUrlFromContentHash, formatNumber } from '../utils/formats';
 import { MdOutlineShowChart } from "react-icons/md";
 import { TVChartContainer } from '../components/TVChartContainer';
-import { SwapWidget, darkTheme } from '@uniswap/widgets'
 import '@uniswap/widgets/fonts.css'
-import { useAccount, useReadContract } from 'wagmi'
-import { Web3Provider } from '@ethersproject/providers'
-import { UNISWAP_ROUTER_ADDRESS, USDC_ADDRESS, WETH_ADDRESS } from '../contracts/constants';
-import { abi as UNISWAP_ROUTER_ABI } from '../contracts/UniswapRouter02';
-import { parseEther } from 'viem';
-import { GET_BONDING_CURVE_TRADES_SUBSCRIPTION } from '../graphql/queries/chartQueries';
 import SmallNumberDisplay from '../components/utils/SmallNumberDisplay';
-import axios from 'axios';
-import './CommentsSection.css';
+import { generateTokenId } from '../utils/generatePrimaryKeys';
+import { BONDING_CURVE_QUERY, GET_BONDING_CURVE_TRADES_QUERY } from '../graphql/queries/bondingCurveQueries';
+import { nativeCurrencyDetails } from '../utils/native';
 
 const Token = () => {
     const navigate = useNavigate();
-    let { tokenAddress } = useParams();
+    let { chainId, tokenAddress } = useParams();
+    const nativeCurrency = nativeCurrencyDetails(chainId);
     const chartContainerRef = useRef(null);
 
     const [tabIndex, setTabIndex] = useState(0);
@@ -63,108 +44,8 @@ const Token = () => {
     const [token, setToken] = useState(null);
     const [bondingCurve, setBondingCurve] = useState(null);
     const [trades, setTrades] = useState(null);
-    const [comments, setComments] = useState([]); 
+    const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
-    const { address, isConnected } = useAccount();
-    const [provider, setProvider] = useState();
-    const { connector } = useAccount();
-
-    const [wethPriceIntoUSD, setWethPriceIntoUSD] = useState(0);
-
-    const { data: wethPrice, isLoading: isWethPriceLoading } = useReadContract({
-        address: UNISWAP_ROUTER_ADDRESS,
-        abi: UNISWAP_ROUTER_ABI,
-        functionName: 'getAmountsOut',
-        args: [
-            parseEther('1').toString(), // 1 WETH in Wei
-            [WETH_ADDRESS, USDC_ADDRESS] // Path from WETH to USDC
-        ],
-        watch: true
-    });
-
-    useEffect(() => {
-        if (wethPrice) {
-            const formattedPrice = wethPrice ? wethPrice[1].toString() / 1e6 : null;
-            setWethPriceIntoUSD(formattedPrice);
-        }
-    }, [wethPrice]);
-
-   const fetchComments = async () => {
-        try {
-            const response = await axios.get(`http://localhost:3000/token/${tokenAddress}/comments`);
-            if (Array.isArray(response.data)) {
-                setComments(response.data);
-            } else {
-                console.error("Invalid response format:", response.data);
-            }
-        } catch (error) {
-            console.error("Error fetching comments:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchComments(); 
-        const intervalId = setInterval(fetchComments, 5000); 
-        return () => clearInterval(intervalId); 
-    }, [tokenAddress]);
-
-
-    const handleCommentSubmit = async (e) => {
-        e.preventDefault();
-        if (!isConnected) {
-            enqueueSnackbar('Please connect your wallet to submit a comment', { variant: 'warning' });
-            return;
-        }
-
-        try {
-            const response = await axios.post(`http://localhost:3000/token/${tokenAddress}/comments`, {
-                userId: address,
-                message: newComment,
-            });
-            const newCommentData = {
-                ...response.data,
-                user: { id: address }, // Add user information
-                createdAt: new Date().toISOString(), // Add createdAt timestamp
-                likes: [], // Add empty likes array if not included in the response
-            };
-            setComments([...comments, newCommentData]);
-            setNewComment('');
-        } catch (error) {
-            if (error.response) {
-                console.error("Error submitting comment:", error.response.data.error);
-            } else {
-                console.error("Error submitting comment:", error.message);
-            }
-        }
-    };
-
-      const handleLike = async (commentId) => {
-        if (!isConnected) {
-            enqueueSnackbar('Please connect your wallet to like a comment', { variant: 'warning' });
-            return;
-        }
-
-        try {
-            const response = await axios.post(`http://localhost:3000/comments/${commentId}/like`, {
-                userId: address,
-            });
-
-            setComments((prevComments) =>
-                prevComments.map((comment) =>
-                    comment.id === commentId
-                        ? { ...comment, likes: [...comment.likes, response.data] }
-                        : comment
-                )
-            );
-        } catch (error) {
-            if (error.response) {
-                console.error("Error liking comment:", error.response.data.error);
-            } else {
-                console.error("Error liking comment:", error.message);
-            }
-        }
-    };
-
 
     useEffect(() => {
         window.Browser = {
@@ -175,55 +56,56 @@ const Token = () => {
     const [tradesPage, setTradesPage] = useState(1);
     const tradesPageSize = 10;
 
+    const handleBondingCurveFetchCompleted = useCallback((data) => {
+        if (data?.BondingCurve_by_pk) {
+            setBondingCurve(data.BondingCurve_by_pk);
+        }
+    }, []);
+
+    const handleTradesFetchCompleted = useCallback((data) => {
+        if (data?.Trade) {
+            setTrades(data.Trade);
+        }
+    }, []);
+
     const { data: tokenData, loading: tokenLoading, error: tokenError } = useQuery(TOKEN_QUERY, {
-        variables: { id: tokenAddress },
+        variables: { id: generateTokenId(tokenAddress, chainId) },
         onCompleted: (data) => {
-            if (data?.token) {
-                setToken(data?.token);
+            if (data?.Token_by_pk) {
+                setToken(data?.Token_by_pk);
             }
         },
     });
 
-    const { data: bondingCurveData, loading: bondingCurveLoading, error: bondingCurveError } = useSubscription(
-        BONDING_CURVE_SUBSCRIPTION,
+    const { data: bondingCurveData, loading: bondingCurveLoading, error: bondingCurveError } = useQuery(
+        BONDING_CURVE_QUERY,
         {
             skip: !token?.bondingCurve?.id,
             variables: { id: token?.bondingCurve?.id },
-        },
+            pollInterval: 3000,
+            onCompleted: handleBondingCurveFetchCompleted,
+        }
     );
 
-    const { data: tradesData, loading: tradesLoading, error: tradesError } = useSubscription(
-        GET_BONDING_CURVE_TRADES_SUBSCRIPTION,
+    const { loading: tradesLoading, error: tradesError } = useQuery(
+        GET_BONDING_CURVE_TRADES_QUERY,
         {
             skip: !token?.bondingCurve?.id,
             variables: { bondingCurveId: token?.bondingCurve?.id },
+            pollInterval: 3000,
+            onCompleted: handleTradesFetchCompleted,
+            onError: (err) => {
+                console.log('err', err)
+            }
         }
     );
-
-    useEffect(() => {
-        if (bondingCurveData?.bondingCurveUpdated) {
-            setBondingCurve(bondingCurveData.bondingCurveUpdated);
-        }
-    }, [bondingCurveData]);
-
-    useEffect(() => {
-        if (tradesData?.trades) {
-            setTrades(tradesData.trades);
-        }
-    }, [tradesData]);
 
     const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100);
     const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve;
 
     const targetDivRef = useRef(null);
 
-    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({
-    })
 
-    const value = useWatch({
-        name: 'value',
-        control
-    });
     const handleClick = () => {
         if (targetDivRef.current) {
             targetDivRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -231,20 +113,6 @@ const Token = () => {
             console.error("Target div with ref 'targetDivRef' not found.");
         }
     };
-    const price = useMemo(() => {
-        return value == undefined || value == null || value == '' ? null : `${parseFloat(value) * 307636.863473} BTC`;
-    }, [value])
-
-    const outputTokenList = [
-        {
-            "name": token?.name,
-            "address": token?.id,
-            "symbol": token?.symbol,
-            "decimals": 18,
-            "chainId": 8454,
-            "logoURI": convertIpfsUrl(token?.metadata?.image)
-        }
-    ];
 
     if (tokenLoading || isLoading) {
         return <div>Loading...</div>;
@@ -265,7 +133,7 @@ const Token = () => {
                                 </div>
                             </div>
                             <div className='relative overflow-hidden '>
-                                <img className='hover:scale-105 w-full  transition-all duration-300' src={convertIpfsUrl(token?.metadata?.image)} alt="" />
+                                <img className='hover:scale-105 w-full  transition-all duration-300' src={createIpfsUrlFromContentHash(token?.metadata?.image)} alt="" />
                             </div>
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 <div className='flex justify-center mt-5 gap-x-2'>
@@ -492,8 +360,8 @@ const Token = () => {
                         </div>
                         <div className='w-full  flex-1'>
                             <div>
-                                 
-                                 <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+
+                                <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                                     <div className='bg-[#17171c]  px-2  flex items-center'>
                                         <TabList className='flex gap-x-4 items-center'>
                                             <Tab className='focus:border-none focus:outline-none'>
@@ -511,10 +379,9 @@ const Token = () => {
                                         </TabList>
                                     </div>
                                     <TabPanel>
-                                        <Transactions trades={trades} tokenName={token?.name} />
-                                        
+                                        <Transactions trades={trades} tokenName={token?.name} nativeCurrency={nativeCurrency} />
                                     </TabPanel>
-                                    <TabPanel>
+                                    {/* <TabPanel>
                                         <div className='comments-section' style = {{padding: '1.5vw', overflowY: 'scroll', maxHeight: '50%'}}>
                                             {comments.length > 0 ? (
                                                 comments.map(comment => (
@@ -546,8 +413,8 @@ const Token = () => {
                                                 <button type='submit' className='bg-[#475dc0] text-white px-4 py-2 mt-2 rounded'>Submit</button>
                                             </form>
                                         </div>
-                                    </TabPanel>
-                                    <TabPanel>
+                                    </TabPanel> */}
+                                    {/* <TabPanel>
                                         <div className='comments-section' style = {{padding: '1.5vw', overflowY: 'scroll', maxHeight: '50%'}}>
                                             {comments.length > 0 ? (
                                                 comments.map(comment => (
@@ -579,7 +446,7 @@ const Token = () => {
                                                 <button type='submit' className='bg-[#475dc0] text-white px-4 py-2 mt-2 rounded'>Submit</button>
                                             </form>
                                         </div>
-                                    </TabPanel>
+                                    </TabPanel> */}
                                 </Tabs>
                             </div>
                         </div>
@@ -603,12 +470,12 @@ const Token = () => {
                                 {
                                     bondingCurve?.active && (
                                         <div className='flex mt-3 gap-x-2'>
-                                            <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
+                                            {/* <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price usd</p>
                                                 <p className='text-white text-sm text-center pfont-600'>
                                                     $<SmallNumberDisplay value={formatNumber(bondingCurve?.currentPrice * wethPriceIntoUSD)} />
                                                 </p>
-                                            </div>
+                                            </div> */}
                                             <div className='flex-1 py-2 rounded border border-[#5e5e6b]'>
                                                 <p className='uppercase  text-center text-[#797979] pfont-400 text-sm'>price</p>
                                                 <p className='text-white text-sm text-center pfont-600'>{bondingCurve?.currentPrice ?
@@ -616,7 +483,7 @@ const Token = () => {
                                                         <SmallNumberDisplay value={bondingCurve.currentPrice} />
                                                     )
                                                     :
-                                                    null} BTC</p>
+                                                    null} {nativeCurrency.symbol}</p>
                                             </div>
                                         </div>
                                     )}
@@ -633,7 +500,7 @@ const Token = () => {
                                             </a>
                                             <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
                                                 <div className='w-[330px]'>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches 4.2 BTC (~{formatNumber(4.2 * wethPriceIntoUSD)})$ all the liquidity from the bonding curve will be deposited into Uniswap and burned. progression increases as the price goes up.</p>
+                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches 4.2 {nativeCurrency.symbol} all the liquidity from the bonding curve will be deposited into Uniswap and burned. progression increases as the price goes up.</p>
                                                     <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve.</p>
                                                 </div>
                                             </Tooltip>
@@ -641,7 +508,7 @@ const Token = () => {
                                     </div>
                                 </div>
 
-                                {bondingCurve?.active ?
+                                {/* {bondingCurve?.active ?
                                     (
                                         token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
                                     ) :
@@ -650,10 +517,10 @@ const Token = () => {
                                            
                                         </div>
                                     )
-                                }
-                                {
+                                } */}
+                                {/* {
                                     token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve} />
-                                }
+                                } */}
                             </div>
                         </div>
                     </div>

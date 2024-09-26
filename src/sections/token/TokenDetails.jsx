@@ -38,7 +38,7 @@ const TokenDetails = ({ token, trades, bondingCurve }) => {
             trades.forEach((trade) => {
                 stats.makers.add(trade.user.id);
 
-                if (trade.type === 'BUY') {
+                if (trade.tradeType === 'BUY') {
                     stats.buys += 1;
                     stats.buyVolEth += parseFloat(trade.inAmount);
                     stats.buyers.add(trade.user.id);

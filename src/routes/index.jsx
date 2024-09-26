@@ -16,7 +16,7 @@ const Router = () => {
               element:<Explore />
             },
             {
-              path:'token/:tokenAddress',
+              path:'token/:chainId/:tokenAddress',
               element:<Token />
             },
             {

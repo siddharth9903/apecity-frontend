@@ -1,5 +1,4 @@
 import { gql } from '@apollo/client';
-import { deployedContractAddress as apeFactoryAddress } from '../../contracts/ApeFactory';
 
 export const TOKENS_QUERY = gql`
   query GetTokens(
@@ -13,7 +12,9 @@ export const TOKENS_QUERY = gql`
         order_by: $orderBy
     ){
         id
+        chainId
         name
+        address
         symbol
         metadata {
           id
@@ -45,9 +46,10 @@ export const TOTAL_TOKENS_QUERY = gql`
 `;
 
 export const TOKEN_QUERY = gql`
-  query GetToken($id: ID!) {
-    token(id: $id) {
+  query GetToken($id: String!) {
+    Token_by_pk(id: $id) {
       id
+      address
       name
       symbol
       decimals
@@ -62,82 +64,30 @@ export const TOKEN_QUERY = gql`
       }
       bondingCurve {
         id
-        createdAtTimestamp
+        timestamp
       }
     }
   }
 `;
-
-export const BONDING_CURVE_QUERY = gql`
-  query GetBondingCurve($id: ID!) {
-      bondingCurve(id: $id) {
-        id
-        reserveRatio
-        poolBalance
-        circulatingSupply
-        active
-        currentPrice
-        marketCap
-        ethAmountToCompleteCurve
-        tokenAmountToCompleteCurve
-        totalEthAmountToCompleteCurve
-        totalTokenAmountToCompleteCurve
-        uniswapRouter
-        uniswapLiquidityPool
-        lpCreationTimestamp
-        txCount
-        createdAtTimestamp
-        createdAtBlockNumber
-      }
-  }
-`;
-
-export const TOKEN_TRADES_QUERY = gql`
-  query GetTokenTrades($bondingCurveId: ID!, $first: Int!, $skip: Int!) {
-    trades(
-      where: { bondingCurve: $bondingCurveId }
-      orderBy: timestamp
-      orderDirection: desc
-      first: $first
-      skip: $skip
-    ) {
-      id
-      transaction {
-        id
-      }
-      timestamp
-      type
-      inAmount
-      outAmount
-      avgPrice
-      openPrice
-      closePrice
-      user {
-        id
-      }
-    }
-  }
-`;
-export const BONDING_CURVE_SUBSCRIPTION = gql`
-  subscription BondingCurveUpdated($id: ID!) {
-    bondingCurveUpdated: bondingCurve(id: $id) {
-      id
-      reserveRatio
-      poolBalance
-      circulatingSupply
-      active
-      currentPrice
-      marketCap
-      ethAmountToCompleteCurve
-      tokenAmountToCompleteCurve
-      totalEthAmountToCompleteCurve
-      totalTokenAmountToCompleteCurve
-      uniswapRouter
-      uniswapLiquidityPool
-      lpCreationTimestamp
-      txCount
-      createdAtTimestamp
-      createdAtBlockNumber
-    }
-  }
-`;
+//   subscription BondingCurveUpdated($id: ID!) {
+//     bondingCurveUpdated: bondingCurve(id: $id) {
+//       id
+//       reserveRatio
+//       poolBalance
+//       circulatingSupply
+//       active
+//       currentPrice
+//       marketCap
+//       ethAmountToCompleteCurve
+//       tokenAmountToCompleteCurve
+//       totalEthAmountToCompleteCurve
+//       totalTokenAmountToCompleteCurve
+//       uniswapRouter
+//       uniswapLiquidityPool
+//       lpCreationTimestamp
+//       txCount
+//       createdAtTimestamp
+//       createdAtBlockNumber
+//     }
+//   }
+// `;

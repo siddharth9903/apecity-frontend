@@ -113,8 +113,7 @@ const ExploreTokenList = ({ searchResults, sortBy, orderBy, reorderInterval }) =
 export default ExploreTokenList;
 
 export const Item = ({ item }) => {
-    console.log('item', item)
-    const { id, name, symbol, metadata, bondingCurve } = item;
+    const { id, chainId, address, name, symbol, metadata, bondingCurve } = item;
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
     const navigate = useNavigate();
@@ -122,7 +121,7 @@ export const Item = ({ item }) => {
     return (
         <Reorder.Item
             as="tr"
-            onClick={() => navigate(`/token/${id}`)}
+            onClick={() => navigate(`/token/${chainId}/${address}`)}
             value={id}
             id={id}
             className="bg-[#28282d] hover:bg-[#39393e] cursor-pointer rounded-md"

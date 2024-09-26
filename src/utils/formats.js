@@ -43,6 +43,11 @@ function convertIpfsUrl(originalUrl) {
     return newUrl;
 }
 
+function createIpfsUrlFromContentHash(contentHash) {
+    // return `${import.meta.env.VITE_IPFS_ENDPOINT}`
+    return import.meta.env.VITE_IPFS_ENDPOINT + contentHash
+}
+
 
 //   function formatSmallNumber(number) {
 //     // Convert to number if it's a string
@@ -106,5 +111,5 @@ function formatSmallNumber(number) {
   }
   
   
-export { formatNumber,formatSmallNumber, convertIpfsUrl };
+export { formatNumber,formatSmallNumber, convertIpfsUrl, createIpfsUrlFromContentHash };
 
