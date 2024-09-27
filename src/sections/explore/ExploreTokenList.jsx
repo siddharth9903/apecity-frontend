@@ -8,6 +8,7 @@ import { useRaisedShadow } from '../../hooks/useRaisedShadow';
 import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQueries';
 import { convertIpfsUrl, formatNumber } from '../../utils/formats';
 import { FaCircleInfo } from "react-icons/fa6";
+import { nativeCurrencyDetails } from '../../utils/native';
 
 
 const ExploreTokenList = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
@@ -114,6 +115,7 @@ export default ExploreTokenList;
 
 export const Item = ({ item }) => {
     const { id, chainId, address, name, symbol, metadata, bondingCurve } = item;
+    const nativeCurrency = nativeCurrencyDetails(chainId);
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
     const navigate = useNavigate();
@@ -140,14 +142,14 @@ export const Item = ({ item }) => {
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">MC</span>
-                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.marketCap)} BTC
+                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.marketCap)} {nativeCurrency?.symbol}
                     </span>
                 </div>
             </td>
             <td className="px-4 py-4">
                 <div className="flex gap-x-2 items-center">
                     <span className="text-[#808080] text-sm pfont-400">VOL</span>
-                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.volume)} BTC
+                    <span className="pfont-600 text-sm text-[#48bb78]">{formatNumber(bondingCurve?.volume)} {nativeCurrency?.symbol}
                     </span>
                 </div>
             </td>
