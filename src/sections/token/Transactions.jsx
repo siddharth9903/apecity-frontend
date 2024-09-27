@@ -6,8 +6,7 @@ import { formatNumber } from "../../utils/formats";
 import { chainNativeExplorer } from "../../utils/native";
 
 const Transactions = ({ trades, tokenName, nativeCurrency }) => {
-    console.log('tokenName',tokenName)
-    console.log('trades',trades)
+
     return (
         <div className="overflow-x-auto">
             <table className="border-collapse xl:w-full max-xl:w-[900px] max-md:overflow-x-auto">

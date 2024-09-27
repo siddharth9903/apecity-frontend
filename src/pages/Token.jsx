@@ -20,6 +20,7 @@ import { generateTokenId } from '../utils/generatePrimaryKeys';
 import { BONDING_CURVE_QUERY, GET_BONDING_CURVE_TRADES_QUERY } from '../graphql/queries/bondingCurveQueries';
 import { nativeCurrencyDetails } from '../utils/native';
 import TokenDetails from '../sections/token/TokenDetails';
+import TradeComponentUniswapCurve from '../sections/token/TradeComponentUniswapCurve';
 
 const Token = () => {
     const navigate = useNavigate();
@@ -64,6 +65,7 @@ const Token = () => {
     }, []);
 
     const handleTradesFetchCompleted = useCallback((data) => {
+        console.log('trades fetched')
         if (data?.Trade) {
             setTrades(data.Trade);
         }
@@ -78,22 +80,27 @@ const Token = () => {
         },
     });
 
-    const { data: bondingCurveData, loading: bondingCurveLoading, error: bondingCurveError } = useQuery(
+    const { data: bondingCurveData, loading: bondingCurveLoading, error: bondingCurveError, startPolling: startBondingCurvePolling } = useQuery(
         BONDING_CURVE_QUERY,
         {
             skip: !token?.bondingCurve?.id,
             variables: { id: token?.bondingCurve?.id },
-            pollInterval: 3000,
+            // pollInterval: 3000,
+            // fetchPolicy: 'no-cache',
             onCompleted: handleBondingCurveFetchCompleted,
+            onError: (err) => {
+                console.log('err', err)
+            }
         }
     );
 
-    const { loading: tradesLoading, error: tradesError } = useQuery(
+    const { loading: tradesLoading, error: tradesError, startPolling: startTradesPolling } = useQuery(
         GET_BONDING_CURVE_TRADES_QUERY,
         {
             skip: !token?.bondingCurve?.id,
             variables: { bondingCurveId: token?.bondingCurve?.id },
-            pollInterval: 3000,
+            // pollInterval: 3000,
+            // fetchPolicy: 'network-only',
             onCompleted: handleTradesFetchCompleted,
             onError: (err) => {
                 console.log('err', err)
@@ -101,8 +108,18 @@ const Token = () => {
         }
     );
 
-    const bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / bondingCurve?.totalEthAmountToCompleteCurve) * 100);
-    const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve;
+    useEffect(() => {
+        startBondingCurvePolling(3000);
+    }, [startBondingCurvePolling]);
+
+    useEffect(() => {
+        startTradesPolling(3000);
+    }, [startTradesPolling]);
+
+    const bondingCurveProgess = 100 - ((
+        (bondingCurve?.ethAmountToCompleteCurve - bondingCurve?.virtualEthReserve) /
+        (bondingCurve?.totalEthAmountToCompleteCurve - bondingCurve?.virtualEthReserve)) * 100);
+    // const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve;
 
     const targetDivRef = useRef(null);
 
@@ -501,25 +518,26 @@ const Token = () => {
                                             <Tooltip opacity={1} style={{ backgroundColor: '#111116' }} className='z-[10] ' id="bonding_curve">
                                                 <div className='w-[330px]'>
                                                     <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>when the market cap reaches 4.2 {nativeCurrency.symbol} all the liquidity from the bonding curve will be deposited into Uniswap and burned. progression increases as the price goes up.</p>
-                                                    <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve.</p>
+                                                    {/* <p className='pfont-500 mt-3 text-[#8e94a0] text-sm'>there are {remainingSupplyInCurve} tokens still available for sale in the bonding curve.</p> */}
                                                 </div>
                                             </Tooltip>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* {bondingCurve?.active ?
+                                {bondingCurve?.active ?
                                     (
-                                        token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
+                                        // token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
+                                        token && bondingCurve && <TradeComponentUniswapCurve token={token} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency} />
                                     ) :
                                     (
                                         <div className="Uniswap mt-2">
-                                           
+
                                         </div>
                                     )
-                                } */}
+                                }
                                 {
-                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency}/>
+                                    token && trades && <TokenDetails token={token} trades={trades} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency} />
                                 }
                             </div>
                         </div>

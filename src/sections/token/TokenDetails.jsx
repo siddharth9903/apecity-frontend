@@ -210,7 +210,7 @@ const TokenDetails = ({ token, trades, bondingCurve, nativeCurrency }) => {
                                                 {shortenText(bondingCurve?.uniswapLiquidityPool, 10)}
                                             </span>
                                         </div>
-                                        <a href={`${expl}/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
+                                        <a href={`${chainNativeExplorer(nativeCurrency.chainId)}/token/tokenholderchart/${bondingCurve?.uniswapLiquidityPool}`} target='_blank'>
                                             <div className="flex gap-x-2 text-[#cccccc] items-center">
                                                 <span className="uppercase pfont-400 text-sm">LPs</span>
                                                 <span>
