@@ -6,25 +6,20 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import Modal from 'react-responsive-modal';
-import axios from 'axios';
-import { useAccount, useTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useAccount, useChainId, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { useSnackbar } from 'notistack';
 import { abi as apeFactoryABI, deployedContractAddress as apeFactoryContractAddress } from '../contracts/ApeFactory';
-import { convertIpfsUrl, formatNumber } from '../utils/formats';
-import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants } from '../utils/apeFormula';
+// import { abi as pumpFactoryABI, deployedContractAddress as apeFactoryContractAddress } from '../contracts/PumpFactory';
+import { abi as pumpFactoryABI } from '../contracts/PumpFactory';
+import { createIpfsUrlFromContentHash, formatNumber } from '../utils/formats';
 import BigNumber from 'bignumber.js';
 import Decimal from 'decimal.js';
-import InputField from '../sections/token/InputField';
-import QuickSelect from '../sections/token/QuickSelect';
 import ipfsClient from '../ipfs/client';
-import { ethers } from 'ethers';
 import { getAddress, parseEventLogs } from 'viem';
-import { PINATA_API_KEY, PINATA_SECRET_API_KEY } from '../ipfs/pinataClient';
 import LoadingSteps from '../components/LoadingSteps';
-
-const pinataApiKey = PINATA_API_KEY
-const pinataSecretApiKey = PINATA_SECRET_API_KEY
-
+import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants } from '../utils/uniswapHelper';
+import { getFactoryContractAddress } from '../config/contracts';
+import { nativeCurrencyDetails } from '../utils/native';
 
 const Create = () => {
     const [open1, setOpen1] = useState(false);
@@ -38,6 +33,8 @@ const Create = () => {
 
     const [ethTrade, setEthTrade] = useState(true);
     const { enqueueSnackbar } = useSnackbar();
+    const chainId = useChainId()
+    const nativeCurrency = nativeCurrencyDetails(chainId);
 
     useEffect(() => {
         if (ethTrade) {
@@ -109,13 +106,22 @@ const Create = () => {
     const tokenSymbol = watch('symbol');
 
     const purchaseReturn = useMemo(() => {
-        return new BigNumber(calculatePurchaseReturn(initialConstants.circulatingSupply, initialConstants.poolBalance, initialConstants.reserveRatio, buyAmountEth || '0')).toString();
+        const ethInWei = buyAmountEth || '0';
+        return calculatePurchaseReturn(
+            ethInWei,
+            initialConstants.virtualEthReserve,
+            initialConstants.virtualTokenReserve
+        );
     }, [buyAmountEth]);
 
     const estimateEthIn = useMemo(() => {
-        return new BigNumber(estimateEthInForExactTokensOut(initialConstants.circulatingSupply, initialConstants.poolBalance, initialConstants.reserveRatio, buyAmountToken || '0')).toString();
+        const tokensOutWei = buyAmountToken || '0';
+        return estimateEthInForExactTokensOut(
+            tokensOutWei,
+            initialConstants.virtualEthReserve,
+            initialConstants.virtualTokenReserve
+        );
     }, [buyAmountToken]);
-
 
     const {
         data: hash,
@@ -125,7 +131,6 @@ const Create = () => {
         writeContractAsync
     } = useWriteContract()
 
-    // const hash1 = "0x27fc20affe6d667d52408ac11991ea962f328a25d9ed5d3d39b70d1026be8b1e"
     const { data: receiptData, isLoading: isConfirming, isSuccess: isConfirmed } =
         useWaitForTransactionReceipt({
             hash: hash,
@@ -135,7 +140,7 @@ const Create = () => {
         if (isConfirmed) {
             enqueueSnackbar('Transaction successful of Token creation', { variant: 'success' });
             const eventLogs = parseEventLogs({
-                abi: apeFactoryABI,
+                abi: pumpFactoryABI,
                 eventName: 'TokenCreated',
                 logs: receiptData?.logs,
             })
@@ -145,13 +150,12 @@ const Create = () => {
 
                 setTimeout(() => {
                     setProgress(4);
-                    navigate(`/token/${tokenAddress.toLowerCase()}`);
+                    navigate(`token/${chainId}/${tokenAddress.toLowerCase()}`);
                 }, 10000);
-                // navigate(`/token/${tokenAddress.toLowerCase()}?wait=10`)
             }
 
         } else if (error) {
-            console.log('errorrrr',error)
+            console.log('errorrrr', error)
             enqueueSnackbar('Error executing token creation transaction: ' + error.details, { variant: 'error' });
         }
     }, [isConfirmed, error, enqueueSnackbar]);
@@ -258,6 +262,14 @@ const Create = () => {
                 enqueueSnackbar('Please connect your wallet', { variant: 'warning' });
                 return
             }
+
+            const factoryContractAddress = getFactoryContractAddress(chainId)
+            console.log('factoryContractAddress', factoryContractAddress)
+            if (!factoryContractAddress) {
+                enqueueSnackbar('Chain is not supported yet', { variant: 'warning' });
+                return
+            }
+
             onCloseModal();
             const values = getValues()
             setIsLoading(true)
@@ -265,8 +277,7 @@ const Create = () => {
             // Upload image to IPFS
             const imageFile = values.image[0];
             const imageAdded = await ipfsClient.add(imageFile);
-            const imageURI = `https://ipfs.io/ipfs/${imageAdded.path}`;
-            console.log("imageURI",convertIpfsUrl(imageURI))
+            const imageURI = imageAdded.path;
 
             await ipfsClient.pin.add(imageAdded.path);
             // await new Promise(resolve => setTimeout(resolve, 3000));
@@ -282,11 +293,13 @@ const Create = () => {
                 website: values.website,
             };
 
+            console.log('imageURI', createIpfsUrlFromContentHash(imageURI))
+
             // Upload metadata to IPFS
             const metadataAdded = await ipfsClient.add(JSON.stringify(metadata));
-            const tokenURI = `https://ipfs.io/ipfs/${metadataAdded.path}`;
+            const tokenURI = `${metadataAdded.path}`;
 
-            console.log("tokenURI",convertIpfsUrl(tokenURI))
+            console.log('tokenURI', createIpfsUrlFromContentHash(tokenURI))
             // Pin the metadata
             await ipfsClient.pin.add(metadataAdded.path);
 
@@ -295,11 +308,7 @@ const Create = () => {
                 setProgress(1)
             }, 3);
 
-
-
-            // return
             const args = [values.name, values.symbol, tokenURI]
-
 
             let value = 0;
             if (ethTrade) {
@@ -307,10 +316,9 @@ const Create = () => {
             } else {
                 const estimateEthIn = new BigNumber(
                     estimateEthInForExactTokensOut(
-                        initialConstants.circulatingSupply,
-                        initialConstants.poolBalance,
-                        initialConstants.reserveRatio,
-                        values?.buyAmountToken || '0'
+                        values?.buyAmountToken || '0',
+                        initialConstants.virtualEthReserve,
+                        initialConstants.virtualTokenReserve
                     )
                 ).toString();
                 value = estimateEthIn;
@@ -319,27 +327,17 @@ const Create = () => {
             const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
             const adjustedInputAmount = inputAmount.mul(1.01);
 
-
-            console.log('setProgress(2)')
             setTimeout(() => {
                 setProgress(2);
             }, 3);
 
-            console.log('before write contract')
-            console.log({
-                address:  getAddress(apeFactoryContractAddress),
-                functionName: 'createToken',
-                args: args,
-                value: adjustedInputAmount.toFixed(),
-            })
             await writeContractAsync({
-                abi: apeFactoryABI,
-                address: getAddress(apeFactoryContractAddress),
+                abi: pumpFactoryABI,
+                address: getAddress(factoryContractAddress),
                 functionName: 'createToken',
                 args: args,
                 value: adjustedInputAmount.toFixed(),
             });
-            console.log('after write contract')
             setProgress(3);
 
             return
@@ -456,7 +454,7 @@ const Create = () => {
                                         >
                                             Create
                                         </button>
-                                        <p className='text-white mt-3.5 roboto-400'>Cost to deploy: ~0.00002 BTC</p>
+                                        <p className='text-white mt-3.5 roboto-400'>Cost to deploy: ~0.0002 {nativeCurrency.symbol}</p>
                                     </div>
                                 </div>
                             </form>
@@ -484,7 +482,7 @@ const Create = () => {
                                             type="button"
                                             onClick={handleSwitchCurrency}
                                         >
-                                            Switch to {ethTrade ? tokenSymbol : 'BTC'}
+                                            Switch to {ethTrade ? tokenSymbol : nativeCurrency.symbol}
                                         </button>
                                     </div>
                                     <div>
@@ -500,12 +498,12 @@ const Create = () => {
                                                             {...register('buyAmountEth')}
                                                         />
                                                         <div className="flex items-center ml-2 absolute right-2">
-                                                            <span className="text-white pfont-400 mr-2">BTC</span>
+                                                            <span className="text-white pfont-400 mr-2">{nativeCurrency.symbol}</span>
                                                             <img
                                                                 className="w-7 h-7 rounded-full"
                                                                 // src="/images/logo/eth.svg"
                                                                 src="/images/logo/bitcoin.png"
-                                                                alt="BTC"
+                                                                alt={nativeCurrency.symbol}
                                                             />
                                                         </div>
                                                     </div>
@@ -551,7 +549,7 @@ const Create = () => {
                                                                     ) :
                                                                     (
                                                                         <div className='mt-1'>
-                                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) BTC`}
+                                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) ${nativeCurrency.symbol}`}
                                                                         </div>
                                                                     )}
                                                         </p>

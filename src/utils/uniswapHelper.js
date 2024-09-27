@@ -3,6 +3,11 @@ import { formatEther, parseEther } from 'viem';
 const toWei = (value) => parseEther(value);
 const fromWei = (value) => formatEther(value);
 
+export const initialConstants = {
+    virtualEthReserve:"0.84",
+    virtualTokenReserve:"1000000000"
+}
+
 export const calculatePurchaseReturn = (ethIn, ethReserve, tokenReserve) => {
   if (ethIn === '0' || ethReserve === '0' || tokenReserve === '0') return '0';
 

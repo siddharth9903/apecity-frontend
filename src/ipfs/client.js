@@ -1,8 +1,14 @@
 import { create } from 'ipfs-http-client';
-import { getConfig } from '../configs/getConfig';
 
-const client = create({ 
-    url: getConfig().ipfsEndpoint, 
-});
+const projectId = import.meta.env.VITE_INFURA_IPFS_PROJECT_ID;
+const projectSecret = import.meta.env.VITE_INFURA_IPFS_PROJECT_SECRET;
+const authorization = "Basic " + btoa(projectId + ":" + projectSecret);
 
-export default client;
+const ipfsClient = create({
+    url: "https://ipfs.infura.io:5001/api/v0",
+    headers:{
+      authorization
+    }
+  })
+
+export default ipfsClient;
