@@ -1,6 +1,6 @@
 // InputField.js
 import React from 'react';
-import { convertIpfsUrl, createIpfsUrlFromContentHash } from '../../utils/formats';
+import { createIpfsUrlFromContentHash } from '../../utils/formats';
 
 const InputField = ({ register, name, symbol, tokenSymbol, isToken, tokenImage }) => {
     return (

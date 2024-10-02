@@ -5,7 +5,6 @@ import { shortenText } from '../../utils/helper';
 import { enqueueSnackbar } from 'notistack';
 import copy from 'copy-to-clipboard';
 import { formatNumber } from '../../utils/formats';
-import { WETH_ADDRESS } from '../../contracts/constants';
 import { chainNativeExplorer } from '../../utils/native';
 
 const TokenDetails = ({ token, trades, bondingCurve, nativeCurrency }) => {

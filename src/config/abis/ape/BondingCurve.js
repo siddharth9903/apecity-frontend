@@ -1,6 +1,11 @@
-export const abi = [
+const abi = [
     {
         "inputs": [
+            {
+                "internalType": "address",
+                "name": "_tokenDeveloper",
+                "type": "address"
+            },
             {
                 "internalType": "address",
                 "name": "_tokenAddress",
@@ -8,33 +13,43 @@ export const abi = [
             },
             {
                 "internalType": "uint256",
-                "name": "_reserveRatio",
+                "name": "_virtualTokenReserve",
                 "type": "uint256"
             },
             {
                 "internalType": "uint256",
-                "name": "_initialSupply",
+                "name": "_virtualEthReserve",
                 "type": "uint256"
             },
             {
                 "internalType": "uint256",
-                "name": "_initialPoolBalance",
+                "name": "_swapFeePercentage",
                 "type": "uint256"
             },
             {
                 "internalType": "uint256",
-                "name": "_ethAmountToLP",
+                "name": "_ethAmountForLiquidity",
                 "type": "uint256"
             },
             {
                 "internalType": "uint256",
-                "name": "_feeAmountAtCurveComplete",
+                "name": "_ethAmountForLiquidityFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_ethAmountForDevReward",
                 "type": "uint256"
             },
             {
                 "internalType": "address",
                 "name": "_uniswapRouter",
                 "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_reserveRatio",
+                "type": "uint256"
             }
         ],
         "stateMutability": "nonpayable",
@@ -175,12 +190,12 @@ export const abi = [
     },
     {
         "inputs": [],
-        "name": "active",
+        "name": "ETH_AMOUNT_FOR_DEV_REWARD",
         "outputs": [
             {
-                "internalType": "bool",
+                "internalType": "uint256",
                 "name": "",
-                "type": "bool"
+                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -188,7 +203,85 @@ export const abi = [
     },
     {
         "inputs": [],
-        "name": "amountToCompleteBondingCurve",
+        "name": "ETH_AMOUNT_FOR_LIQUIDITY",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "ETH_AMOUNT_FOR_LIQUIDITY_FEE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "TOKEN_DEV",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "TOKEN_DEVELOPER",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "TOTAL_ETH_TO_COMPLETE_CURVE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "VIRTUAL_ETH_RESERVE",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "VIRTUAL_TOKEN_RESERVE",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -335,7 +428,20 @@ export const abi = [
     },
     {
         "inputs": [],
-        "name": "factory",
+        "name": "ethReserve",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "factoryContract",
         "outputs": [
             {
                 "internalType": "contract IApeFactory",
@@ -361,7 +467,39 @@ export const abi = [
     },
     {
         "inputs": [],
-        "name": "poolBalance",
+        "name": "isActive",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "poolBalances",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "remainingEthToCompleteCurve",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -389,7 +527,7 @@ export const abi = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "sellAmount",
+                "name": "tokenAmount",
                 "type": "uint256"
             }
         ],
@@ -406,7 +544,33 @@ export const abi = [
     },
     {
         "inputs": [],
-        "name": "uniswapV2Router",
+        "name": "swapFeePercentage",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "tokenContract",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "uniswapRouter",
         "outputs": [
             {
                 "internalType": "contract IUniswapV2Router02",
@@ -418,3 +582,5 @@ export const abi = [
         "type": "function"
     }
 ]
+
+export default abi 

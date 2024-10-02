@@ -1,4 +1,4 @@
-export const abi = [
+const abi = [
     {
         "inputs": [
             {
@@ -50,6 +50,11 @@ export const abi = [
                 "internalType": "address",
                 "name": "_feeRecipientSetter",
                 "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_standardReserveRatio",
+                "type": "uint256"
             }
         ],
         "stateMutability": "nonpayable",
@@ -76,31 +81,6 @@ export const abi = [
         ],
         "name": "OwnableUnauthorizedAccount",
         "type": "error"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "forLiquidity",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "forLiquidityFee",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "forDevReward",
-                "type": "uint256"
-            }
-        ],
-        "name": "EthAmountsUpdated",
-        "type": "event"
     },
     {
         "anonymous": false,
@@ -148,41 +128,15 @@ export const abi = [
                 "internalType": "address",
                 "name": "bondingCurve",
                 "type": "address"
-            }
-        ],
-        "name": "TokenCreated",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "newSupply",
-                "type": "uint256"
-            }
-        ],
-        "name": "TokenTotalSupplyUpdated",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "tokenReserve",
-                "type": "uint256"
             },
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "ethReserve",
+                "name": "reserveRatio",
                 "type": "uint256"
             }
         ],
-        "name": "VirtualReservesUpdated",
+        "name": "TokenCreated",
         "type": "event"
     },
     {
@@ -280,6 +234,25 @@ export const abi = [
                 "type": "address"
             }
         ],
+        "name": "getReserveRatio",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
         "name": "getTokenBondingCurve",
         "outputs": [
             {
@@ -315,21 +288,41 @@ export const abi = [
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_forLiquidity",
+                "name": "_tokenTotalSupply",
                 "type": "uint256"
             },
             {
                 "internalType": "uint256",
-                "name": "_forLiquidityFee",
+                "name": "_virtualTokenReserve",
                 "type": "uint256"
             },
             {
                 "internalType": "uint256",
-                "name": "_forDevReward",
+                "name": "_virtualEthReserve",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_ethAmountForLiquidity",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_ethAmountForLiquidityFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_ethAmountForDevReward",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_standardReserveRatio",
                 "type": "uint256"
             }
         ],
-        "name": "setEthAmounts",
+        "name": "setBondingCurveVariables",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -363,56 +356,12 @@ export const abi = [
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_newPercentage",
-                "type": "uint256"
-            }
-        ],
-        "name": "setSwapFeePercentage",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_newSupply",
-                "type": "uint256"
-            }
-        ],
-        "name": "setTokenTotalSupply",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
                 "name": "_uniswapV2RouterAddress",
                 "type": "address"
             }
         ],
         "name": "setUniswapRouterAddress",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_tokenReserve",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_ethReserve",
-                "type": "uint256"
-            }
-        ],
-        "name": "setVirtualReserves",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -457,3 +406,5 @@ export const abi = [
         "type": "function"
     }
 ]
+
+export default abi 

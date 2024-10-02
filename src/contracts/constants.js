@@ -1,8 +1,0 @@
-import { getAddress } from "viem";
-
-
-export const WETH_ADDRESS = getAddress('0x4200000000000000000000000000000000000006')
-
-export const USDC_ADDRESS = getAddress('0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913');
-
-export const UNISWAP_ROUTER_ADDRESS = getAddress('0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24');

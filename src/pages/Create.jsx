@@ -8,9 +8,6 @@ import { useForm } from 'react-hook-form';
 import Modal from 'react-responsive-modal';
 import { useAccount, useChainId, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { useSnackbar } from 'notistack';
-import { abi as apeFactoryABI, deployedContractAddress as apeFactoryContractAddress } from '../contracts/ApeFactory';
-// import { abi as pumpFactoryABI, deployedContractAddress as apeFactoryContractAddress } from '../contracts/PumpFactory';
-import { abi as pumpFactoryABI } from '../contracts/PumpFactory';
 import { createIpfsUrlFromContentHash, formatNumber } from '../utils/formats';
 import BigNumber from 'bignumber.js';
 import Decimal from 'decimal.js';
@@ -20,6 +17,8 @@ import LoadingSteps from '../components/LoadingSteps';
 import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants } from '../utils/uniswapHelper';
 import { getFactoryContractAddress } from '../config/contracts';
 import { nativeCurrencyDetails } from '../utils/native';
+import { CONTRACT, CURVE_TYPE } from '../constants';
+import { getContractAbi } from '../config/abis';
 
 const Create = () => {
     const [open1, setOpen1] = useState(false);
@@ -140,7 +139,7 @@ const Create = () => {
         if (isConfirmed) {
             enqueueSnackbar('Transaction successful of Token creation', { variant: 'success' });
             const eventLogs = parseEventLogs({
-                abi: pumpFactoryABI,
+                abi: getContractAbi(CONTRACT.FACTORY, CURVE_TYPE.UNISWAP),
                 eventName: 'TokenCreated',
                 logs: receiptData?.logs,
             })
@@ -160,102 +159,6 @@ const Create = () => {
         }
     }, [isConfirmed, error, enqueueSnackbar]);
 
-    // const executeTokenCreation = async () => {
-    //     try {
-
-    //         onCloseModal();
-    //         const values = getValues()
-
-    //         // Upload image to IPFS
-    //         const imageFile = values.image[0];
-
-    //         const imageFormData = new FormData();
-    //         imageFormData.append('file', imageFile);
-
-    //         const imageUploadResponse = await axios.post(
-    //             'https://api.pinata.cloud/pinning/pinFileToIPFS',
-    //             imageFormData,
-    //             {
-    //                 headers: {
-    //                     'Content-Type': `multipart/form-data; boundary=${imageFormData._boundary}`,
-    //                     pinata_api_key: pinataApiKey,
-    //                     pinata_secret_api_key: pinataSecretApiKey,
-    //                 },
-    //             }
-    //         );
-
-    //         const imgIpfsHash = imageUploadResponse.data.IpfsHash
-    //         const imageURI = `https://ipfs.io/ipfs/${imgIpfsHash}`;
-    //         console.log('imageURI', imageURI)
-    //         // await ipfsClient.pin.add(imgIpfsHash);
-    //         // console.log('also added to local ipfs')
-
-    //         // Create metadata with the image URI
-    //         const metadata = {
-    //             name: values.name,
-    //             description: values.description,
-    //             symbol: values.symbol,
-    //             image: imageURI,
-    //             twitter: values.twitter,
-    //             telegram: values.telegram,
-    //             website: values.website,
-    //         };
-
-    //         console.log('metadata', metadata)
-
-    //         const metadataUploadResponse = await axios.post(
-    //             'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-    //             metadata,
-    //             {
-    //                 headers: {
-    //                     pinata_api_key: pinataApiKey,
-    //                     pinata_secret_api_key: pinataSecretApiKey,
-    //                 },
-    //             }
-    //         );
-
-    //         const metaDataIpfsHash = metadataUploadResponse.data.IpfsHash
-    //         const metadataURI = `https://ipfs.io/ipfs/${metaDataIpfsHash}`;
-    //         console.log('metadataURI', metadataURI)
-    //         // await ipfsClient.pin.add(metaataIpfsHash);
-
-    //         const tokenURI = metadataURI
-
-    //         const args = [values.name, values.symbol, tokenURI]
-
-    //         let value = 0;
-    //         if (ethTrade) {
-    //             value = values?.buyAmountEth;
-    //         } else {
-    //             const estimateEthIn = new BigNumber(
-    //                 estimateEthInForExactTokensOut(
-    //                     initialConstants.circulatingSupply,
-    //                     initialConstants.poolBalance,
-    //                     initialConstants.reserveRatio,
-    //                     values?.buyAmountToken || '0'
-    //                 )
-    //             ).toString();
-    //             value = estimateEthIn;
-    //         }
-
-    //         const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
-    //         const adjustedInputAmount = inputAmount.mul(1.01);
-
-    //         await writeContractAsync({
-    //             abi: apeFactoryABI,
-    //             address: apeFactoryContractAddress,
-    //             functionName: 'createToken',
-    //             args: args,
-    //             value: adjustedInputAmount.toFixed(),
-    //         });
-
-    //         return
-    //     } catch (error) {
-    //         console.error('Error executing transaction:', error);
-    //     }
-    // };
-
-
     const executeTokenCreation = async () => {
         try {
             if (!isConnected) {
@@ -263,8 +166,7 @@ const Create = () => {
                 return
             }
 
-            const factoryContractAddress = getFactoryContractAddress(chainId)
-            console.log('factoryContractAddress', factoryContractAddress)
+            const factoryContractAddress = getFactoryContractAddress(chainId, CURVE_TYPE.UNISWAP)
             if (!factoryContractAddress) {
                 enqueueSnackbar('Chain is not supported yet', { variant: 'warning' });
                 return
@@ -332,7 +234,7 @@ const Create = () => {
             }, 3);
 
             await writeContractAsync({
-                abi: pumpFactoryABI,
+                abi: getContractAbi(CONTRACT.FACTORY, CURVE_TYPE.UNISWAP),
                 address: getAddress(factoryContractAddress),
                 functionName: 'createToken',
                 args: args,

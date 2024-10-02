@@ -1,4 +1,4 @@
-export const abi = [
+const abi = [
     {
         "inputs": [
             {
@@ -347,3 +347,5 @@ export const abi = [
         "type": "function"
     }
 ]
+
+export default abi 

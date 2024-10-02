@@ -1,0 +1,11 @@
+export const CURVE_TYPE = {
+    UNISWAP : 'UNISWAP',
+    APE: 'APE'
+}
+
+export const CONTRACT = {
+    FACTORY: 'FACTORY',
+    BONDING_CURVE: 'BONDING_CURVE',
+    ERC20: 'ERC20',
+    UNISWAP_ROUTER: 'UNISWAP_ROUTER',
+}

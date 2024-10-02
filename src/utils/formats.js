@@ -1,5 +1,3 @@
-import { getConfig } from "../configs/getConfig";
-
 function formatNumber(number) {
     if (number === 0) {
         return '0';
@@ -36,11 +34,6 @@ function formatNumber(number) {
         // Between 1 and 1000
         return sign + absNumber.toFixed(2).replace(/\.?0+$/, '');
     }
-}
-function convertIpfsUrl(originalUrl) {
-    // Replace the beginning of the URL with the new domain
-    const newUrl = originalUrl?.replace('https://ipfs.io', getConfig().ipfsEndpoint);
-    return newUrl;
 }
 
 function createIpfsUrlFromContentHash(contentHash) {
@@ -113,5 +106,5 @@ function formatSmallNumber(number) {
 }
 
 
-export { formatNumber, formatSmallNumber, convertIpfsUrl, createIpfsUrlFromContentHash };
+export { formatNumber, formatSmallNumber, createIpfsUrlFromContentHash };
 

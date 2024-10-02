@@ -6,7 +6,7 @@ import { useQuery } from '@apollo/client';
 import { useMotionValue } from 'framer-motion';
 import { useRaisedShadow } from '../../hooks/useRaisedShadow';
 import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQueries';
-import { convertIpfsUrl, formatNumber } from '../../utils/formats';
+import { createIpfsUrlFromContentHash, formatNumber } from '../../utils/formats';
 import { FaCircleInfo } from "react-icons/fa6";
 import { nativeCurrencyDetails } from '../../utils/native';
 
@@ -135,7 +135,7 @@ export const Item = ({ item }) => {
                     <span className="pfont-600 text-sm uppercase text-white">{symbol}</span>
                     <span className="text-sm text-[#cccccc] pfont-400">{name}</span>
                     <span>
-                        <img className="w-5" src={convertIpfsUrl(metadata?.image)} alt="" />
+                        <img className="w-5" src={createIpfsUrlFromContentHash(metadata?.image)} alt="" />
                     </span>
                 </div>
             </td>

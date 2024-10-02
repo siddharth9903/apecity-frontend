@@ -1,4 +1,4 @@
-export const abi = [
+const abi = [
     {
         "inputs": [
             {
@@ -971,3 +971,5 @@ export const abi = [
         "type": "receive"
     }
 ]
+
+export default abi 

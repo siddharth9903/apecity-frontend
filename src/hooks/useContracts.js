@@ -1,7 +1,16 @@
 // src/hooks/useContracts.js
 import { useNetwork, useContract, useProvider } from 'wagmi'
-import { memeTokenABI, memeTradingABI } from '../config/abis'
 import { contractAddresses } from '../config/contracts'
+
+// src/config/abis.js
+export const memeTokenABI = [
+    // ... ABI for meme token contract
+]
+
+export const memeTradingABI = [
+    // ... ABI for meme trading contract
+]
+
 
 export function useContracts() {
   const { chain } = useNetwork()
