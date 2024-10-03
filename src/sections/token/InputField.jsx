@@ -2,7 +2,7 @@
 import React from 'react';
 import { createIpfsUrlFromContentHash } from '../../utils/formats';
 
-const InputField = ({ register, name, symbol, tokenSymbol, isToken, tokenImage }) => {
+const InputField = ({ register, name, nativeCurrency, tokenSymbol, isToken, tokenImage, chainId }) => {
     return (
         <div className="flex items-center rounded-md relative">
             <input
@@ -13,11 +13,11 @@ const InputField = ({ register, name, symbol, tokenSymbol, isToken, tokenImage }
                 type="number"
             />
             <div className="flex items-center ml-2 absolute right-2">
-                <span className="text-white pfont-400 mr-2">{isToken ? tokenSymbol : symbol}</span>
+                <span className="text-white pfont-400 mr-2">{isToken ? tokenSymbol : nativeCurrency?.symbol}</span>
                 <img
                     className="w-7 h-7 rounded-full"
-                    src={isToken ? createIpfsUrlFromContentHash(tokenImage) : "/images/logo/bitcoin.png"}
-                    alt={isToken ? tokenSymbol : symbol}
+                    src={isToken ? createIpfsUrlFromContentHash(tokenImage) : nativeCurrency?.currencyLogo}
+                    alt={isToken ? tokenSymbol : nativeCurrency?.symbol}
                 />
             </div>
         </div>

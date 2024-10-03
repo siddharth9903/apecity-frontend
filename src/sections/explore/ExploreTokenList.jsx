@@ -9,6 +9,7 @@ import { TOKENS_QUERY, TOTAL_TOKENS_QUERY } from '../../graphql/queries/tokenQue
 import { createIpfsUrlFromContentHash, formatNumber } from '../../utils/formats';
 import { FaCircleInfo } from "react-icons/fa6";
 import { nativeCurrencyDetails } from '../../utils/native';
+import { getChainLogo } from '../../config/chains';
 
 
 const ExploreTokenList = ({ searchResults, sortBy, orderBy, reorderInterval }) => {
@@ -18,7 +19,7 @@ const ExploreTokenList = ({ searchResults, sortBy, orderBy, reorderInterval }) =
     const [totalPages, setTotalPages] = useState(1);
     const navigate = useNavigate();
 
-    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError }  = useQuery(TOTAL_TOKENS_QUERY, {
+    const { data: totalTokensData, loading: totalTokensLoading, error: totalTokensError } = useQuery(TOTAL_TOKENS_QUERY, {
         pollInterval: 1000,
         fetchPolicy: 'no-cache'
     });
@@ -114,7 +115,8 @@ const ExploreTokenList = ({ searchResults, sortBy, orderBy, reorderInterval }) =
 export default ExploreTokenList;
 
 export const Item = ({ item }) => {
-    const { id, chainId, address, name, symbol, metadata, bondingCurve } = item;
+    console.log('item', item)
+    const { id, chainId, curveType, address, name, symbol, metadata, bondingCurve } = item;
     const nativeCurrency = nativeCurrencyDetails(chainId);
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
@@ -129,7 +131,7 @@ export const Item = ({ item }) => {
             className="bg-[#28282d] hover:bg-[#39393e] cursor-pointer rounded-md"
             style={{ boxShadow, y }}
         >
-            <td className="w-[40%] px-4 py-4">
+            <td className="w-[25%] px-4 py-4">
                 <div className="flex items-center gap-x-2">
                     <span className="text-sm text-[#848489] pfont-400">#</span>
                     <span className="pfont-600 text-sm uppercase text-white">{symbol}</span>
@@ -137,6 +139,18 @@ export const Item = ({ item }) => {
                     <span>
                         <img className="w-5" src={createIpfsUrlFromContentHash(metadata?.image)} alt="" />
                     </span>
+                </div>
+            </td>
+            <td className="px-4 py-4">
+                <div className="flex gap-x-2 items-center">
+                    <span className="text-[#808080] uppercase text-sm font-400">chain</span>
+                    <img src={getChainLogo(chainId)} className="h-6 w-6" alt="Ethereum Logo" />
+                </div>
+            </td>
+            <td className="px-4 py-4">
+                <div className="flex gap-x-2 items-center">
+                    <span className="text-[#808080] uppercase text-sm pfont-400">curve</span>
+                    <span className="text-sm text-white pfont-600">{curveType}</span>
                 </div>
             </td>
             <td className="px-4 py-4">
@@ -159,12 +173,6 @@ export const Item = ({ item }) => {
                     <span className="text-sm text-white pfont-600">{formatNumber(bondingCurve?.txCount)}</span>
                 </div>
             </td>
-            {/* <td className="px-4 py-4">
-                <div className="flex gap-x-2 items-center">
-                    <span className="text-[#808080] uppercase text-sm pfont-400">liq</span>
-                    <span className="text-sm text-white pfont-600">$12.2M</span>
-                </div>
-            </td> */}
         </Reorder.Item>
     );
 };

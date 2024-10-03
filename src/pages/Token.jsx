@@ -21,6 +21,7 @@ import { BONDING_CURVE_QUERY, GET_BONDING_CURVE_TRADES_QUERY } from '../graphql/
 import { nativeCurrencyDetails } from '../utils/native';
 import TokenDetails from '../sections/token/TokenDetails';
 import TradeComponentUniswapCurve from '../sections/token/TradeComponentUniswapCurve';
+import { getChainLogo } from '../config/chains';
 
 const Token = () => {
     const navigate = useNavigate();
@@ -481,8 +482,35 @@ const Token = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className='bg-[#111116] py-1.5 flex justify-center'>
+
+                            <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
+                                <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
+                                    <div className='flex items-center'>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm w-1/2'>
+                                            Curve: 
+                                            <span className='text-white'> {token?.curveType}</span>
+                                        </p>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm flex items-center gap-x-2 w-1/2'>
+                                            <span>Chain:</span>
+                                            <img className="h-6 w-6 inline" src={getChainLogo(token?.chainId)} alt="Chain Logo" />
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
+                                <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
+                                    <div className='flex items-center gap-x-2'>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm'>Curve: {token?.curveType}</p>
+                                        <p className='pfont-500 text-[#8e94a0] text-sm flex items-center gap-x-2'>
+                                            <span>Chain:</span>
+                                            <img className="h-6 w-6 inline" src={getChainLogo(token?.chainId)} alt="Chain Logo" />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div> */}
+
+
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 {
                                     bondingCurve?.active && (
@@ -528,7 +556,7 @@ const Token = () => {
                                 {bondingCurve?.active ?
                                     (
                                         // token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
-                                        token && bondingCurve && <TradeComponentUniswapCurve token={token} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency} />
+                                        token && bondingCurve && <TradeComponentUniswapCurve token={token} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency} chainId={chainId} />
                                     ) :
                                     (
                                         <div className="Uniswap mt-2">

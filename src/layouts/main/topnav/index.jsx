@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom";
-import SimpleBarReact from "simplebar-react";
 import 'simplebar-react/dist/simplebar.min.css';
 import { ControlledMenu, MenuDivider, MenuItem, useClick } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
 import '@szhsin/react-menu/dist/transitions/slide.css';
-import { Menu, Bell, ShoppingCart, DollarSign, Truck } from 'feather-icons-react'
-import { LuSearch, BiWallet, AiOutlineUser, MdOutlineSettings, AiOutlineLogout, FaTwitter, FaTelegramPlane, RxCross2, FaUserCircle, FaWallet, SiBlueprint, AiOutlineDisconnect } from "./../../../assets/icons/vander.jsx"
+import { FaTwitter, FaTelegramPlane, RxCross2, FaUserCircle, FaWallet, SiBlueprint, AiOutlineDisconnect } from "./../../../assets/icons/vander.jsx"
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
 import ConnectButton from "../../../components/web3Components/ConnectButton.jsx";

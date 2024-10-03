@@ -19,6 +19,7 @@ import { getFactoryContractAddress } from '../config/contracts';
 import { nativeCurrencyDetails } from '../utils/native';
 import { CONTRACT, CURVE_TYPE } from '../constants';
 import { getContractAbi } from '../config/abis';
+import { getChainLogo } from '../config/chains';
 
 const Create = () => {
     const [open1, setOpen1] = useState(false);
@@ -403,8 +404,7 @@ const Create = () => {
                                                             <span className="text-white pfont-400 mr-2">{nativeCurrency.symbol}</span>
                                                             <img
                                                                 className="w-7 h-7 rounded-full"
-                                                                // src="/images/logo/eth.svg"
-                                                                src="/images/logo/bitcoin.png"
+                                                                src={getChainLogo(chainId)}
                                                                 alt={nativeCurrency.symbol}
                                                             />
                                                         </div>

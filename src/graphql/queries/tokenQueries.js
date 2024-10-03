@@ -13,6 +13,7 @@ export const TOKENS_QUERY = gql`
     ){
         id
         chainId
+        curveType
         name
         address
         symbol
@@ -49,6 +50,8 @@ export const TOKEN_QUERY = gql`
   query GetToken($id: String!) {
     Token_by_pk(id: $id) {
       id
+      chainId
+      curveType
       address
       name
       symbol

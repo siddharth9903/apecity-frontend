@@ -1,4 +1,4 @@
-import { supportedChains } from "../config/chains"
+import { getChainLogo, supportedChains } from "../config/chains"
 
 const chainNativeProperties = supportedChains.reduce((acc, chain) => {
     acc[chain.id] = {
@@ -6,7 +6,8 @@ const chainNativeProperties = supportedChains.reduce((acc, chain) => {
         name: chain.nativeCurrency.name,
         symbol: chain.nativeCurrency.symbol,
         decimals: chain.nativeCurrency.decimals,
-        blockExplorers: chain.blockExplorers
+        blockExplorers: chain.blockExplorers,
+        currencyLogo: getChainLogo(chain.id)
     }
     return acc
 })
@@ -16,7 +17,8 @@ export function nativeCurrencyDetails(chainId) {
         name: chainNativeProperties[chainId].name,
         symbol: chainNativeProperties[chainId].symbol,
         decimals: chainNativeProperties[chainId].decimals,
-        chainId: chainNativeProperties[chainId].chainId
+        chainId: chainNativeProperties[chainId].chainId,
+        currencyLogo: chainNativeProperties[chainId].currencyLogo
     } : {
         name: 'Unknown',
         symbol: 'UNKNOWN',

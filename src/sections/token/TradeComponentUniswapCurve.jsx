@@ -23,7 +23,7 @@ const TradeType = Object.freeze({
     SELL: 1
 });
 
-const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => {
+const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency, chainId }) => {
     const { enqueueSnackbar } = useSnackbar();
 
     const [tabIndex, setTabIndex] = useState(TradeType.BUY);
@@ -105,7 +105,7 @@ const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => 
         if (isConfirmed) {
             enqueueSnackbar('Transaction successful', { variant: 'success' });
         } else if (error) {
-            console.log('error',error)
+            console.log('error', error)
             enqueueSnackbar('Error executing transaction: ' + error.details, { variant: 'error' });
         }
     }, [isConfirmed, error, enqueueSnackbar]);
@@ -119,7 +119,7 @@ const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => 
             setValue('sellAmountToken', estimateTokenIn)
         }
     }, [ethTrade])
-    
+
 
     const onSubmit = async (values) => {
         try {
@@ -246,7 +246,7 @@ const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => 
                 <div className="border border-[#343439] px-4 py-3 rounded-lg text-gray-400 grid gap-4">
                     <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                         <TabList>
-                            <div className="grid grid-cols-2 gap-2 mb-3"> 
+                            <div className="grid grid-cols-2 gap-2 mb-3">
                                 <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex == TradeType.BUY ? 'bg-[#48bb78] text-white' : 'bg-gray-800 text-grey-600'}`}>
                                     Buy
                                 </Tab>
@@ -289,7 +289,7 @@ const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => 
                                             <InputField
                                                 register={register}
                                                 name="buyAmountEth"
-                                                symbol={nativeCurrency.symbol}
+                                                nativeCurrency={nativeCurrency}
                                                 isToken={false}
                                             />
                                             <QuickSelect
@@ -409,8 +409,9 @@ const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => 
                                         <>
                                             <InputField
                                                 register={register}
+                                                chainId={chainId}
                                                 name="sellAmountEth"
-                                                symbol={nativeCurrency.symbol}
+                                                nativeCurrency={nativeCurrency}
                                                 isToken={false}
                                             />
                                             <QuickSelect
@@ -438,6 +439,7 @@ const TradeComponentUniswapCurve = ({ token, bondingCurve, nativeCurrency }) => 
                                         <>
                                             <InputField
                                                 register={register}
+                                                chainId={chainId}
                                                 name="sellAmountToken"
                                                 tokenSymbol={token?.symbol}
                                                 isToken={true}
