@@ -4,11 +4,11 @@ const MAX_WEIGHT = new Decimal(1000000);
 const DEC = new Decimal(1).mul(10 ** 18)
 const MAX_DECIMAL_PLACES = 14;
 
-function formatDecimal(value) {
+export const formatDecimal = (value) => {
     return new Decimal(value).toFixed(MAX_DECIMAL_PLACES);
 }
 
-function calculatePurchaseReturn(supply, connectorBalance, connectorWeight, depositAmount) {
+export const calculatePurchaseReturn =(supply, connectorBalance, connectorWeight, depositAmount) => {
     const supplyDec = new Decimal(supply).mul(DEC);
     const connectorBalanceDec = new Decimal(connectorBalance).mul(DEC);
     const connectorWeightDec = new Decimal(connectorWeight);
@@ -30,7 +30,7 @@ function calculatePurchaseReturn(supply, connectorBalance, connectorWeight, depo
     return formatDecimal(purchaseReturn.div(DEC).toString())
 }
 
-function calculateSaleReturn(supply, connectorBalance, connectorWeight, sellAmount) {
+export const calculateSaleReturn = (supply, connectorBalance, connectorWeight, sellAmount) => {
     const supplyDec = new Decimal(supply).mul(DEC);
     const connectorBalanceDec = new Decimal(connectorBalance).mul(DEC);
     const connectorWeightDec = new Decimal(connectorWeight);
@@ -57,7 +57,7 @@ function calculateSaleReturn(supply, connectorBalance, connectorWeight, sellAmou
     return formatDecimal(saleReturn.div(DEC).toString())
 }
 
-function estimateEthInForExactTokensOut(supply, connectorBalance, connectorWeight, tokenAmountOut) {
+export const estimateEthInForExactTokensOut = (supply, connectorBalance, connectorWeight, tokenAmountOut) => {
     const supplyDec = new Decimal(supply).mul(DEC);
     const connectorBalanceDec = new Decimal(connectorBalance).mul(DEC);
     const connectorWeightDec = new Decimal(connectorWeight);
@@ -79,7 +79,7 @@ function estimateEthInForExactTokensOut(supply, connectorBalance, connectorWeigh
     return formatDecimal(estimatedEthIn.div(DEC).toString())
 }
 
-function estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight, ethOut) {
+export const  estimateTokenInForExactEthOut = (supply, connectorBalance, connectorWeight, ethOut) => {
     const supplyDec = new Decimal(supply).mul(DEC);
     const connectorBalanceDec = new Decimal(connectorBalance).mul(DEC);
     const connectorWeightDec = new Decimal(connectorWeight);
@@ -103,16 +103,17 @@ function estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight
     return formatDecimal(estimateTokenIn.div(DEC).toString())
 }
 
-const initialConstants = {
+export const initialConstants = {
     "circulatingSupply": "1000",
     "poolBalance": "0.000000000008571428",
     "reserveRatio": "500000"
 }
 
-export {
+
+export const apeFormula={
     calculatePurchaseReturn,
     calculateSaleReturn,
     estimateEthInForExactTokensOut,
     estimateTokenInForExactEthOut,
     initialConstants
-};
+}

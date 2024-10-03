@@ -498,19 +498,6 @@ const Token = () => {
                                 </div>
                             </div>
 
-                            {/* <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
-                                <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
-                                    <div className='flex items-center gap-x-2'>
-                                        <p className='pfont-500 text-[#8e94a0] text-sm'>Curve: {token?.curveType}</p>
-                                        <p className='pfont-500 text-[#8e94a0] text-sm flex items-center gap-x-2'>
-                                            <span>Chain:</span>
-                                            <img className="h-6 w-6 inline" src={getChainLogo(token?.chainId)} alt="Chain Logo" />
-                                        </p>
-                                    </div>
-                                </div>
-                            </div> */}
-
-
                             <div className='xs:pl-4 pl-3 pr-3 xs:pr-4 lg:pr-2'>
                                 {
                                     bondingCurve?.active && (

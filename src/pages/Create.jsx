@@ -14,12 +14,19 @@ import Decimal from 'decimal.js';
 import ipfsClient from '../ipfs/client';
 import { getAddress, parseEventLogs } from 'viem';
 import LoadingSteps from '../components/LoadingSteps';
-import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants } from '../utils/uniswapHelper';
+import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants, uniswapFormula } from '../utils/uniswapHelper';
 import { getFactoryContractAddress } from '../config/contracts';
 import { nativeCurrencyDetails } from '../utils/native';
 import { CONTRACT, CURVE_TYPE } from '../constants';
 import { getContractAbi } from '../config/abis';
 import { getChainLogo } from '../config/chains';
+import Select from 'react-select';
+import { apeFormula } from '../utils/apeFormula';
+
+const curveTypesOptions = [
+    { value: 'UNISWAP', label: 'UNISWAP' },
+    { value: 'APE', label: 'APE' }
+];
 
 const Create = () => {
     const [open1, setOpen1] = useState(false);
@@ -91,36 +98,61 @@ const Create = () => {
         website: Yup.string().url().nullable(true),
         buyAmountEth: Yup.string().matches(/^\d*\.?\d*$/, 'Must be a valid number').test('positive', 'Must be greater than or equal to 0', value => parseFloat(value) >= 0),
         buyAmountToken: Yup.string().matches(/^\d*\.?\d*$/, 'Must be a valid number').test('positive', 'Must be greater than or equal to 0', value => parseFloat(value) >= 0),
+        curveType: Yup.string().oneOf(['UNISWAP', 'APE'], 'Must be either UNISWAP or APE').required('Curve type is required'),
     });
 
     const { register, handleSubmit, watch, getValues, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(CreateCoinSchema),
         defaultValues: {
             buyAmountEth: '0',
-            buyAmountToken: '0'
+            buyAmountToken: '0',
+            curveType: 'UNISWAP'
         },
     });
 
+    const curveType = watch('curveType');
     const buyAmountEth = watch('buyAmountEth');
     const buyAmountToken = watch('buyAmountToken');
     const tokenSymbol = watch('symbol');
 
     const purchaseReturn = useMemo(() => {
-        const ethInWei = buyAmountEth || '0';
-        return calculatePurchaseReturn(
-            ethInWei,
-            initialConstants.virtualEthReserve,
-            initialConstants.virtualTokenReserve
-        );
+        if (curveType == CURVE_TYPE.UNISWAP) {
+            return uniswapFormula.calculatePurchaseReturn(
+                buyAmountEth || '0',
+                uniswapFormula.initialConstants.virtualEthReserve,
+                uniswapFormula.initialConstants.virtualTokenReserve
+            );
+        } else if (curveType == CURVE_TYPE.APE) {
+            return new BigNumber(
+                apeFormula.calculatePurchaseReturn(
+                    apeFormula.initialConstants.circulatingSupply,
+                    apeFormula.initialConstants.poolBalance,
+                    apeFormula.initialConstants.reserveRatio,
+                    buyAmountEth || '0')
+            ).toString();
+        } else {
+            return 0;
+        }
     }, [buyAmountEth]);
 
     const estimateEthIn = useMemo(() => {
-        const tokensOutWei = buyAmountToken || '0';
-        return estimateEthInForExactTokensOut(
-            tokensOutWei,
-            initialConstants.virtualEthReserve,
-            initialConstants.virtualTokenReserve
-        );
+        if (curveType == CURVE_TYPE.UNISWAP) {
+            return uniswapFormula.estimateEthInForExactTokensOut(
+                buyAmountToken || '0',
+                uniswapFormula.initialConstants.virtualEthReserve,
+                uniswapFormula.initialConstants.virtualTokenReserve
+            );
+        } else if (curveType == CURVE_TYPE.APE) {
+            return new BigNumber(
+                apeFormula.estimateEthInForExactTokensOut(
+                    apeFormula.initialConstants.circulatingSupply,
+                    apeFormula.initialConstants.poolBalance,
+                    apeFormula.initialConstants.reserveRatio,
+                    buyAmountToken || '0')
+            ).toString();
+        } else {
+            return 0;
+        }
     }, [buyAmountToken]);
 
     const {
@@ -140,7 +172,7 @@ const Create = () => {
         if (isConfirmed) {
             enqueueSnackbar('Transaction successful of Token creation', { variant: 'success' });
             const eventLogs = parseEventLogs({
-                abi: getContractAbi(CONTRACT.FACTORY, CURVE_TYPE.UNISWAP),
+                abi: getContractAbi(CONTRACT.FACTORY, curveType),
                 eventName: 'TokenCreated',
                 logs: receiptData?.logs,
             })
@@ -150,7 +182,7 @@ const Create = () => {
 
                 setTimeout(() => {
                     setProgress(4);
-                    navigate(`token/${chainId}/${tokenAddress.toLowerCase()}`);
+                    navigate(`/token/${chainId}/${tokenAddress.toLowerCase()}`);
                 }, 10000);
             }
 
@@ -167,14 +199,15 @@ const Create = () => {
                 return
             }
 
-            const factoryContractAddress = getFactoryContractAddress(chainId, CURVE_TYPE.UNISWAP)
+            let values = getValues();
+            const factoryContractAddress = getFactoryContractAddress(chainId, values.curveType)
             if (!factoryContractAddress) {
                 enqueueSnackbar('Chain is not supported yet', { variant: 'warning' });
                 return
             }
 
             onCloseModal();
-            const values = getValues()
+            values = getValues()
             setIsLoading(true)
 
             // Upload image to IPFS
@@ -183,7 +216,7 @@ const Create = () => {
             const imageURI = imageAdded.path;
 
             await ipfsClient.pin.add(imageAdded.path);
-            // await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
 
             // Create metadata with the image URI
             const metadata = {
@@ -206,10 +239,7 @@ const Create = () => {
             // Pin the metadata
             await ipfsClient.pin.add(metadataAdded.path);
 
-            console.log('setProgress(1)')
-            setTimeout(() => {
-                setProgress(1)
-            }, 3);
+            setProgress(1)
 
             const args = [values.name, values.symbol, tokenURI]
 
@@ -217,30 +247,42 @@ const Create = () => {
             if (ethTrade) {
                 value = values?.buyAmountEth;
             } else {
-                const estimateEthIn = new BigNumber(
-                    estimateEthInForExactTokensOut(
-                        values?.buyAmountToken || '0',
-                        initialConstants.virtualEthReserve,
-                        initialConstants.virtualTokenReserve
-                    )
-                ).toString();
+                let estimateEthIn;
+                if (curveType == CURVE_TYPE.UNISWAP) {
+                    estimateEthIn = new BigNumber(
+                        uniswapFormula.estimateEthInForExactTokensOut(
+                            values?.buyAmountToken || '0',
+                            uniswapFormula.initialConstants.virtualEthReserve,
+                            uniswapFormula.initialConstants.virtualTokenReserve
+                        )
+                    ).toString();
+                } else if (curveType == CURVE_TYPE.APE) {
+                    estimateEthIn = new BigNumber(
+                        apeFormula.estimateEthInForExactTokensOut(
+                            apeFormula.initialConstants.circulatingSupply,
+                            apeFormula.initialConstants.poolBalance,
+                            apeFormula.initialConstants.reserveRatio,
+                            values?.buyAmountToken || '0')
+                    ).toString();
+                } else {
+                    estimateEthIn = new BigNumber(0);
+                }
                 value = estimateEthIn;
             }
 
             const inputAmount = new Decimal(value).mul(new Decimal(10).pow(18));
             const adjustedInputAmount = inputAmount.mul(1.01);
 
-            setTimeout(() => {
-                setProgress(2);
-            }, 3);
+            setProgress(2);
 
             await writeContractAsync({
-                abi: getContractAbi(CONTRACT.FACTORY, CURVE_TYPE.UNISWAP),
+                abi: getContractAbi(CONTRACT.FACTORY, curveType),
                 address: getAddress(factoryContractAddress),
                 functionName: 'createToken',
                 args: args,
                 value: adjustedInputAmount.toFixed(),
             });
+
             setProgress(3);
 
             return
@@ -271,7 +313,6 @@ const Create = () => {
                 <div className="row py-10 justify-center">
                     <div className="col-xxl-4 col-lg-5 col-md-7 col-sm-9 col-11 bg-black border-[2px] border-[#27272a]  rounded-md p-7">
                         <div>
-                            {/* <form onSubmit={handleSubmit((values) => onSubmit(values))}> */}
                             <form onSubmit={handleSubmit((values) => onOpenBuyModal())}>
                                 <div className='flex flex-col gap-y-4'>
                                     <div>
@@ -308,6 +349,17 @@ const Create = () => {
                                             {...register('description')}
                                         />
                                         {errors.description && <span className='text-red-500'>{errors.description.message}</span>}
+                                    </div>
+                                    <div>
+                                        <label className='roboto-400 tracking-[0.5px] text-white'>Curve Type :</label>
+                                        <select
+                                            className='w-full focus:border-[2px] focus:border-[#6b7280] border-[1px] border-[#4b4b50]  bg-[#27272a] mt-1.5 rounded text-white roboto-400 text-base py-2 px-4 outline-none focus:outline-none'
+                                            {...register('curveType')}
+                                        >
+                                            <option value="UNISWAP">UNISWAP</option>
+                                            <option value="APE">APE</option>
+                                        </select>
+                                        {errors.curveType && <span className='text-red-500'>{errors.curveType.message}</span>}
                                     </div>
                                     <div>
                                         <div onClick={() => setOpen1(!open1)} className='flex gap-x-1.5 items-center  cursor-pointer'>
@@ -370,7 +422,6 @@ const Create = () => {
                                 onClose={onCloseModal}
                                 center
                             >
-                                {/* <form onSubmit={handleSubmit(values => onSubmit(values))}> */}
                                 <div className='sm:w-[470px] border px-5 py-5 sm:py-6 sm:px-6 border-white rounded-xl flex gap-y-3 flex-col bg-[#1b1d28]'>
                                     <div className='w-full   flex justify-center items-center'>
                                         <div className="text-center">

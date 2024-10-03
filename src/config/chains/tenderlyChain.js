@@ -1,6 +1,6 @@
 import { defineChain } from "viem";
 
-export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/6725e05d-6353-4342-8e6d-fd822c6086ce'
+export const rpcUrl = 'https://virtual.base.rpc.tenderly.co/1fc2e09b-1a7e-4895-ace9-a7fa5c88bc46'
 
 export const tenderlyChain = defineChain({
     id: 8454,
