@@ -14,19 +14,13 @@ import Decimal from 'decimal.js';
 import ipfsClient from '../ipfs/client';
 import { getAddress, parseEventLogs } from 'viem';
 import LoadingSteps from '../components/LoadingSteps';
-import { calculatePurchaseReturn, estimateEthInForExactTokensOut, initialConstants, uniswapFormula } from '../utils/uniswapHelper';
+import { uniswapFormula } from '../utils/uniswapHelper';
 import { getFactoryContractAddress } from '../config/contracts';
 import { nativeCurrencyDetails } from '../utils/native';
 import { CONTRACT, CURVE_TYPE } from '../constants';
 import { getContractAbi } from '../config/abis';
 import { getChainLogo } from '../config/chains';
-import Select from 'react-select';
 import { apeFormula } from '../utils/apeFormula';
-
-const curveTypesOptions = [
-    { value: 'UNISWAP', label: 'UNISWAP' },
-    { value: 'APE', label: 'APE' }
-];
 
 const Create = () => {
     const [open1, setOpen1] = useState(false);

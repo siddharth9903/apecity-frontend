@@ -10,6 +10,8 @@ export const BONDING_CURVE_QUERY = gql`
       virtualTokenReserve
       ethReserve
       tokenReserve
+      reserveRatio
+      circulatingSupply
       active
       currentPrice
       marketCap

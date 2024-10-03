@@ -20,8 +20,10 @@ import { generateTokenId } from '../utils/generatePrimaryKeys';
 import { BONDING_CURVE_QUERY, GET_BONDING_CURVE_TRADES_QUERY } from '../graphql/queries/bondingCurveQueries';
 import { nativeCurrencyDetails } from '../utils/native';
 import TokenDetails from '../sections/token/TokenDetails';
-import TradeComponentUniswapCurve from '../sections/token/TradeComponentUniswapCurve';
+import TradeComponent from '../sections/token/TradeComponent';
 import { getChainLogo } from '../config/chains';
+import { CURVE_TYPE } from '../constants';
+import e from 'cors';
 
 const Token = () => {
     const navigate = useNavigate();
@@ -117,10 +119,15 @@ const Token = () => {
         startTradesPolling(3000);
     }, [startTradesPolling]);
 
-    const bondingCurveProgess = 100 - ((
-        (bondingCurve?.ethAmountToCompleteCurve - bondingCurve?.virtualEthReserve) /
-        (bondingCurve?.totalEthAmountToCompleteCurve - bondingCurve?.virtualEthReserve)) * 100);
-    // const remainingSupplyInCurve = bondingCurve?.tokenAmountToCompleteCurve;
+    let bondingCurveProgess;
+
+    if (token?.curveType == CURVE_TYPE.UNISWAP) {
+        bondingCurveProgess = 100 - ((
+            (bondingCurve?.ethAmountToCompleteCurve) /
+            (bondingCurve?.totalEthAmountToCompleteCurve - bondingCurve?.virtualEthReserve)) * 100);
+    } else if (token?.curveType == CURVE_TYPE.APE) {
+        bondingCurveProgess = 100 - ((bondingCurve?.ethAmountToCompleteCurve / (bondingCurve?.totalEthAmountToCompleteCurve - bondingCurve?.virtualEthReserve)) * 100);
+    }
 
     const targetDivRef = useRef(null);
 
@@ -487,7 +494,7 @@ const Token = () => {
                                 <div className='border border-[#343439] mt-3 px-3 py-2.5 rounded-lg'>
                                     <div className='flex items-center'>
                                         <p className='pfont-500 text-[#8e94a0] text-sm w-1/2'>
-                                            Curve: 
+                                            Curve:
                                             <span className='text-white'> {token?.curveType}</span>
                                         </p>
                                         <p className='pfont-500 text-[#8e94a0] text-sm flex items-center gap-x-2 w-1/2'>
@@ -542,8 +549,7 @@ const Token = () => {
 
                                 {bondingCurve?.active ?
                                     (
-                                        // token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} />
-                                        token && bondingCurve && <TradeComponentUniswapCurve token={token} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency} chainId={chainId} />
+                                        token && bondingCurve && <TradeComponent token={token} bondingCurve={bondingCurve} nativeCurrency={nativeCurrency} chainId={chainId} />
                                     ) :
                                     (
                                         <div className="Uniswap mt-2">

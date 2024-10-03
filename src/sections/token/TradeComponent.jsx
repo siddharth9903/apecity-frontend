@@ -5,8 +5,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import BigNumber from 'bignumber.js';
-import { Modal } from 'react-responsive-modal';
-import { calculatePurchaseReturn, calculateSaleReturn, estimateEthInForExactTokensOut, estimateTokenInForExactEthOut } from '../../utils/apeFormula';
+import { uniswapFormula } from '../../utils/uniswapHelper';
 import 'react-responsive-modal/styles.css';
 import { formatNumber } from '../../utils/formats';
 import { useAccount, useBalance, useReadContract, useSendTransaction, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
@@ -14,17 +13,18 @@ import { formatEther, parseEther } from 'viem';
 import QuickSelect from './QuickSelect';
 import InputField from './InputField';
 import { useSnackbar } from 'notistack';
-import { CgLayoutGrid } from 'react-icons/cg';
 import { getContractAbi } from '../../config/abis';
 import { CONTRACT, CURVE_TYPE } from '../../constants';
+import { apeFormula } from '../../utils/apeFormula';
 
 const TradeType = Object.freeze({
     BUY: 0,
     SELL: 1
 });
 
-const TradeComponent = ({ token, bondingCurve }) => {
+const TradeComponent = ({ token, bondingCurve, nativeCurrency, chainId }) => {
     const { enqueueSnackbar } = useSnackbar();
+    const curveType = token?.curveType;
 
     const [tabIndex, setTabIndex] = useState(TradeType.BUY);
     const [ethTrade, setEthTrade] = useState(true);
@@ -38,12 +38,16 @@ const TradeComponent = ({ token, bondingCurve }) => {
     const [userTokenBalance, setUserTokenBalance] = useState(0)
     const { address: userAddress } = useAccount();
 
-    const supply = useMemo(() => {
-        return bondingCurve?.circulatingSupply || '0';
+    const ethReserve = useMemo(() => {
+        return bondingCurve?.ethReserve || '0';
     }, [bondingCurve]);
 
-    const connectorBalance = useMemo(() => {
-        return bondingCurve?.poolBalance || '0';
+    const tokenReserve = useMemo(() => {
+        return bondingCurve?.tokenReserve || '0';
+    }, [bondingCurve]);
+
+    const supply = useMemo(() => {
+        return bondingCurve?.circulatingSupply || '0';
     }, [bondingCurve]);
 
     const connectorWeight = useMemo(() => {
@@ -73,20 +77,56 @@ const TradeComponent = ({ token, bondingCurve }) => {
     const sellAmountToken = watch('sellAmountToken');
 
     const purchaseReturn = useMemo(() => {
-        return new BigNumber(calculatePurchaseReturn(supply, connectorBalance, connectorWeight, buyAmountEth || '0')).toString();
-    }, [supply, connectorBalance, connectorWeight, buyAmountEth]);
+        const ethInWei = buyAmountEth || '0';
+        if (curveType == CURVE_TYPE.UNISWAP) {
+            return uniswapFormula.calculatePurchaseReturn(ethInWei, ethReserve, tokenReserve);
+        } else if (curveType == CURVE_TYPE.APE) {
+            return new BigNumber(
+                apeFormula.calculatePurchaseReturn(supply, ethReserve, connectorWeight, ethInWei)
+            ).toString();
+        } else {
+            return '0'
+        }
+    }, [supply, connectorWeight, buyAmountEth, ethReserve, tokenReserve]);
 
     const saleReturn = useMemo(() => {
-        return new BigNumber(calculateSaleReturn(supply, connectorBalance, connectorWeight, sellAmountToken || '0')).toString();
-    }, [supply, connectorBalance, connectorWeight, sellAmountToken]);
+        const tokensInWei = sellAmountToken || '0';
+        if (curveType == CURVE_TYPE.UNISWAP) {
+            return uniswapFormula.calculateSaleReturn(tokensInWei, ethReserve, tokenReserve);
+        } else if (curveType == CURVE_TYPE.APE) {
+            return new BigNumber(
+                apeFormula.calculateSaleReturn(supply, ethReserve, connectorWeight, tokensInWei)
+            ).toString();
+        } else {
+            return '0'
+        }
+    }, [supply, connectorWeight, sellAmountToken, ethReserve, tokenReserve]);
 
     const estimateEthIn = useMemo(() => {
-        return new BigNumber(estimateEthInForExactTokensOut(supply, connectorBalance, connectorWeight, buyAmountToken || '0')).toString();
-    }, [supply, connectorBalance, connectorWeight, buyAmountToken]);
+        const tokensOutWei = buyAmountToken || '0';
+        if (curveType == CURVE_TYPE.UNISWAP) {
+            return uniswapFormula.estimateEthInForExactTokensOut(tokensOutWei, ethReserve, tokenReserve);
+        } else if (curveType == CURVE_TYPE.APE) {
+            return new BigNumber(
+                apeFormula.estimateEthInForExactTokensOut(supply, ethReserve, connectorWeight, tokensOutWei)
+            ).toString();
+        } else {
+            return '0'
+        }
+    }, [supply, connectorWeight, buyAmountToken, ethReserve, tokenReserve]);
 
     const estimateTokenIn = useMemo(() => {
-        return new BigNumber(estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight, sellAmountEth || '0')).toString();
-    }, [supply, connectorBalance, connectorWeight, sellAmountEth]);
+        const ethOutWei = sellAmountEth || '0';
+        if (curveType == CURVE_TYPE.UNISWAP) {
+            return uniswapFormula.estimateTokenInForExactEthOut(ethOutWei, ethReserve, tokenReserve);
+        } else if (curveType == CURVE_TYPE.APE) {
+            return new BigNumber(
+                apeFormula.estimateTokenInForExactEthOut(supply, ethReserve, connectorWeight, ethOutWei)
+            ).toString();
+        } else {
+            return '0'
+        }
+    }, [supply, connectorWeight, sellAmountEth, ethReserve, tokenReserve]);
 
     const {
         data: hash,
@@ -105,7 +145,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
         if (isConfirmed) {
             enqueueSnackbar('Transaction successful', { variant: 'success' });
         } else if (error) {
-            // enqueueSnackbar('Error executing transaction: ' + error.message, { variant: 'error' });
+            console.log('error', error)
             enqueueSnackbar('Error executing transaction: ' + error.details, { variant: 'error' });
         }
     }, [isConfirmed, error, enqueueSnackbar]);
@@ -119,7 +159,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
             setValue('sellAmountToken', estimateTokenIn)
         }
     }, [ethTrade])
-    
+
 
     const onSubmit = async (values) => {
         try {
@@ -128,13 +168,38 @@ const TradeComponent = ({ token, bondingCurve }) => {
                 if (ethTrade) {
                     value = values?.buyAmountEth
                 } else {
-                    const estimateEthIn = new BigNumber(estimateEthInForExactTokensOut(supply, connectorBalance, connectorWeight, values?.buyAmountToken || '0')).toString();
+                    let estimateEthIn;
+                    let tokensOutWei = values?.buyAmountToken || '0'
+                    if (curveType == CURVE_TYPE.UNISWAP) {
+                        estimateEthIn = new BigNumber(
+                            uniswapFormula.estimateEthInForExactTokensOut(tokensOutWei, ethReserve, tokenReserve)
+                        ).toString();
+                    } else if (curveType == CURVE_TYPE.APE) {
+                        estimateEthIn = new BigNumber(
+                            apeFormula.estimateEthInForExactTokensOut(supply, ethReserve, connectorWeight, tokensOutWei)
+                        ).toString()
+                    } else {
+                        estimateEthIn = '0';
+                    }
+
                     value = estimateEthIn
                 }
             } else {
-                value = values?.sellAmountToken
                 if (ethTrade) {
-                    const estimateTokenIn = new BigNumber(estimateTokenInForExactEthOut(supply, connectorBalance, connectorWeight, values?.sellAmountEth || '0')).toString();
+                    let estimateTokenIn;
+                    const ethOutWei = sellAmountEth || '0';
+                    if (curveType == CURVE_TYPE.UNISWAP) {
+                        estimateTokenIn = new BigNumber(
+                            uniswapFormula.estimateTokenInForExactEthOut(ethOutWei, ethReserve, tokenReserve)
+                        ).toString();
+                    } else if (curveType == CURVE_TYPE.APE) {
+                        estimateTokenIn = new BigNumber(
+                            apeFormula.estimateTokenInForExactEthOut(supply, ethReserve, connectorWeight, ethOutWei)
+                        ).toString();
+                    } else {
+                        estimateTokenIn = '0'
+                    }
+
                     value = estimateTokenIn
                 } else {
                     value = values?.sellAmountToken
@@ -151,17 +216,17 @@ const TradeComponent = ({ token, bondingCurve }) => {
 
             if (tabIndex === TradeType.SELL) {
                 await writeContractAsync({
-                    abi: getContractAbi(CONTRACT.ERC20, CURVE_TYPE.APE),
-                    address: token.id,
+                    abi: getContractAbi(CONTRACT.ERC20, curveType),
+                    address: token.address,
                     functionName: "approve",
-                    args: [bondingCurve.id, adjustedInputAmount.toFixed()],
+                    args: [bondingCurve.address, adjustedInputAmount.toFixed()],
                     value: valueToSend
                 })
             }
 
             writeContract({
-                abi: getContractAbi(CONTRACT.BONDING_CURVE, CURVE_TYPE.APE),
-                address: bondingCurve.id,
+                abi: getContractAbi(CONTRACT.BONDING_CURVE, curveType),
+                address: bondingCurve.address,
                 functionName: functionName,
                 args: args,
                 value: valueToSend
@@ -180,8 +245,8 @@ const TradeComponent = ({ token, bondingCurve }) => {
             const valueToSend = adjustedInputAmount.toFixed(0);
 
             await writeContractAsync({
-                abi: getContractAbi(CONTRACT.BONDING_CURVE, CURVE_TYPE.APE),
-                address: bondingCurve.id,
+                abi: getContractAbi(CONTRACT.BONDING_CURVE, curveType),
+                address: bondingCurve.address,
                 functionName: 'buy',
                 args: [],
                 value: valueToSend,
@@ -197,16 +262,16 @@ const TradeComponent = ({ token, bondingCurve }) => {
             const adjustedInputAmount = inputAmount;
 
             await writeContractAsync({
-                abi: getContractAbi(CONTRACT.ERC20, CURVE_TYPE.APE),
-                address: token.id,
+                abi: getContractAbi(CONTRACT.ERC20, curveType),
+                address: token.address,
                 functionName: 'approve',
-                args: [bondingCurve.id, adjustedInputAmount.toFixed()],
+                args: [bondingCurve.address, adjustedInputAmount.toFixed()],
                 value: '0',
             });
 
             await writeContractAsync({
-                abi: getContractAbi(CONTRACT.BONDING_CURVE, CURVE_TYPE.APE),
-                address: bondingCurve.id,
+                abi: getContractAbi(CONTRACT.BONDING_CURVE, curveType),
+                address: bondingCurve.address,
                 functionName: 'sell',
                 args: [adjustedInputAmount.toFixed()],
                 value: '0',
@@ -217,11 +282,11 @@ const TradeComponent = ({ token, bondingCurve }) => {
     };
 
     const { data: userTokenBalanceData, isLoading: isTokenBalanceLoading, isError: isError2, refetch } = useReadContract({
-        abi: getContractAbi(CONTRACT.ERC20, CURVE_TYPE.APE),
-        address: token?.id,
+        abi: getContractAbi(CONTRACT.ERC20, curveType),
+        address: token?.address,
         functionName: 'balanceOf',
         args: [userAddress],
-        watch: true
+        watch: true,
     })
 
     useEffect(() => {
@@ -246,7 +311,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                 <div className="border border-[#343439] px-4 py-3 rounded-lg text-gray-400 grid gap-4">
                     <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
                         <TabList>
-                            <div className="grid grid-cols-2 gap-2 mb-3"> 
+                            <div className="grid grid-cols-2 gap-2 mb-3">
                                 <Tab className={`p-2 cursor-pointer text-center pfont-500 rounded ${tabIndex == TradeType.BUY ? 'bg-[#48bb78] text-white' : 'bg-gray-800 text-grey-600'}`}>
                                     Buy
                                 </Tab>
@@ -272,7 +337,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             onClick={() => setEthTrade(true)}
                                             className="text-xs py-1 px-2 pfont-400 rounded bg-gray-800 text-gray-300"
                                         >
-                                            Switch to BTC
+                                            Switch to {nativeCurrency.symbol}
                                         </button>
                                     )}
                                     {/* <button
@@ -289,13 +354,14 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             <InputField
                                                 register={register}
                                                 name="buyAmountEth"
-                                                symbol="BTC"
+                                                nativeCurrency={nativeCurrency}
                                                 isToken={false}
                                             />
                                             <QuickSelect
                                                 setValue={setValue}
                                                 name="buyAmountEth"
                                                 isToken={false}
+                                                nativeCurrency={nativeCurrency}
                                             />
                                             {
                                                 formErrors?.buyAmountEth ?
@@ -324,6 +390,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 setValue={setValue}
                                                 name="buyAmountToken"
                                                 isToken={true}
+                                                nativeCurrency={nativeCurrency}
                                                 tokenAmountsOptions={[
                                                     {
                                                         key: '25M',
@@ -352,7 +419,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                     ) :
                                                     (
                                                         <div className='mt-1'>
-                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) BTC`}
+                                                            {`It will cost ${estimateEthIn} (~${formatNumber(estimateEthIn)}) ${nativeCurrency.symbol}`}
                                                         </div>
                                                     )
                                             }
@@ -391,7 +458,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                             onClick={() => setEthTrade(true)}
                                             className="text-xs py-1 px-2 pfont-400 rounded bg-gray-800 text-gray-300"
                                         >
-                                            Switch to BTC
+                                            Switch to {nativeCurrency.symbol}
                                         </button>
                                     )}
                                     {/* <button
@@ -407,14 +474,16 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                         <>
                                             <InputField
                                                 register={register}
+                                                chainId={chainId}
                                                 name="sellAmountEth"
-                                                symbol="BTC"
+                                                nativeCurrency={nativeCurrency}
                                                 isToken={false}
                                             />
                                             <QuickSelect
                                                 setValue={setValue}
                                                 name="sellAmountEth"
                                                 isToken={false}
+                                                nativeCurrency={nativeCurrency}
                                             />
                                             {
                                                 formErrors?.sellAmountEth ?
@@ -435,6 +504,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                         <>
                                             <InputField
                                                 register={register}
+                                                chainId={chainId}
                                                 name="sellAmountToken"
                                                 tokenSymbol={token?.symbol}
                                                 isToken={true}
@@ -444,6 +514,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                 setValue={setValue}
                                                 name="sellAmountToken"
                                                 isToken={true}
+                                                nativeCurrency={nativeCurrency}
                                                 tokenAmountsOptions={[
                                                     {
                                                         key: '25%',
@@ -472,7 +543,7 @@ const TradeComponent = ({ token, bondingCurve }) => {
                                                     ) :
                                                     (
                                                         <div className='mt-1'>
-                                                            {`You are about to receive ${saleReturn} (~${formatNumber(saleReturn)}) BTC`}
+                                                            {`You are about to receive ${saleReturn} (~${formatNumber(saleReturn)}) ${nativeCurrency.symbol}`}
                                                         </div>
                                                     )
                                             }

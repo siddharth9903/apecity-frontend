@@ -3,12 +3,12 @@ import { formatEther, parseEther } from 'viem';
 const toWei = (value) => parseEther(value);
 const fromWei = (value) => formatEther(value);
 
-export const initialConstants = {
+const initialConstants = {
     virtualEthReserve: "0.84",
     virtualTokenReserve: "1000000000"
 }
 
-export const calculatePurchaseReturn = (ethIn, ethReserve, tokenReserve) => {
+const calculatePurchaseReturn = (ethIn, ethReserve, tokenReserve) => {
     try {
         if (ethIn === '0' || ethReserve === '0' || tokenReserve === '0') return '0';
 
@@ -24,7 +24,7 @@ export const calculatePurchaseReturn = (ethIn, ethReserve, tokenReserve) => {
     }
 };
 
-export const calculateSaleReturn = (tokensIn, ethReserve, tokenReserve) => {
+const calculateSaleReturn = (tokensIn, ethReserve, tokenReserve) => {
     try {
         if (tokensIn === '0' || ethReserve === '0' || tokenReserve === '0') return '0';
 
@@ -40,7 +40,7 @@ export const calculateSaleReturn = (tokensIn, ethReserve, tokenReserve) => {
     }
 };
 
-export const estimateEthInForExactTokensOut = (tokensOut, ethReserve, tokenReserve) => {
+const estimateEthInForExactTokensOut = (tokensOut, ethReserve, tokenReserve) => {
     try {
         if (tokensOut === '0' || ethReserve === '0' || tokenReserve === '0') return '0';
 
@@ -56,7 +56,7 @@ export const estimateEthInForExactTokensOut = (tokensOut, ethReserve, tokenReser
     }
 };
 
-export const estimateTokenInForExactEthOut = (ethOut, ethReserve, tokenReserve) => {
+const estimateTokenInForExactEthOut = (ethOut, ethReserve, tokenReserve) => {
     try {
         if (ethOut === '0' || ethReserve === '0' || tokenReserve === '0') return '0';
 
