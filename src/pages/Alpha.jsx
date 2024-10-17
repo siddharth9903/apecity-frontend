@@ -220,22 +220,30 @@ const Alpha = () => {
             uniswapReturn: parseFloat(UniswapCalculator.calculate_purchase_return(ethIn, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve)),
         }));
 
-        const specificEthInputs = Array.from({ length: 5 }, (_, i) => targetedPoolBalance * (i + 1) * 0.2);
+        // const specificEthInputs = Array.from({ length: 5 }, (_, i) => targetedPoolBalance * (i + 1) * 0.2);
+        const specificEthInputs = Array.from({ length: Math.floor(targetedPoolBalance) }, (_, i) => i + 1);
+
+        if (!specificEthInputs.includes(targetedPoolBalance)) {
+            specificEthInputs.push(targetedPoolBalance);
+        }
         const newSpecificReturnData = specificEthInputs.map(ethIn => ({
             ethIn: `${ethIn?.toFixed(2)} ETH (${((ethIn / targetedPoolBalance) * 100)?.toFixed(0)}%)`,
             apeReturn: parseFloat(APECalculator.calculate_tokens_out_for_exact_eth_in(ethIn, reserveRatio, newSlope)),
             uniswapReturn: parseFloat(UniswapCalculator.calculate_purchase_return(ethIn, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve)),
         }));
 
-        const tokenAmounts = Array.from({ length: 10 }, (_, i) => actualTargetedTokenSupply * (i + 1) * 0.1);
-        const newEthEstimateData = tokenAmounts.map(amount => ({
+
+        const tokenAmountsInHundredsRange = Array.from({ length: 100 }, (_, i) => actualTotalTokenSupply * (i + 1) * 0.01);
+        const tokenAmountsInTensRange = Array.from({ length: 10 }, (_, i) => actualTotalTokenSupply * (i + 1) * 0.1);
+        const tokenAmountsBeforeMigrationInHundredsRange = tokenAmountsInHundredsRange.filter(amount => amount <= actualTargetedTokenSupply);
+        const tokenAmountsBeforeMigrationInTensRange = tokenAmountsInTensRange.filter(amount => amount <= actualTargetedTokenSupply);
+
+        // const tokenAmounts = Array.from({ length: 10 }, (_, i) => actualTargetedTokenSupply * (i + 1) * 0.1);
+        const newEthEstimateData = tokenAmountsBeforeMigrationInTensRange.map(amount => ({
             tokenAmount: `${(amount / 1e6)?.toFixed(0)}M (${((amount / actualTargetedTokenSupply) * 100)?.toFixed(0)}%)`,
             apeEstimate: parseFloat(APECalculator.calculate_eth_in_for_exact_tokens_out(amount, reserveRatio, newSlope)),
             uniswapEstimate: parseFloat(UniswapCalculator.estimate_eth_in_for_exact_tokens_out(amount, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve)),
         }));
-
-        const tokenAmountsInHundredsRange = Array.from({ length: 100 }, (_, i) => actualTotalTokenSupply * (i + 1) * 0.01);
-        const tokenAmountsBeforeMigrationInHundredsRange = tokenAmountsInHundredsRange.filter(amount => amount <= actualTargetedTokenSupply);
 
         const newPriceData = tokenAmountsBeforeMigrationInHundredsRange.map(amount => {
             const priceData = {
@@ -274,12 +282,13 @@ const Alpha = () => {
         const lastApePriceBeforeMigration = newPriceData[newPriceData.length - 1]
         const firstPriceAfterMigration = newPriceAfterMigrationData[0]
 
-        const newMarketcapData = tokenAmountsInHundredsRange.map(amount => ({
+        const newMarketcapData = tokenAmountsBeforeMigrationInHundredsRange.map(amount => ({
             supply: amount,
             apeMarketcap: parseFloat(APECalculator.calculate_marketcap(amount, reserveRatio, newSlope, actualTotalTokenSupply)),
             uniswapMarketcap: parseFloat(UniswapCalculator.calculate_marketcap(amount, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve, actualTotalTokenSupply)),
         })
         );
+        console.log('newMarketcapData', newMarketcapData)
 
         return {
             slope: newSlope,
@@ -498,53 +507,62 @@ const Alpha = () => {
                     <div className="md:col-span-1">
                         {renderChart("Price after migration", afterMigrationPriceChart)}
                     </div>
-                    <div className="md:col-span-2 lg:col-span-3">
-                        {renderChart("Purchase Return Comparison", purchaseReturnChart)}
-                    </div>
+
                     <div className="md:col-span-1">
                         {renderChart("Marketcap chart", marketcapChart)}
                     </div>
+
                     <div className="md:col-span-1">
+                        {renderChart("For every ETH you'll get", specificReturnChart)}
+                    </div>
+                    <div className="md:col-span-1">
+                        {renderChart("100 millions tokens purchase price", ethEstimateChart)}
+                    </div>
+
+                    {/* <div className="md:col-span-2 lg:col-span-3">
+                        {renderChart("Purchase Return Comparison", purchaseReturnChart)}
+                    </div> */}
+                    {/* <div className="md:col-span-1">
                         {renderChart("Specific ETH Input Comparison", specificReturnChart)}
                     </div>
                     <div className="md:col-span-1">
                         {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
-                    </div>
+                    </div> */}
                 </div>
             </div>
         ),
-        '2': (
-            <div className="grid grid-cols-1 gap-4">
-                <div>{renderInputCard()}</div>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    <div className="lg:col-span-3">
-                        {renderChart("Purchase Return Comparison", purchaseReturnChart)}
-                    </div>
-                    <div className="lg:col-span-1">
-                        {renderChart("Specific ETH Input Comparison", specificReturnChart)}
-                    </div>
-                    <div className="lg:col-span-2">
-                        {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
-                    </div>
-                </div>
-            </div>
-        ),
-        '3': (
-            <div className="grid grid-cols-1 gap-4">
-                <div>{renderInputCard()}</div>
-                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                    <div className="xl:col-span-3">
-                        {renderChart("Purchase Return Comparison", purchaseReturnChart)}
-                    </div>
-                    <div>
-                        {renderChart("Specific ETH Input Comparison", specificReturnChart)}
-                    </div>
-                    <div className="xl:col-span-2">
-                        {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
-                    </div>
-                </div>
-            </div>
-        ),
+        // '2': (
+        //     <div className="grid grid-cols-1 gap-4">
+        //         <div>{renderInputCard()}</div>
+        //         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        //             <div className="lg:col-span-3">
+        //                 {renderChart("Purchase Return Comparison", purchaseReturnChart)}
+        //             </div>
+        //             <div className="lg:col-span-1">
+        //                 {renderChart("Specific ETH Input Comparison", specificReturnChart)}
+        //             </div>
+        //             <div className="lg:col-span-2">
+        //                 {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
+        //             </div>
+        //         </div>
+        //     </div>
+        // ),
+        // '3': (
+        //     <div className="grid grid-cols-1 gap-4">
+        //         <div>{renderInputCard()}</div>
+        //         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        //             <div className="xl:col-span-3">
+        //                 {renderChart("Purchase Return Comparison", purchaseReturnChart)}
+        //             </div>
+        //             <div>
+        //                 {renderChart("Specific ETH Input Comparison", specificReturnChart)}
+        //             </div>
+        //             <div className="xl:col-span-2">
+        //                 {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
+        //             </div>
+        //         </div>
+        //     </div>
+        // ),
     };
 
     return (
