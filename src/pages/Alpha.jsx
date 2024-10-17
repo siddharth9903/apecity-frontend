@@ -26,7 +26,7 @@ const TokenomicsCalculator = {
     MAX_DECIMAL_PLACES: 14,
 
     format_decimal: (value) => {
-        return new Decimal(value).toFixed(TokenomicsCalculator.MAX_DECIMAL_PLACES);
+        return new Decimal(value)?.toFixed(TokenomicsCalculator.MAX_DECIMAL_PLACES);
     },
 
     to_wei: (value) => {
@@ -120,20 +120,60 @@ const UniswapCalculator = {
 const InputWithPresets = ({ value, setValue, label, presets, unit }) => (
     <div className="space-y-2">
         <Label htmlFor={label}>{label}</Label>
-        <Input
-            id={label}
-            type="number"
-            value={value}
-            onChange={(e) => setValue(parseFloat(e.target.value))}
-        />
-        <div className="flex space-x-2 mt-2">
-            <Button variant="outline" size="sm" onClick={() => setValue(0)}>Reset</Button>
-            {presets.map((preset, index) => (
-                <Button key={index} variant="outline" size="sm" onClick={() => setValue(preset)}>
-                    {preset} {unit}
-                </Button>
-            ))}
+        <div className="space-x-2">
+            <Input
+                id={label}
+                type="number"
+                value={value}
+                onChange={(e) => setValue(parseFloat(e.target.value))}
+                className="w-full"
+            />
+            {/* <Select value={value.toString()} onValueChange={(value) => setValue(parseFloat(value))}>
+                <SelectTrigger className="w-[80px]">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                    {presets.map((preset) => (
+                        <SelectItem key={preset} value={preset.toString()}>{preset} {unit}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select> */}
+            <div className="flex space-x-1 mt-1">
+                {presets.map((preset, index) => (
+                    <Button key={index} variant="outline" size="sm" onClick={() => setValue(preset)}>
+                        {preset} {unit}
+                    </Button>
+                ))}
+            </div>
         </div>
+    </div>
+);
+
+const SliderWithPresets = ({ value, setValue, label, min, max, step, presets }) => (
+    <div className="space-y-2">
+        <Label htmlFor={label}>{label}</Label>
+        <div className="flex items-center space-x-2">
+            <Slider
+                id={label}
+                min={min}
+                max={max}
+                step={step}
+                value={[value]}
+                onValueChange={(newValue) => setValue(newValue[0])}
+                className="w-full"
+            />
+            <Select value={value.toString()} onValueChange={(value) => setValue(parseFloat(value))}>
+                <SelectTrigger className="w-[100px]">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                    {presets.map((preset) => (
+                        <SelectItem key={preset.value} value={preset.value.toString()}>{preset.label}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+        </div>
+        <div className="text-sm text-gray-500">{value?.toFixed(3)}</div>
     </div>
 );
 
@@ -182,26 +222,18 @@ const Alpha = () => {
 
         const specificEthInputs = Array.from({ length: 5 }, (_, i) => targetedPoolBalance * (i + 1) * 0.2);
         const newSpecificReturnData = specificEthInputs.map(ethIn => ({
-            ethIn: `${ethIn.toFixed(2)} ETH (${((ethIn / targetedPoolBalance) * 100).toFixed(0)}%)`,
+            ethIn: `${ethIn?.toFixed(2)} ETH (${((ethIn / targetedPoolBalance) * 100)?.toFixed(0)}%)`,
             apeReturn: parseFloat(APECalculator.calculate_tokens_out_for_exact_eth_in(ethIn, reserveRatio, newSlope)),
             uniswapReturn: parseFloat(UniswapCalculator.calculate_purchase_return(ethIn, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve)),
         }));
 
         const tokenAmounts = Array.from({ length: 10 }, (_, i) => actualTargetedTokenSupply * (i + 1) * 0.1);
         const newEthEstimateData = tokenAmounts.map(amount => ({
-            tokenAmount: `${(amount / 1e6).toFixed(0)}M (${((amount / actualTargetedTokenSupply) * 100).toFixed(0)}%)`,
+            tokenAmount: `${(amount / 1e6)?.toFixed(0)}M (${((amount / actualTargetedTokenSupply) * 100)?.toFixed(0)}%)`,
             apeEstimate: parseFloat(APECalculator.calculate_eth_in_for_exact_tokens_out(amount, reserveRatio, newSlope)),
             uniswapEstimate: parseFloat(UniswapCalculator.estimate_eth_in_for_exact_tokens_out(amount, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve)),
         }));
 
-        // const tokenAmountsInHundredsRange = Array.from({ length: 100 }, (_, i) => actualTargetedTokenSupply * (i + 1) * 0.01);
-        // const newPriceData = tokenAmountsInHundredsRange.map(amount => ({
-        //     supply: `${(amount / 1e6).toFixed(0)}M (${((amount / actualTargetedTokenSupply) * 100).toFixed(0)}%)`,
-        //     apePrice: parseFloat(APECalculator.calculate_price(amount, reserveRatio, newSlope)),
-        //     uniswapPrice: parseFloat(UniswapCalculator.calculate_price(amount, newUniswapVirtualEthReserve, newUniswapVirtualTokenReserve)),
-        //     afterMigrationPrice: parseFloat(UniswapCalculator.calculate_price(amount - actualTargetedTokenSupply, new Decimal(targetedPoolBalance), actualTotalTokenSupply - actualTargetedTokenSupply)) 
-        // })
-        // );
         const tokenAmountsInHundredsRange = Array.from({ length: 100 }, (_, i) => actualTotalTokenSupply * (i + 1) * 0.01);
         const tokenAmountsBeforeMigrationInHundredsRange = tokenAmountsInHundredsRange.filter(amount => amount <= actualTargetedTokenSupply);
 
@@ -238,10 +270,9 @@ const Alpha = () => {
                 ))
             })
         }).filter(Boolean);
-        console.log('newPriceAfterMigrationData', newPriceAfterMigrationData)
 
-        const lastApePriceBeforeMigration = newPriceData[newPriceData.length - 1].apePrice
-        const firstPriceAfterMigration = newPriceAfterMigrationData[0].afterMigrationPrice
+        const lastApePriceBeforeMigration = newPriceData[newPriceData.length - 1]
+        const firstPriceAfterMigration = newPriceAfterMigrationData[0]
 
         const newMarketcapData = tokenAmountsInHundredsRange.map(amount => ({
             supply: amount,
@@ -278,59 +309,57 @@ const Alpha = () => {
         setDerivedValues(newValues);
     }, [calculateAllValues]);
 
-    const formatMillions = (value) => `${(value / 1000000).toFixed(0)}M`;
+    const formatMillions = (value) => `${(value / 1000000)?.toFixed(0)}M`;
 
     // const formatEthToGwei = (valueInEth) => `${new Decimal(valueInEth).mul(TokenomicsCalculator.HALF_DEC).toString()} Gwei`;
     const formatEthToGwei = (valueInEth) => `${formatSmallNumber(new Decimal(valueInEth).mul(TokenomicsCalculator.HALF_DEC).toString())} Gwei`;
     const formatEth = (valueInEth) => `${formatSmallNumber(new Decimal(valueInEth).toString())} Eth`;
 
-
     const renderInputCard = () => (
-        <Card className="h-full">
-            <CardHeader className="flex justify-between items-center">
-                <CardTitle>Input Parameters</CardTitle>
-                <Button onClick={resetToDefault}>Reset</Button>
-            </CardHeader>
-
+        <Card className="w-full">
+            <div className='flex'>
+                <p className='mx-5 my-2 font-medium text-lg'>Input Parameters</p>
+                <button className='ml-auto m-1 p-2  border-2 rounded-md' onClick={resetToDefault}>Reset All</button>
+            </div>
             <CardContent>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <InputWithPresets
                         value={totalTokenSupply}
                         setValue={setTotalTokenSupply}
-                        label="Total Token Supply (in millions)"
+                        label="Total Token Supply"
                         presets={[500, 1000, 1500, 2000]}
                         unit="M"
                     />
                     <InputWithPresets
                         value={targetedPoolBalance}
                         setValue={setTargetedPoolBalance}
-                        label="Targeted Pool Balance (in ETH)"
+                        label="Targeted Pool Balance"
                         presets={[4, 4.5, 5, 6]}
                         unit="ETH"
                     />
                     <InputWithPresets
                         value={targetedTokenSupply}
                         setValue={setTargetedTokenSupply}
-                        label="Targeted Token Supply (% of Total Supply)"
+                        label="Targeted Token Supply"
                         presets={[60, 70, 80, 90]}
                         unit="%"
                     />
-                    <div>
-                        <Label htmlFor="reserveRatio">Reserve Ratio</Label>
-                        <Slider
-                            id="reserveRatio"
-                            min={1}
-                            max={999}
-                            step={1}
-                            value={[reserveRatio * 1000]}
-                            onValueChange={(value) => setReserveRatio(value[0] / 1000)}
-                        />
-                        <span>{reserveRatio.toFixed(3)}</span>
-                    </div>
+                    <SliderWithPresets
+                        value={reserveRatio}
+                        setValue={setReserveRatio}
+                        label="Reserve Ratio"
+                        min={0.000}
+                        max={1.000}
+                        step={0.001}
+                        presets={[
+                            { label: "Flat", value: 1.000 },
+                            { label: "Linear", value: 0.5 }
+                        ]}
+                    />
                 </div>
             </CardContent>
         </Card>
-    );
+    )
 
     const renderChart = (title, chartComponent) => (
         <Card className="h-full">
@@ -350,12 +379,12 @@ const Alpha = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
                 dataKey="ethIn"
-                tickFormatter={(value) => `${value.toFixed(2)} (${((value / targetedPoolBalance) * 100).toFixed(0)}%)`}
+                tickFormatter={(value) => `${value?.toFixed(2)} (${((value / targetedPoolBalance) * 100)?.toFixed(0)}%)`}
             />
             <YAxis tickFormatter={formatMillions} />
             <Tooltip
                 formatter={(value, name) => [formatMillions(value), name]}
-                labelFormatter={(value) => `${value.toFixed(2)} ETH (${((value / targetedPoolBalance) * 100).toFixed(0)}%)`}
+                labelFormatter={(value) => `${value?.toFixed(2)} ETH (${((value / targetedPoolBalance) * 100)?.toFixed(0)}%)`}
             />
             <Legend />
             <Line type="monotone" dataKey="apeReturn" stroke="#8884d8" name="APE Formula" />
@@ -368,7 +397,7 @@ const Alpha = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
                 dataKey="supply"
-                tickFormatter={(value) => `${(value / 1e6).toFixed(0)}M (${((value / derivedValues.actualTargetedTokenSupply) * 100).toFixed(0)}%)`}
+                tickFormatter={(value) => `${(value / 1e6)?.toFixed(0)}M (${((value / derivedValues.actualTargetedTokenSupply) * 100)?.toFixed(0)}%)`}
             />
             <YAxis tickFormatter={formatEthToGwei} />
             <Tooltip
@@ -378,7 +407,14 @@ const Alpha = () => {
             <Line type="monotone" dataKey="apePrice" stroke="#8884d8" name="APE Formula" />
             <Line type="monotone" dataKey="uniswapPrice" stroke="#82ca9d" name="Uniswap Formula" />
             <Line type="monotone" dataKey="afterMigrationPrice" stroke="#ff3333" name="After Migration" />
-            <ReferenceLine y={derivedValues.firstPriceAfterMigration} label="Price after migration" stroke="#ff3333" strokeDasharray="3 3" />
+            <ReferenceLine y={derivedValues?.firstPriceAfterMigration?.afterMigrationPrice} label="Price after migration" stroke="#ff3333" strokeDasharray="3 3" />
+            <ReferenceDot
+                x={derivedValues?.firstPriceAfterMigration?.supply}
+                y={derivedValues?.firstPriceAfterMigration?.afterMigrationPrice}
+                r={8}
+                fill="#ff3333"
+                stroke="#ff3333"
+            />
         </LineChart>
     );
 
@@ -387,7 +423,7 @@ const Alpha = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
                 dataKey="supply"
-                tickFormatter={(value) => `${(value / 1e6).toFixed(0)}M (${((value / derivedValues.actualTotalTokenSupply) * 100).toFixed(0)}%)`}
+                tickFormatter={(value) => `${(value / 1e6)?.toFixed(0)}M (${((value / derivedValues.actualTotalTokenSupply) * 100)?.toFixed(0)}%)`}
             />
             <YAxis tickFormatter={formatEthToGwei} />
             <Tooltip
@@ -395,7 +431,14 @@ const Alpha = () => {
             />
             <Legend />
             <Line type="monotone" dataKey="afterMigrationPrice" stroke="#ff3333" name="After Migration" />
-            <ReferenceLine y={derivedValues.lastApePriceBeforeMigration} label="Last Ape price" stroke="#8884d8" strokeDasharray="3 3" />
+            <ReferenceLine y={derivedValues?.lastApePriceBeforeMigration?.apePrice} label="Last Ape price" stroke="#8884d8" strokeDasharray="3 3" />
+            <ReferenceDot
+                x={derivedValues?.lastApePriceBeforeMigration?.supply}
+                y={derivedValues?.lastApePriceBeforeMigration?.apePrice}
+                // r={8}
+                fill="#8884d8"
+                stroke="#8884d8"
+            />
         </LineChart>
     );
     const marketcapChart = (
@@ -403,7 +446,7 @@ const Alpha = () => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
                 dataKey="supply"
-                tickFormatter={(value) => `${(value / 1e6).toFixed(0)}M (${((value / derivedValues.actualTargetedTokenSupply) * 100).toFixed(0)}%)`}
+                tickFormatter={(value) => `${(value / 1e6)?.toFixed(0)}M (${((value / derivedValues.actualTargetedTokenSupply) * 100)?.toFixed(0)}%)`}
             />
             <YAxis tickFormatter={formatEth} />
             <Tooltip
@@ -433,7 +476,7 @@ const Alpha = () => {
             <XAxis dataKey="tokenAmount" />
             <YAxis />
             <Tooltip
-                formatter={(value, name) => [`${value.toFixed(4)} ETH`, name]}
+                formatter={(value, name) => [`${value?.toFixed(4)} ETH`, name]}
                 labelFormatter={(value) => `${value}`}
             />
             <Legend />
@@ -445,59 +488,58 @@ const Alpha = () => {
 
     const layouts = {
         '1': (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="md:col-span-2 lg:col-span-1">
-                    {renderInputCard()}
-                </div>
-                <div className="md:col-span-2 lg:col-span-2">
-                    {renderChart("Purchase Return Comparison", purchaseReturnChart)}
-                </div>
-                <div className="md:col-span-2 lg:col-span-2">
-                    {renderChart("Price chart", priceChart)}
-                </div>
-                <div className="md:col-span-1">
-                    {renderChart("Price after migration", afterMigrationPriceChart)}
-                </div>
-                <div className="md:col-span-1">
-                    {renderChart("Marketcap chart", marketcapChart)}
-                </div>
-                <div className="md:col-span-1">
-                    {renderChart("Specific ETH Input Comparison", specificReturnChart)}
-                </div>
-                <div className="md:col-span-1">
-                    {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
+            <div className="grid grid-cols-1 gap-4">
+                <div>{renderInputCard()}</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    <div className="md:col-span-2 lg:col-span-2">
+                        {renderChart("Price chart", priceChart)}
+                    </div>
+                    <div className="md:col-span-1">
+                        {renderChart("Price after migration", afterMigrationPriceChart)}
+                    </div>
+                    <div className="md:col-span-2 lg:col-span-3">
+                        {renderChart("Purchase Return Comparison", purchaseReturnChart)}
+                    </div>
+                    <div className="md:col-span-1">
+                        {renderChart("Marketcap chart", marketcapChart)}
+                    </div>
+                    <div className="md:col-span-1">
+                        {renderChart("Specific ETH Input Comparison", specificReturnChart)}
+                    </div>
+                    <div className="md:col-span-1">
+                        {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
+                    </div>
                 </div>
             </div>
         ),
         '2': (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <div className="lg:col-span-1">
-                    {renderInputCard()}
-                </div>
-                <div className="lg:col-span-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
-                        <div>{renderChart("Purchase Return Comparison", purchaseReturnChart)}</div>
-                        <div>{renderChart("Specific ETH Input Comparison", specificReturnChart)}</div>
-                        <div className="md:col-span-2">
-                            {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
-                        </div>
+            <div className="grid grid-cols-1 gap-4">
+                <div>{renderInputCard()}</div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                    <div className="lg:col-span-3">
+                        {renderChart("Purchase Return Comparison", purchaseReturnChart)}
+                    </div>
+                    <div className="lg:col-span-1">
+                        {renderChart("Specific ETH Input Comparison", specificReturnChart)}
+                    </div>
+                    <div className="lg:col-span-2">
+                        {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
                     </div>
                 </div>
             </div>
         ),
         '3': (
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 h-screen">
-                <div className="xl:col-span-1 overflow-auto">
-                    {renderInputCard()}
-                </div>
-                <div className="xl:col-span-3 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    <div className="md:col-span-2 xl:col-span-3">
+            <div className="grid grid-cols-1 gap-4">
+                <div>{renderInputCard()}</div>
+                <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                    <div className="xl:col-span-3">
                         {renderChart("Purchase Return Comparison", purchaseReturnChart)}
                     </div>
                     <div>
                         {renderChart("Specific ETH Input Comparison", specificReturnChart)}
                     </div>
-                    <div>
+                    <div className="xl:col-span-2">
                         {renderChart("Estimated ETH Input for Token Output", ethEstimateChart)}
                     </div>
                 </div>
@@ -508,7 +550,7 @@ const Alpha = () => {
     return (
         <div className="container-fluid p-4 pt-[80px] bg-black text-white min-h-screen">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-3xl font-bold">Tokenomics Calculator</h1>
+                {/* <h1 className="text-3xl font-bold">Tokenomics Calculator</h1> */}
                 <Select value={layout} onValueChange={setLayout}>
                     <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select layout" />
